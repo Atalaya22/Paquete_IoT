@@ -1,0 +1,232 @@
+﻿@model IoT_Web.Models.Shifts
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div style="width:100%;">
+    <h2 class="h1-responsive font-weight-bold text-center my-4"><font color="white">@Recursos.Idioma.Torns  </font></h2>
+    <div class="table100 ver2 m-b-110">
+        <div class="table100-head">
+            <table>
+                <thead>
+                    <tr class="row100 head row100-head">
+                        <th class="cell100 column1">
+                            @Recursos.Idioma.Nom
+                        </th>
+                        <th class="cell100 column2">
+                            @Recursos.Idioma.IniciDurada
+                        </th>
+                        <th class="cell100 column3">
+                            @Recursos.Idioma.Fi
+                        </th>
+                        <th class="cell100 column4">
+                            @Recursos.Idioma.Dies
+                        </th>
+                        <th class="cell100 column5"></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="table100-body js-pscroll">
+            <table>
+                <tbody>
+                    @foreach (var item in Model.ActualShifts)
+                    {
+                        <tr class="row100 body">
+                            <td class="cell100 column1">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td class="cell100 column2">
+                                @Html.DisplayFor(modelItem => item.BeginTimeString)
+                            </td>
+                            <td class="cell100 column3">
+                                @Html.DisplayFor(modelItem => item.EndTimeString)
+                            </td>
+                            <td class="cell100 column4">
+                                @if (item.Monday)
+                                {@Recursos.Idioma.Dilluns}
+                                @if (item.Tuesday)
+                                {@Recursos.Idioma.Dimarts}
+                                @if (item.Wednesday)
+                                {@Recursos.Idioma.Dimecres}
+                                @if (item.Thursday)
+                                {@Recursos.Idioma.Dijous}
+                                @if (item.Friday)
+                                {@Recursos.Idioma.Divendres}
+                                @if (item.Saturday)
+                                {@Recursos.Idioma.Dissabte}
+                                @if (item.Sunday)
+                                {@Recursos.Idioma.Diumenge}
+                            </td>
+                            <td class="cell100 column5">
+                                @Html.ActionLink(Recursos.Idioma.Editar, "EditTorns", new { id = item.ID }) |
+                                @Html.ActionLink(Recursos.Idioma.Eliminar, "EliminarTorn", new { id = item.ID })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @Html.ActionLink(Recursos.Idioma.CrearTorn, "Create", "Configuration", null, new { @class = "button" })
+</div>
+
+
+<div style="width:100%;margin-top:10%">
+    <h2 class="h1-responsive font-weight-bold text-center my-4"><font color="white">@Recursos.Idioma.HorariLaboral</font></h2>
+
+    <div class="table100 ver2 m-b-110">
+        <div class="table100-head">
+            <table>
+                <thead>
+                    <tr class="row100 head row100-head">
+                        <th class="cell100 column2">
+                            @Recursos.Idioma.Nom
+                        </th>
+                        <th class="cell100 column2">
+                            @Recursos.Idioma.IniciDurada
+                        </th>
+                        <th class="cell100 column2">
+                            @Recursos.Idioma.Fi
+                        </th>
+                        <th class="cell100 column2">
+                            @Recursos.Idioma.Dies
+                        </th>
+                        <th class="cell100 column2">
+                            @Recursos.Idioma.DiaInicial
+                        </th>
+                        <th class="cell100 column2">
+                            @Recursos.Idioma.DiaFinal
+                        </th>
+                        <th class="cell100 column2"></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="table100-body js-pscroll">
+            <table>
+                <tbody>
+                    @foreach (var item in Model.llistaHorariLaboral)
+                    {
+                        <tr class="row100 body">
+                            <td class="cell100 column2">
+                                @Html.DisplayFor(modelItem => item.Nom)
+                            </td>
+                            <td class="cell100 column2">
+                                @Html.DisplayFor(modelItem => item.Inici)
+                            </td>
+                            <td class="cell100 column2">
+                                @Html.DisplayFor(modelItem => item.Final)
+                            </td>
+                            <td class="cell100 column2">
+                                @if (item.Dilluns)
+                                {@Recursos.Idioma.Dilluns}
+                                @if (item.Dimarts)
+                                {@Recursos.Idioma.Dimarts}
+                                @if (item.Dimecres)
+                                {@Recursos.Idioma.Dimecres}
+                                @if (item.Dijous)
+                                {@Recursos.Idioma.Dijous}
+                                @if (item.Divendres)
+                                {@Recursos.Idioma.Divendres}
+                                @if (item.Dissabte)
+                                {@Recursos.Idioma.Dissabte}
+                                @if (item.Diumenge)
+                                {@Recursos.Idioma.Diumenge}
+                            </td>
+                            <td class="cell100 column2">
+                                @Html.DisplayFor(modelItem => item.IntervalInici)
+                            </td>
+                            <td class="cell100 column2">
+                                @Html.DisplayFor(modelItem => item.IntervalFinal)
+                            </td>
+                            <td class="cell100 column2">
+                                @Html.ActionLink(Recursos.Idioma.Editar, "EditHorariLaboral", new { id = item.Id }) |
+                                @Html.ActionLink(Recursos.Idioma.Eliminar, "EliminarHorariLaboral", new { id = item.Id })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @Html.ActionLink(Recursos.Idioma.CrearHorariLaboral, "CrearHorariLaboral", "Configuration", null, new { @class = "button" })
+</div>
+
+<div style="width:100%;margin-top:10%">
+    <h2 class="h1-responsive font-weight-bold text-center my-4"><font color="white">@Recursos.Idioma.DiesFestius</font></h2>
+
+    <div class="table100 ver2 m-b-110">
+        <div class="table100-head">
+            <table>
+                <thead>
+                    <tr class="row100 head row100-head">
+                        <th class="cell100 column1">
+                            @Recursos.Idioma.DiesFestius
+                        </th>
+                        <th class="cell100 column2"></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="table100-body js-pscroll">
+            <table>
+                <tbody>
+                    @foreach (var item in Model.llistaDiesFestius)
+                    {
+                    <tr class="row100 body">
+                        <td class="cell100 column1">
+                            @Html.DisplayFor(modelItem => item.diaVacances)
+                        </td>
+                        <td class="cell100 column2">
+                            @Html.ActionLink(Recursos.Idioma.Editar, "EditDiesFestius", new { id = item.Id }) |
+                            @Html.ActionLink(Recursos.Idioma.Eliminar, "EliminarDiaFestiu", new { id = item.Id })
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @Html.ActionLink(Recursos.Idioma.CrearDiesFestius, "CrearDiesFestius", "Configuration", null, new { @class = "button" })
+</div>
+
+<div style="width:100%;margin-top:10%">
+    <h2 class="h1-responsive font-weight-bold text-center my-4"><font color="white">@Recursos.Idioma.Cameres</font></h2>
+
+    <div class="table100 ver2 m-b-110">
+        <div class="table100-head">
+            <table>
+                <thead>
+                    <tr class="row100 head row100-head">
+                        <th class="cell100 column1">
+                            @Recursos.Idioma.NomMaquina
+                        </th>
+                        <th class="cell100 column1">@Recursos.Idioma.Cameres</th>
+                        <th class="cell100 column2"></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="table100-body js-pscroll">
+            <table>
+                <tbody>
+                    @foreach (var item in Model.llistaConfCameres)
+                    {
+                    <tr class="row100 body">
+                        <td class="cell100 column1">
+                            @Html.DisplayFor(modelItem => item.Nom)
+                        </td>
+                        <td class="cell100 column1">
+                            @Html.DisplayFor(modelItem => item.Cameres)
+                        </td>
+                        <td class="cell100 column2">
+                            @Html.ActionLink(Recursos.Idioma.Editar, "EditCameresMaquina", new { id = item.Id })
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

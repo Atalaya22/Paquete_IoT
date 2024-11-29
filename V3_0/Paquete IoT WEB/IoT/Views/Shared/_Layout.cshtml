@@ -1,0 +1,168 @@
+﻿﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Tavil IoT</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/Sidebar.css")
+    @Styles.Render("~/Content/Site.css")
+    @Styles.Render("~/Content/ResponsiveTable.css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <script type="text/javascript" src="~/Scripts/d3/d3.js"></script>
+
+    <script src="~/Scripts/CloudFlare.js"></script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript" src="~/Scripts/Libraries/moment.js"></script>
+    <script src="~/Scripts/Libraries/es.js" charset="UTF-8"></script>
+    <script src="~/Scripts/Libraries/en.js" charset="UTF-8"></script>
+    <script src="~/Scripts/Libraries/ca.js" charset="UTF-8"></script>
+
+    <script>
+        moment.locale('@System.Globalization.CultureInfo.DefaultThreadCurrentUICulture');
+    </script>
+
+    <script type="text/javascript" src="~/Scripts/Libraries/tempusdominus-bootstrap-4.js"></script>
+    <link rel="stylesheet" href="~/Content/Libraries/tempusdominus-bootstrap-4.css" />
+
+
+    <script type="text/javascript" src="~/PDF/jspdf.min.js"></script>
+    <script type="text/javascript" src="~/PDF/jspdf.plugin.autotable.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="~/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <link rel="icon" type="image/png" href="~/Images/icons/logo_nav.ico" />
+
+    <!--Estils per la imatge de perfil d'usuari-->
+    <link rel="stylesheet" type="text/css" href="~/Content/ImgProfile.css">
+    <link rel="stylesheet" href="~/Content/Scrollbar.css" />
+</head>
+<body>
+    <div class="wrapper" style="BACKGROUND: #2d2d2d;">
+        <nav id="sidebar" style="min-height: 500px;" class="sticky-top">
+            <div class="sidebar-header">
+                <div class="login100-pic js-tilt" data-tilt>
+                    <a href=@Url.Action("Index", "Home")>
+                        <img src="~/Images/logo_iot_login.png" alt="IMG" class="navbar-logo">
+                    </a>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="sidebar-header">
+			<img src="/Images/Logo.png" alt="IMG" style="width: 100px;display: block;margin: auto;">
+			<hr>
+				<div class="language-buttons-container">
+					<button class="language-button" onclick="location.href='@Url.Action("Language", "Home", new {Language = "ca", path_and_query = System.Web.HttpContext.Current.Request.Url.PathAndQuery})';return false;">
+					<img src="~/Images/Catalunya.png" alt="" width="30" height="20">
+					</button>
+					 
+										<button class="language-button" onclick="location.href='@Url.Action("Language", "Home", new {Language = "es", path_and_query = System.Web.HttpContext.Current.Request.Url.PathAndQuery})';return false;">
+					<img src="~/Images/Spain.png" alt="" width="30" height="20">
+					</button>
+					 
+										<button class="language-button" onclick="location.href='@Url.Action("Language", "Home", new {Language = "en", path_and_query = System.Web.HttpContext.Current.Request.Url.PathAndQuery})';return false;">
+					<img src="~/Images/UK.png" alt="" width="30" height="20">
+					</button>
+				</div>
+			</div>
+
+            <hr>
+
+            <ul class="heightScroll list-unstyled components" id="ulMenu" style="">
+                <li id="idHome">
+                    <a href='@Url.Action("Index", "Home")'>
+                        @Recursos.Idioma.Inici
+                        <span style="float:left;margin-top: 2%;" class="fa fa-home pull-left"></span>
+                    </a>
+                </li>
+                @Html.Partial("~/Views/Menu/MenuPartial.cshtml", new IoT_Web.Models.Menu.MenuModel())
+                <li id="liMenu">
+
+                </li>
+
+                <li>
+                    <a target="_blank" href="@IoT_Web.InfoSessio.Sessio.GetHttpIpAxxonLinia()">
+                        @Recursos.Idioma.Cameres
+                        <span style="float:left;margin-top: 2%;" class="fa fa-video-camera pull-left"></span>
+                    </a>
+
+                <li>
+                    <a href='@Url.Action("Index", "Configuration")'>
+                        @Recursos.Idioma.Configuracio
+                        <span style="float:left;margin-top: 2%;" class="fa fa-wrench pull-left"></span>
+                    </a>
+                </li>
+                @Html.Partial("_LoginPartial")
+            </ul>
+        </nav>
+
+        <div class="container">
+            <div id="navSuperior" class="sticky-top" style="background: linear-gradient(-35deg, #2d2d2d, #2d2d2d);
+    border-radius: 10px 10px 0px 0px; z-index:5000; border: 0.2px solid rgba(111, 111, 111, 1);">
+                <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="top:10px; height: 20px;">
+                    <div class="container-fluid" style="padding:0px;">
+                        <button type="button" id="sidebarCollapse" class="navbar-btn">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <i class="fas fa-align-justify"></i>
+                        </button>
+                        <div class="md-form my-0">
+                            <div class="navbar-nav right-auto" id="navbarSupportedContent">
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            @RenderBody()
+            <hr />
+            <div class="row justify-content-center">
+                <div class="col">
+                    <p style="text-align: center;">&copy; @DateTime.Now.Year - Tavil IoT - Version: @HttpContext.Current.Application["Version"]</p>
+                </div>
+            </div>
+        </div>
+
+        <script src="~/Scripts/Libraries/select2.min.js"></script>
+        <script src="~/Scripts/Libraries/tilt.jquery.min.js"></script>
+        <script>
+            $('.js-tilt').tilt({
+                scale: 1.1
+            })
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#sidebarCollapse').on('click', function () {
+                    $('#sidebar').toggleClass('active');
+                    $(this).toggleClass('active');
+                });
+                
+            });
+        </script>
+
+        <script>
+            //Timeout de la sessió.
+            var sessionTimeoutWarning = @Session.Timeout;
+
+            var sTimeout = parseInt(sessionTimeoutWarning) * 60 * 1000;
+            setTimeout('SessionEnd()', sTimeout);
+
+            function SessionEnd() {
+                window.location = "/Account/LogOff";
+            }
+        </script>
+    </div>
+</body>
+</html>
+

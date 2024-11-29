@@ -1,0 +1,361 @@
+﻿@model IoT_Web.Models.CompanyModel
+@{Layout = "~/Views/Shared/_LayoutNoLogin.cshtml";}
+@{
+    ViewBag.Title = Recursos.Idioma.EscollirEmpresa;
+}
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+@Styles.Render("~/Content/maps/MapStyle.css")
+
+
+
+
+
+<div class="col-auto" style="width:300px;max-width: 300px;">
+
+    <div class="wrap-input100" style="width:250px">
+        @*<label for="tags">Companies: </label>*@
+        <input title="" id="tags" class="input100" style="min-width:150px;">
+        <span class="focus-input100"></span>
+        <span class="symbol-input100">
+            <i class="fa fa-search" aria-hidden="true"></i>
+        </span>
+        @*<button type="button" class="btn btn-secondary" style="margin-top:5px;">Submit</button>*@
+    </div>
+    <div style="margin-bottom: 20px;">
+        <button type="button" class="btn btn-secondary" onclick="selectRegion('europe', 11);myFunction(0)">Europa</button>
+        <div id="dropdownEUROPE" class="dropdown-contentProva">
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <button type="button" class="btn btn-secondary" onclick="selectRegion('northamerica', 9);myFunction(1)">America del norte</button>
+        <div id="dropdownAMERICAN" class="dropdown-contentProva">
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <button type="button" class="btn btn-secondary" onclick="selectRegion('southamerica',2);myFunction(2)">America del sur</button>
+        <div id="dropdownAMERICAS" class="dropdown-contentProva">
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <button type="button" class="btn btn-secondary" onclick="selectRegion('asia',18);myFunction(3)">Asia</button>
+        <div id="dropdownASIA" class="dropdown-contentProva">
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <button type="button" class="btn btn-secondary" onclick="selectRegion('australia',3);myFunction(4)">Australia</button>
+        <div id="dropdownAustralia" class="dropdown-contentProva">
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <button type="button" class="btn btn-secondary" onclick="selectRegion('africa',2);myFunction(5)">Africa</button>
+        <div id="dropdownAFRICA" class="dropdown-contentProva">
+        </div>
+    </div>
+
+</div>
+
+@Html.Partial("~/Views/Settings/maps/GlobalMap.cshtml")
+
+
+@Html.Partial("~/Views/Settings/maps/EuropeMap.cshtml")
+
+@Html.Partial("~/Views/Settings/maps/AsiaMap.cshtml")
+
+@Html.Partial("~/Views/Settings/maps/AustraliaMap.cshtml")
+
+@Html.Partial("~/Views/Settings/maps/NorthAmericaMap.cshtml")
+
+@Html.Partial("~/Views/Settings/maps/AfricaMap.cshtml")
+
+@Html.Partial("~/Views/Settings/maps/SouthAmericaMap.cshtml")
+
+<script>
+    function selectRegion(region, number) {
+        $("path").css({ 'fill': '#DDDDDD' });//Eliminem els marcatges anteriors
+        fillContinent(region, number, '#626665');//Marquem els elements.
+    }
+
+    function ocultarElements() {
+
+        document.getElementById("dropdownAMERICAN").classList.toggle("showContinent", false);
+        document.getElementById("dropdownEUROPE").classList.toggle("showContinent", false);
+        document.getElementById("dropdownAMERICAS").classList.toggle("showContinent", false);
+        document.getElementById("dropdownAustralia").classList.toggle("showContinent", false);
+        document.getElementById("dropdownASIA").classList.toggle("showContinent", false);
+        document.getElementById("dropdownAFRICA").classList.toggle("showContinent", false);
+
+    }
+    function closeOthers(number) {
+        if (number != 0) document.getElementById("dropdownEUROPE").classList.toggle("showContinent", false);
+        if (number != 1) document.getElementById("dropdownAMERICAN").classList.toggle("showContinent", false);
+        if (number != 2) document.getElementById("dropdownAMERICAS").classList.toggle("showContinent", false);
+        if (number != 3) document.getElementById("dropdownASIA").classList.toggle("showContinent", false);
+        if (number != 4) document.getElementById("dropdownAustralia").classList.toggle("showContinent", false);
+        if (number != 5) document.getElementById("dropdownAFRICA").classList.toggle("showContinent", false);
+    }
+    function myFunction(continent) {
+        //ocultarElements();
+        switch (continent) {
+            case 0:
+                closeOthers(0);
+                if ($("#dropdownEUROPE").hasClass("showContinent")) {
+                    ocultarElements();
+                    $("li").removeClass("focus active-region");
+                    fillContinent('europe', 11, '#DDDDDD');
+                    return;
+                }
+                document.getElementById("dropdownEUROPE").classList.toggle("showContinent");
+                $("#map-europe").show();
+                break;
+            case 1:
+                closeOthers(1);
+                if ($("#dropdownAMERICAN").hasClass("showContinent")) {
+                    ocultarElements();
+                    $("li").removeClass("focus active-region");
+                    fillContinent('northamerica', 9, '#DDDDDD');
+                    return;
+                }
+                document.getElementById("dropdownAMERICAN").classList.toggle("showContinent");
+                break;
+            case 2:
+                closeOthers(2);
+                if ($("#dropdownAMERICAS").hasClass("showContinent")) {
+                    ocultarElements();
+                    $("li").removeClass("focus active-region");
+                    fillContinent('southamerica', 2, '#DDDDDD');
+                    return;
+                }
+                document.getElementById("dropdownAMERICAS").classList.toggle("showContinent");
+                break;
+            case 3:
+                closeOthers(3);
+                if ($("#dropdownASIA").hasClass("showContinent")) {
+                    ocultarElements();
+                    $("li").removeClass("focus active-region");
+                    fillContinent('asia',18,'#DDDDDD');
+                    return;
+                }
+                document.getElementById("dropdownASIA").classList.toggle("showContinent");
+                break;
+            case 4:
+                closeOthers(4);
+                if ($("#dropdownAustralia").hasClass("showContinent")) {
+                    ocultarElements();
+                    $("li").removeClass("focus active-region");
+                    fillContinent('australia', 3, '#DDDDDD');
+                    return;
+                }
+                document.getElementById("dropdownAustralia").classList.toggle("showContinent");
+                break;
+            case 5:
+                closeOthers(5);
+                if ($("#dropdownAFRICA").hasClass("showContinent")) {
+                    ocultarElements();
+                    $("li").removeClass("focus active-region");
+                    fillContinent('africa',2,'#DDDDDD');
+                    return;
+                }
+                document.getElementById("dropdownAFRICA").classList.toggle("showContinent");
+                break;
+
+        }
+    }
+
+    function submitCompany(nameCompany) {
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: '/Settings/GoToMachine',
+            data: { company: nameCompany },
+            success: function (result) {
+                if (result > 1) window.location.href = '@Url.Action("ChooseLinia", "Settings")';
+                else window.location.href = '@Url.Action("Index", "Home")';
+            }
+        });
+    }
+
+    function fillContinent(continent, numElements,color) {
+        var i;
+        for (i = 1; i <= numElements; i++) {
+            $('#' + continent + i).css({ 'fill': color });
+        }
+    }
+
+    $(document).ready(function () {
+
+        var listCompanies = @Html.Raw(Json.Encode(Model.listCompanies));
+        var region;
+        var name;
+        var eixX;
+        var eixY;
+        var availableTags = [];
+        var listEurope = [];
+        var listAsia = [];
+        var listAfrica = [];
+        var listAmericaN = [];
+        var listAmericaS = [];
+        var listAustralia = [];
+
+        for (var i in listCompanies) {
+            region = listCompanies[i].Continent;
+            name = listCompanies[i].Name;
+            eixX = listCompanies[i].X;
+            eixY = listCompanies[i].Y;
+            availableTags.push({ id: i, value: name });
+
+            if (region == "Europe") {
+                listEurope.push(name);
+                document.getElementById("dropdownEUROPE").innerHTML += "<a style='cursor: pointer;' onclick='submitCompany(\"" + name + "\")'>" + name + "</a>";
+                if (eixX != 0 && eixY != 0) {//En cas que tinguem una posició al mapa, l'inserim als pins.
+                    $("#europemap").append("<button class='fa fa-map-marker' title='" + name + "' onclick='submitCompany(\""+ name + "\")' style='padding: 1px;display:block;color: red;text-align:center;position: absolute;top: " + eixY + "px;left: " + eixX + "px;'></button>");
+                }
+            }
+            else if (region == "Asia") {
+                listAsia.push(name);
+                document.getElementById("dropdownASIA").innerHTML += "<a style='cursor: pointer;' onclick='submitCompany(\"" + name + "\")'>" + name + "</a>";
+                if (eixX != 0 && eixY != 0) {//En cas que tinguem una posició al mapa, l'inserim als pins.
+                    $("#asiamap").append("<button class='fa fa-map-marker' title='" + name + "' onclick='submitCompany(\""+ name + "\")' style='padding: 1px;display:block;color: red;text-align:center;position: absolute;top: " + eixY + "px;left: " + eixX + "px;'></button>");
+                }
+            }
+            else if (region == "Africa") {
+                listAfrica.push(name);
+                document.getElementById("dropdownAFRICA").innerHTML += "<a style='cursor: pointer;' onclick='submitCompany(\"" + name + "\")'>" + name + "</a>";
+                if (eixX != 0 && eixY != 0) {//En cas que tinguem una posició al mapa, l'inserim als pins.
+                    $("#africamap").append("<button class='fa fa-map-marker' title='" + name + "' onclick='submitCompany(\"" + name + "\")' style='padding: 1px;display:block;color: red;text-align:center;position: absolute;top: " + eixY + "px;left: " + eixX + "px;'></button>");
+                }
+            }
+            else if (region == "NorthAmerica") {
+                listAmericaN.push(name);
+                document.getElementById("dropdownAMERICAN").innerHTML += "<a style='cursor: pointer;' onclick='submitCompany(\"" + name + "\")'>" + name + "</a>";
+                if (eixX != 0 && eixY != 0) {//En cas que tinguem una posició al mapa, l'inserim als pins.
+                    $("#northamericamap").append("<button class='fa fa-map-marker' title='" + name + "' onclick='submitCompany(\"" + name + "\")' style='padding: 1px;display:block;color: red;text-align:center;position: absolute;top: " + eixY + "px;left: " + eixX + "px;'></button>");
+                }
+            }
+            else if (region == "SouthAmerica") {
+                listAmericaS.push(name);
+                document.getElementById("dropdownAMERICAS").innerHTML += "<a style='cursor: pointer;' onclick='submitCompany(\"" + name + "\")'>" + name + "</a>";
+                if (eixX != 0 && eixY != 0) {//En cas que tinguem una posició al mapa, l'inserim als pins.
+                    $("#southamericamap").append("<button class='fa fa-map-marker' title='" + name + "' onclick='submitCompany(\"" + name + "\")' style='padding: 1px;display:block;color: red;text-align:center;position: absolute;top: " + eixY + "px;left: " + eixX + "px;'></button>");
+                }
+            }
+            else if (region == "Australia") {
+                listAustralia.push(name);
+                document.getElementById("dropdownAustralia").innerHTML += "<a style='cursor: pointer;' onclick='submitCompany(\"" + name + "\")'>" + name + "</a>";
+                if (eixX != 0 && eixY != 0) {//En cas que tinguem una posició al mapa, l'inserim als pins.
+                    $("#australiamap").append("<button class='fa fa-map-marker' title='" + name + "' onclick='submitCompany(\"" + name + "\")' style='padding: 1px;display:block;color: red;text-align:center;position: absolute;top: " + eixY + "px;left: " + eixX + "px;'></button>");
+                }
+            }
+        }
+        //position: {
+        //    my: "left bottom",
+        //        at: "left top"
+        //},
+        $("#tags").autocomplete({
+            source: availableTags,
+            minLength: 3,
+            messages: {
+                noResults: '',
+                results: function () { }
+            },
+            color: "#f5f8f9"
+        });
+
+        $("#tags").keyup(function (e) {//Si trobem l'element, obrim el dropdown. Altrament, el tanquem.
+            var valueInput = $(this).val();
+            var found = false;
+            if (valueInput.length == 0 || valueInput.length == 1 || valueInput.length == 2) {
+                ocultarElements();
+                return;
+            }
+            //Europe
+            for (var i in listEurope) {
+                if (listEurope[i].includes(valueInput)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) document.getElementById("dropdownEUROPE").classList.toggle("showContinent", false);
+            else {
+                found = false;
+                if (!$("#dropdownEUROPE").hasClass("showContinent")) document.getElementById("dropdownEUROPE").classList.toggle("showContinent");
+            }
+
+            //Asia
+            for (var i in listAsia) {
+                if (listAsia[i].includes(valueInput)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) document.getElementById("dropdownASIA").classList.toggle("showContinent", false);
+            else {
+                found = false;
+                if (!$("#dropdownASIA").hasClass("showContinent")) document.getElementById("dropdownASIA").classList.toggle("showContinent");
+            }
+
+            //Africa
+            for (var i in listAfrica) {
+                if (listAfrica[i].includes(valueInput)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) document.getElementById("dropdownAFRICA").classList.toggle("showContinent", false);
+            else {
+                found = false;
+                if (!$("#dropdownAFRICA").hasClass("showContinent")) document.getElementById("dropdownAFRICA").classList.toggle("showContinent");
+            }
+
+            //AmericaN
+            for (var i in listAmericaN) {
+                if (listAmericaN[i].includes(valueInput)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) document.getElementById("dropdownAMERICAN").classList.toggle("showContinent", false);
+            else {
+                found = false;
+                if (!$("#dropdownAMERICAN").hasClass("showContinent")) document.getElementById("dropdownAMERICAN").classList.toggle("showContinent");
+            }
+
+            //AmericaS
+            for (var i in listAmericaS) {
+                if (listAmericaS[i].includes(valueInput)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) document.getElementById("dropdownAMERICAS").classList.toggle("showContinent", false);
+            else {
+                found = false;
+                if (!$("#dropdownAMERICAS").hasClass("showContinent")) document.getElementById("dropdownAMERICAS").classList.toggle("showContinent");
+            }
+
+            //Australia
+            for (var i in listAustralia) {
+                if (listAustralia[i].includes(valueInput)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) document.getElementById("dropdownAustralia").classList.toggle("showContinent", false);
+            else {
+                found = false;
+                if (!$("#dropdownAustralia").hasClass("showContinent")) document.getElementById("dropdownAustralia").classList.toggle("showContinent");
+            }
+
+        });
+
+    });
+</script>
+
+
+

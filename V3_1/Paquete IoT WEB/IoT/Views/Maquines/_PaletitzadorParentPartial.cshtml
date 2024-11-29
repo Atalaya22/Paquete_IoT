@@ -1,0 +1,2024 @@
+﻿
+@model IoT_Web.Models.Maquines.PaletitzadorParentModel
+@{ }
+
+<link rel="stylesheet" href="~/Content/Overlay.css" />
+<link rel="stylesheet" href="~/Content/DataTableCustom.css" />
+<link rel="stylesheet" href="~/Content/FonsGrafiques.css" />
+<link href="~/Content/ParagraphCustom.css" rel="stylesheet" />
+<link href="~/Content/FabricaStyles.css" rel="stylesheet" />
+
+<h1 style="color: white; font-size: 30px; text-align: center; ">@Model.NomMaquinaTraduit</h1>
+
+<div id="noData" style="display: none; margin-top:200px;margin-bottom:200px;">
+    <p align="center">@Recursos.Idioma.NoDades</p>
+</div>
+
+<div class="container backgroundGraphics" id="containerCadenciesRobot">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCadenciesRobot" href="#collapseCadenciesRobot" aria-expanded="false" aria-controls="collapseCadenciesRobot">
+    </a>
+    <p style="font-size:20px;">@Model.Robots.First().NomTraduit: @Recursos.Idioma.CadenciaMitja @Recursos.Idioma.CadenciaCiclosMinut.Replace(Recursos.Idioma.Cadencia, "")</p>
+    <div id="collapseCadenciesRobot" class="collapse show">
+        <div class="container mb-2">
+            <div class="col-12" id="conjunt-cadencies-robot">
+            </div>
+            @*<script>
+                var dadesPlot = [];
+
+                var dadesChart = @Html.Raw(Json.Encode(Model.ChartCadenciesRobots.Charts2));
+
+                if (dadesChart != null) {
+                    dadesChart.forEach(chart => {
+
+                        let tracePlot = {
+                            x: chart.XAxis2,
+                            y: chart.YAxis,
+                            mode: 'lines+markers',
+                            name: chart.Titol,
+                            hovertemplate: "" +
+                                "<b>@Recursos.Idioma.CadenciaCiclosMinut.Replace(Recursos.Idioma.Cadencia,""):</b> %{y:.2f}<br>" +
+                                "<extra></extra>"
+                        }
+
+                        dadesPlot.push(tracePlot);
+
+                    });
+
+                    var layoutPlot = {
+                        showlegend: true,
+                        height: 600,
+                        width: 1080,
+                        autosize: false,
+                        plot_bgcolor: "#3f4143",
+                        paper_bgcolor: "#3f4143",
+                        xaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        yaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        font: {
+                            color: '#ffffff'
+                        }
+                    };
+
+                    var configPlot = {
+                        responsive: true,
+                        modeBarButtonsToRemove: ['hoverClosestCartesian', 'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomOut2d', 'zoomIn2d', 'autoScale2d', 'toggleSpikelines'],
+                        toImageButtonOptions: {
+                            format: 'png', // one of png, svg, jpeg, webp
+                            filename: '@Recursos.Idioma.Cadencia',
+                            height: 500,
+                            width: 700,
+                            scale: 1 // Multiply title/legend/axis/canvas sizes by this factor
+                        }
+                    }
+
+                    Plotly.newPlot('conjunt-cadencies-robot', dadesPlot, layoutPlot, configPlot);
+                }
+            </script>
+			*@
+			
+			<script>
+				var dadesPlot = [];
+
+				var dadesChart = @Html.Raw(Json.Encode(Model.ChartCadenciesRobots.Charts2));
+
+				if (dadesChart != null) {
+					dadesChart.forEach(chart => {
+
+						let tracePlot = {
+							x: chart.XAxis2,  // Eje X (fechas, por ejemplo)
+							y: chart.YAxis,   // Eje Y (valores de ciclos por minuto)
+							type: 'bar',      // Cambiamos el tipo de gráfico a "bar"
+							name: chart.Titol,
+							hovertemplate: "" +
+								"<b>@Recursos.Idioma.CadenciaCiclosMinut.Replace(Recursos.Idioma.Cadencia,""):</b> %{y:.2f}<br>" +
+								"<extra></extra>"
+						}
+
+						dadesPlot.push(tracePlot);
+
+					});
+
+					var layoutPlot = {
+						showlegend: true,
+						height: 600,
+						width: 1080,
+						autosize: false,
+						plot_bgcolor: "#3f4143",
+						paper_bgcolor: "#3f4143",
+						xaxis: {
+							title: null,
+							showline: true,
+							showgrid: true,
+							gridcolor: 'grey'
+						},
+						yaxis: {
+							title: null,
+							showline: true,
+							showgrid: true,
+							gridcolor: 'grey'
+						},
+						font: {
+							color: '#ffffff'
+						}
+					};
+
+					var configPlot = {
+						responsive: true,
+						modeBarButtonsToRemove: ['hoverClosestCartesian', 'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomOut2d', 'zoomIn2d', 'autoScale2d', 'toggleSpikelines'],
+						toImageButtonOptions: {
+							format: 'png', // uno de png, svg, jpeg, webp
+							filename: '@Recursos.Idioma.Cadencia',
+							height: 500,
+							width: 700,
+							scale: 1 // Multiplica el tamaño de título/leyenda/ejes/canvas por este factor
+						}
+					}
+
+					Plotly.newPlot('conjunt-cadencies-robot', dadesPlot, layoutPlot, configPlot);
+				}
+            </script>
+			
+        </div>
+    </div>
+    @if (Model.Robots.Count() > 0)
+    {
+        <div class="row" style="border-radius:10px; width: 90% !important; margin: auto;">
+            <table class="table" style="border-radius:10px;">
+                <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                    <tr>
+                        <th colspan="10" style="text-align: center;">@Recursos.Idioma.NomMaquina</th>
+                        <th colspan="10" style="text-align: center;">Max</th>
+                        <th colspan="10" style="text-align: center;">@Recursos.Idioma.Mig</th>
+                        <th colspan="10" style="text-align: center;">Min</th>
+                    </tr>
+                </thead>
+                <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                    @foreach (var robot in Model.Robots)
+                    {
+                    <tr>
+                        @if (robot.Estats.Count() > 0)
+                        {
+                            <td colspan="10" style="text-align: center;">
+                                @robot.NomTraduit
+                            </td>
+
+                            <td colspan="10" style="text-align: center;">
+                                @robot.Cadencies.Max(e => e.Valor)
+                            </td>
+
+                            <td colspan="10" style="text-align: center;">
+                                @try
+                                {
+                                    @Math.Round(robot.Cadencies.Where(e => e.Valor != 0).Average(e => e.Valor), 2)
+                                }
+                                catch (Exception)
+                                {
+                                    @Math.Round(robot.Cadencies.Average(e => e.Valor), 2)
+                                }
+                            </td>
+
+                            <td colspan="10" style="text-align: center;">
+                                @try
+                                {
+                                    @robot.Cadencies.Where(e => e.Valor != 0).Min(e => e.Valor)
+                                }
+                                catch (Exception)
+                                {
+                                    @robot.Cadencies.Min(e => e.Valor)
+                                }
+                            </td>
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<div class="container backgroundGraphics" id="containerCadencies">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCadencies" href="#collapseCadencies" aria-expanded="false" aria-controls="collapseCadencies">
+    </a>
+    <p style="font-size:20px;">@Model.Entrades.First().NomTraduit.Replace("1", ""): @Recursos.Idioma.CadenciaMitja @Recursos.Idioma.CadenciaCajasMinut.Replace(Recursos.Idioma.Cadencia, "")</p>
+    <div id="collapseCadencies" class="collapse show">
+        <div class="container mb-2">
+            <div class="col-12" id="conjunt-cadencies-entrada">
+            </div>
+
+            @*<script>
+
+                var dadesPlot = [];
+
+                var dadesChart = @Html.Raw(Json.Encode(Model.ChartCadenciesEntrades.Charts2));
+
+                if (dadesChart != null) {
+                    dadesChart.forEach(chart => {
+
+                        let tracePlot = {
+                            x: chart.XAxis2,
+                            y: chart.YAxis,
+                            mode: 'lines+markers',
+                            name: chart.Titol,
+                            hovertemplate: "" +
+                                "<b>@Recursos.Idioma.CadenciaCajasMinut.Replace(Recursos.Idioma.Cadencia, ""):</b> %{y:.2f}<br>" +
+                                "<extra></extra>"
+                        }
+
+                        dadesPlot.push(tracePlot);
+
+                    });
+
+                    var layoutPlot = {
+                        showlegend: true,
+                        height: 600,
+                        width: 1080,
+                        autosize: false,
+                        plot_bgcolor: "#3f4143",
+                        paper_bgcolor: "#3f4143",
+                        xaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        yaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        font: {
+                            color: '#ffffff'
+                        }
+                    };
+
+                    var configPlot = {
+                        responsive: true,
+                        modeBarButtonsToRemove: ['hoverClosestCartesian', 'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomOut2d', 'zoomIn2d', 'autoScale2d', 'toggleSpikelines'],
+                        toImageButtonOptions: {
+                            format: 'png', // one of png, svg, jpeg, webp
+                            filename: '@Recursos.Idioma.Cadencia',
+                            height: 500,
+                            width: 700,
+                            scale: 1 // Multiply title/legend/axis/canvas sizes by this factor
+                        }
+                    }
+
+                    Plotly.newPlot('conjunt-cadencies-entrada', dadesPlot, layoutPlot, configPlot);
+                }
+            </script>*@
+			
+			<script>
+
+				var dadesPlot = [];
+
+				var dadesChart = @Html.Raw(Json.Encode(Model.ChartCadenciesEntrades.Charts2));
+
+				if (dadesChart != null) {
+					dadesChart.forEach(chart => {
+
+						let tracePlot = {
+							x: chart.XAxis2,  // Eje X (fechas o categorías)
+							y: chart.YAxis,   // Eje Y (valores numéricos)
+							type: 'bar',      // Cambiamos a un gráfico de barras
+							name: chart.Titol,
+							hovertemplate: "" +
+                                "<b>@Recursos.Idioma.CadenciaCajasMinut.Replace(Recursos.Idioma.Cadencia, ""):</b> %{y:.2f}<br>" +
+                                "<extra></extra>"
+						}
+
+						dadesPlot.push(tracePlot);
+
+					});
+
+					var layoutPlot = {
+						showlegend: true,
+						height: 600,
+						width: 1080,
+						autosize: false,
+						plot_bgcolor: "#3f4143",
+						paper_bgcolor: "#3f4143",
+						xaxis: {
+							title: null,
+							showline: true,
+							showgrid: true,
+							gridcolor: 'grey'
+						},
+						yaxis: {
+							title: null,
+							showline: true,
+							showgrid: true,
+							gridcolor: 'grey'
+						},
+						font: {
+							color: '#ffffff'
+						}
+					};
+
+					var configPlot = {
+						responsive: true,
+						modeBarButtonsToRemove: ['hoverClosestCartesian', 'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomOut2d', 'zoomIn2d', 'autoScale2d', 'toggleSpikelines'],
+						toImageButtonOptions: {
+							format: 'png', // uno de png, svg, jpeg, webp
+							filename: '@Recursos.Idioma.Cadencia',
+							height: 500,
+							width: 700,
+							scale: 1 // Multiplica el tamaño de título/leyenda/ejes/canvas por este factor
+						}
+					}
+
+					Plotly.newPlot('conjunt-cadencies-entrada', dadesPlot, layoutPlot, configPlot);
+				}
+            </script>
+        </div>
+    </div>
+    @if (Model.Entrades.Count() > 0)
+    {
+        var totalMax = 0.0;
+        var totalAvg = 0.0;
+        var totalMin = 0.0;
+
+        <div class="row" style="border-radius:10px; width: 90% !important; margin: auto;">
+            <table class="table" style="border-radius:10px;">
+                <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                    <tr>
+                        <th colspan="10" style="text-align: center;">@Recursos.Idioma.NomMaquina</th>
+                        <th colspan="10" style="text-align: center;">Max</th>
+                        <th colspan="10" style="text-align: center;">@Recursos.Idioma.Mig</th>
+                        <th colspan="10" style="text-align: center;">Min</th>
+                    </tr>
+                </thead>
+                <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                    @foreach (var entrada in Model.Entrades)
+                    {
+                        <tr>
+                            @if (entrada.Estats.Count() > 0)
+                            {
+                                <td colspan="10" style="text-align: center;">
+                                    @entrada.NomTraduit
+                                </td>
+
+                                if ((entrada.Cadencies.Last().Inici - entrada.Cadencies.First().Inici).TotalDays > 1)
+                                {
+                                    <td colspan="10" style="text-align: center;">
+                                        @entrada.ProductesCadencia.Max(e => e.cadencia)
+                                    </td>
+
+                                    <td colspan="10" style="text-align: center;">
+                                        @try
+                                        {
+                                            @Math.Round(entrada.ProductesCadencia.Where(e => e.cadencia != 0).Average(e => e.cadencia), 2)
+                                            totalAvg += entrada.ProductesCadencia.Where(e => e.cadencia != 0).Average(e => e.cadencia);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            @Math.Round(entrada.ProductesCadencia.Average(e => e.cadencia), 2)
+                                            totalAvg += entrada.ProductesCadencia.Average(e => e.cadencia);
+                                        }
+                                    </td>
+
+                                    <td colspan="10" style="text-align: center;">
+                                        @try
+                                        {
+                                            @entrada.ProductesCadencia.Where(e => e.cadencia != 0).Min(e => e.cadencia)
+                                            totalMin += entrada.ProductesCadencia.Where(e => e.cadencia != 0).Min(e => e.cadencia);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            @entrada.ProductesCadencia.Min(e => e.cadencia)
+                                            totalMin += entrada.ProductesCadencia.Min(e => e.cadencia);
+                                        }
+                                    </td>
+
+                                    totalMax += entrada.ProductesCadencia.Max(e => e.cadencia);
+                                }
+                                else
+                                {
+                                    <td colspan="10" style="text-align: center;">
+                                        @entrada.Cadencies.Max(e => e.Valor)
+                                    </td>
+
+                                    totalMax += entrada.Cadencies.Max(e => e.Valor);
+
+                                    <td colspan="10" style="text-align: center;">
+                                        @try
+                                        {
+                                            @Math.Round(entrada.Cadencies.Where(e => e.Valor != 0).Average(e => e.Valor), 2)
+                                            totalAvg += entrada.Cadencies.Where(e => e.Valor != 0).Average(e => e.Valor);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            @Math.Round(entrada.Cadencies.Average(e => e.Valor), 2)
+                                            totalAvg += entrada.Cadencies.Average(e => e.Valor);
+                                        }
+                                    </td>
+
+                                    <td colspan="10" style="text-align: center;">
+                                        @try
+                                        {
+                                            @entrada.Cadencies.Where(e => e.Valor != 0).Min(e => e.Valor)
+                                            totalMin += entrada.Cadencies.Where(e => e.Valor != 0).Min(e => e.Valor);
+                                        }
+                                        catch (Exception)
+                                        {
+                                            @entrada.Cadencies.Min(e => e.Valor)
+                                            totalMin += entrada.Cadencies.Min(e => e.Valor);
+                                        }
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                    <tr style="background-color:darkgray">
+                        <th colspan="10" style="text-align: center;">@Recursos.Idioma.Total @Recursos.Idioma.CadenciaCajasMinut.Replace(Recursos.Idioma.Cadencia, "")</th>
+                        <td colspan="10" style="text-align: center;">
+                            @totalMax
+                        </td>
+                        <td colspan="10" style="text-align: center;">
+                            @Math.Round(totalAvg, 2)
+                        </td>
+                        <td colspan="10" style="text-align: center;">
+                            @totalMin
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<div class="container backgroundGraphics" id="containerCaixesTotalsEntrada">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCaixesTotalsEntrada" href="#collapseCaixesTotalsEntrada" aria-expanded="false" aria-controls="collapseCaixesTotalsEntrada">
+    </a>
+    <p style="font-size:20px;">@Model.Entrades.First().NomTraduit.Replace("1", ""): @Recursos.Idioma.CaixesTotals</p>
+    <div id="collapseCaixesTotalsEntrada" class="collapse show">
+        <div class="container mb-2">
+            <div class="col-12" id="conjunt-caixestotals-entrada">
+            </div>
+
+            <script>
+
+                var dadesPlot = [];
+
+                var dadesChart = @Html.Raw(Json.Encode(Model.ChartProductesEntrades.Charts2));
+
+                if (dadesChart != null) {
+                    dadesChart.forEach(chart => {
+
+                        let tracePlot = {
+                            x: chart.XAxis2,
+                            y: chart.YAxis,
+                            type: 'bar',
+                            text: chart.YAxis.map(String),
+                            textposition: 'auto',
+                            name: chart.Titol,
+                            hovertemplate: "" +
+                                "<b>@Recursos.Idioma.CaixesTotals:</b> %{y:}<br>" +
+                                "<extra></extra>"
+							
+                        }
+
+                        dadesPlot.push(tracePlot);
+
+                    });
+
+                    var layoutPlot = {
+                        showlegend: true,
+                        height: 600,
+                        width: 1080,
+                        autosize: false,
+                        plot_bgcolor: "#3f4143",
+                        paper_bgcolor: "#3f4143",
+                        xaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        yaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        font: {
+                            color: '#ffffff'
+                        }
+                    };
+
+                    var configPlot = {
+                        responsive: true,
+                        modeBarButtonsToRemove: ['hoverClosestCartesian', 'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomOut2d', 'zoomIn2d', 'autoScale2d', 'toggleSpikelines'],
+                        toImageButtonOptions: {
+                            format: 'png', // one of png, svg, jpeg, webp
+                            filename: '@Recursos.Idioma.CaixesTotals',
+                            height: 500,
+                            width: 700,
+                            scale: 1 // Multiply title/legend/axis/canvas sizes by this factor
+                        }
+                    }
+
+                    Plotly.newPlot('conjunt-caixestotals-entrada', dadesPlot, layoutPlot, configPlot);
+                }
+            </script>
+        </div>
+    </div>
+    <div class="row" style="border-radius:10px; width: 90% !important; margin: auto;">
+        <table class="table" style="border-radius:10px;">
+            <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                <tr>
+                    <th colspan="10" style="text-align: center;">@Recursos.Idioma.NomMaquina</th>
+                    <th colspan="10" style="text-align: center;">@Recursos.Idioma.CaixesTotals</th>
+                </tr>
+            </thead>
+            <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                @if (Model.Entrades.Count() > 0)
+                {
+                    var total = 0;
+
+                    foreach (var entrada in Model.Entrades)
+                    {
+                        <tr>
+                            @if (entrada.Estats.Count() > 0)
+                            {
+                                <td colspan="10" style="text-align: center;">
+                                    @entrada.NomTraduit
+                                </td>
+
+                                <td colspan="10" style="text-align: center;">
+                                    @entrada.Estats.Last().CaixesTotals
+                                </td>
+
+                                total += entrada.Estats.Last().CaixesTotals;
+                            }
+                        </tr>
+                    }
+
+                    <tr style="background-color:darkgray">
+                        <th colspan="10" style="text-align: center;">@Recursos.Idioma.CaixesTotals @Recursos.Idioma.Periode</th>
+                        <td colspan="10" style="text-align: center;">
+                            @total
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerCadenciesSortida">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCadenciesSortida" href="#collapseCadenciesSortida" aria-expanded="false" aria-controls="collapseCadenciesSortida">
+    </a>
+    <p style="font-size:20px;">@Model.Sortides.First().NomTraduit.Replace("1", ""): @Recursos.Idioma.CadenciaMitja @Recursos.Idioma.CadenciaPaletsHora.Replace(Recursos.Idioma.Cadencia, "")</p>
+    <div id="collapseCadenciesSortida" class="collapse show">
+        <div class="container mb-2">
+            <div class="col-12" id="conjunt-cadencies-sortida">
+            </div>
+
+            @*<script>
+
+                var dadesPlot = [];
+
+                var dadesChart = @Html.Raw(Json.Encode(Model.ChartCadenciesSortides.Charts2));
+
+                if (dadesChart != null) {
+                    dadesChart.forEach(chart => {
+
+                        let tracePlot = {
+                            x: chart.XAxis2,
+                            y: chart.YAxis,
+                            mode: 'lines+markers',
+                            name: chart.Titol,
+                            hovertemplate: "" +
+                                "<b>@Recursos.Idioma.CadenciaPaletsHora.Replace(Recursos.Idioma.Cadencia, ""):</b> %{y:.2f}<br>" +
+                                "<extra></extra>"
+                        }
+
+                        dadesPlot.push(tracePlot);
+
+                    });
+
+                    var layoutPlot = {
+                        showlegend: true,
+                        height: 600,
+                        width: 1080,
+                        autosize: false,
+                        plot_bgcolor: "#3f4143",
+                        paper_bgcolor: "#3f4143",
+                        xaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        yaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        font: {
+                            color: '#ffffff'
+                        }
+                    };
+
+                    var configPlot = {
+                        responsive: true,
+                        modeBarButtonsToRemove: ['hoverClosestCartesian', 'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomOut2d', 'zoomIn2d', 'autoScale2d', 'toggleSpikelines'],
+                        toImageButtonOptions: {
+                            format: 'png', // one of png, svg, jpeg, webp
+                            filename: '@Recursos.Idioma.Cadencia',
+                            height: 500,
+                            width: 700,
+                            scale: 1 // Multiply title/legend/axis/canvas sizes by this factor
+                        }
+                    }
+
+                    Plotly.newPlot('conjunt-cadencies-sortida', dadesPlot, layoutPlot, configPlot);
+                }
+            </script>*@
+			
+			<script>
+
+				var dadesPlot = [];
+
+				var dadesChart = @Html.Raw(Json.Encode(Model.ChartCadenciesSortides.Charts2));
+
+				if (dadesChart != null) {
+					dadesChart.forEach(chart => {
+
+						let tracePlot = {
+							x: chart.XAxis2,  // Eje X (fechas o categorías)
+							y: chart.YAxis,   // Eje Y (valores numéricos)
+							type: 'bar',      // Cambiamos a gráfico de barras
+							name: chart.Titol,
+							hovertemplate: "" +
+                                "<b>@Recursos.Idioma.CadenciaPaletsHora.Replace(Recursos.Idioma.Cadencia, ""):</b> %{y:.2f}<br>" +
+                                "<extra></extra>"
+						}
+
+						dadesPlot.push(tracePlot);
+
+					});
+
+					var layoutPlot = {
+						showlegend: true,
+						height: 600,
+						width: 1080,
+						autosize: false,
+						plot_bgcolor: "#3f4143",
+						paper_bgcolor: "#3f4143",
+						xaxis: {
+							title: null,
+							showline: true,
+							showgrid: true,
+							gridcolor: 'grey'
+						},
+						yaxis: {
+							title: null,
+							showline: true,
+							showgrid: true,
+							gridcolor: 'grey'
+						},
+						font: {
+							color: '#ffffff'
+						}
+					};
+
+					var configPlot = {
+						responsive: true,
+						modeBarButtonsToRemove: ['hoverClosestCartesian', 'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomOut2d', 'zoomIn2d', 'autoScale2d', 'toggleSpikelines'],
+						toImageButtonOptions: {
+							format: 'png', // uno de png, svg, jpeg, webp
+							filename: '@Recursos.Idioma.Cadencia',
+							height: 500,
+							width: 700,
+							scale: 1 // Multiplica el tamaño de título/leyenda/ejes/canvas por este factor
+						}
+					}
+
+					Plotly.newPlot('conjunt-cadencies-sortida', dadesPlot, layoutPlot, configPlot);
+				}
+            </script>
+			
+        </div>
+    </div>
+    @if (Model.Sortides.Count() > 0)
+    {
+        var totalMax = 0.0;
+        var totalAvg = 0.0;
+        var totalMin = 0.0;
+
+        <div class="row" style="border-radius:10px; width: 90% !important; margin: auto;">
+            <table class="table" style="border-radius:10px;">
+                <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                    <tr>
+                        <th colspan="10" style="text-align: center;">@Recursos.Idioma.NomMaquina</th>
+                        <th colspan="10" style="text-align: center;">Max</th>
+                        <th colspan="10" style="text-align: center;">@Recursos.Idioma.Mig</th>
+                        <th colspan="10" style="text-align: center;">Min</th>
+                    </tr>
+                </thead>
+                <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                    @foreach (var sortida in Model.Sortides)
+                    {
+                    <tr>
+                        @if (sortida.Estats.Count() > 0)
+                        {
+                            <td colspan="10" style="text-align: center;">
+                                @sortida.NomTraduit
+                            </td>
+
+                            if ((sortida.Cadencies.Last().Inici - sortida.Cadencies.First().Inici).TotalDays > 1)
+                            {
+                                <td colspan="10" style="text-align: center;">
+                                    @sortida.ProductesCadencia.Max(e => e.cadencia)
+                                </td>
+
+                                <td colspan="10" style="text-align: center;">
+                                    @try
+                                    {
+                                        @Math.Round(sortida.ProductesCadencia.Where(e => e.cadencia != 0).Average(e => e.cadencia),2)
+                                        totalAvg += sortida.ProductesCadencia.Where(e => e.cadencia != 0).Average(e => e.cadencia);
+                                    }
+                                    catch (Exception)
+                                    {
+                                        @Math.Round(sortida.ProductesCadencia.Average(e => e.cadencia),2)
+                                        totalAvg += sortida.ProductesCadencia.Average(e => e.cadencia);
+                                    }
+                                </td>
+
+                                <td colspan="10" style="text-align: center;">
+                                    @try
+                                    {
+                                        @sortida.ProductesCadencia.Where(e => e.cadencia != 0).Min(e => e.cadencia)
+                                        totalMin += sortida.ProductesCadencia.Where(e => e.cadencia != 0).Min(e => e.cadencia);
+                                    }
+                                    catch (Exception)
+                                    {
+                                        @sortida.ProductesCadencia.Min(e => e.cadencia)
+                                        totalMin += sortida.ProductesCadencia.Min(e => e.cadencia);
+                                    }
+                                </td>
+
+                                totalMax += sortida.ProductesCadencia.Max(e => e.cadencia);
+                            }
+                            else
+                            {
+                                <td colspan="10" style="text-align: center;">
+                                    @sortida.Cadencies.Max(e => e.Valor)
+                                </td>
+
+                                totalMax += sortida.Cadencies.Max(e => e.Valor);
+
+                                <td colspan="10" style="text-align: center;">
+                                    @try
+                                    {
+                                        @Math.Round(sortida.Cadencies.Where(e => e.Valor != 0).Average(e => e.Valor),2)
+                                        totalAvg += sortida.Cadencies.Where(e => e.Valor != 0).Average(e => e.Valor);
+                                    }
+                                    catch (Exception)
+                                    {
+                                        @Math.Round(sortida.Cadencies.Average(e => e.Valor),2)
+                                        totalAvg += sortida.Cadencies.Average(e => e.Valor);
+                                    }
+                                </td>
+
+                                <td colspan="10" style="text-align: center;">
+                                    @try
+                                    {
+                                        @sortida.Cadencies.Where(e => e.Valor != 0).Min(e => e.Valor)
+                                        totalMin += sortida.Cadencies.Where(e => e.Valor != 0).Min(e => e.Valor);
+                                    }
+                                    catch (Exception)
+                                    {
+                                        @sortida.Cadencies.Min(e => e.Valor)
+                                        totalMin += sortida.Cadencies.Min(e => e.Valor);
+                                    }
+                                </td>
+                            }
+                        }
+                    </tr>
+                    }
+                    <tr style="background-color:darkgray">
+                        <th colspan="10" style="text-align: center;">@Recursos.Idioma.Total @Recursos.Idioma.CadenciaPaletsHora.Replace(Recursos.Idioma.Cadencia, "")</th>
+                        <td colspan="10" style="text-align: center;">
+                            @totalMax
+                        </td>
+                        <td colspan="10" style="text-align: center;">
+                            @Math.Round(totalAvg,2)
+                        </td>
+                        <td colspan="10" style="text-align: center;">
+                            @totalMin
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<div class="container backgroundGraphics" id="containerCaixesTotalsSortida">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCaixesTotalsSortida" href="#collapseCaixesTotalsSortida" aria-expanded="false" aria-controls="collapseCaixesTotalsSortida">
+    </a>
+    <p style="font-size:20px;">@Model.Sortides.First().NomTraduit.Replace("1", ""): @Recursos.Idioma.PaletsTotals</p>
+    <div id="collapseCaixesTotalsSortida" class="collapse show">
+        <div class="container mb-2">
+            <div class="col-12" id="conjunt-caixestotals-sortida">
+            </div>
+            <script>
+                var dadesPlot = [];
+
+                var dadesChart = @Html.Raw(Json.Encode(Model.ChartProductesSortides.Charts2));
+
+                if (dadesChart != null) {
+                    dadesChart.forEach(chart => {
+
+                        let tracePlot = {
+                            x: chart.XAxis2,
+                            y: chart.YAxis,
+                            type: 'bar',
+                            text: chart.YAxis.map(String),
+                            textposition: 'auto',
+                            name: chart.Titol,
+                            hovertemplate: "" +
+                                "<b>@Recursos.Idioma.PaletsTotals:</b> %{y:}<br>" +
+                                "<extra></extra>"
+                        }
+
+                        dadesPlot.push(tracePlot);
+
+                    });
+
+                    var layoutPlot = {
+                        showlegend: true,
+                        height: 600,
+                        width: 1080,
+                        autosize: false,
+                        plot_bgcolor: "#3f4143",
+                        paper_bgcolor: "#3f4143",
+                        xaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        yaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        font: {
+                            color: '#ffffff'
+                        }
+                    };
+
+                    var configPlot = {
+                        responsive: true,
+                        modeBarButtonsToRemove: ['hoverClosestCartesian', 'zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomOut2d', 'zoomIn2d', 'autoScale2d', 'toggleSpikelines'],
+                        toImageButtonOptions: {
+                            format: 'png', // one of png, svg, jpeg, webp
+                            filename: '@Recursos.Idioma.PaletsTotals',
+                            height: 500,
+                            width: 700,
+                            scale: 1 // Multiply title/legend/axis/canvas sizes by this factor
+                        }
+                    }
+
+                    Plotly.newPlot('conjunt-caixestotals-sortida', dadesPlot, layoutPlot, configPlot );
+                }
+            </script>
+        </div>
+    </div>
+    <div class="row" style="border-radius:10px; width: 90% !important; margin: auto;">
+        <table class="table" style="border-radius:10px;">
+            <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                <tr>
+                    <th colspan="10" style="text-align: center;">@Recursos.Idioma.NomMaquina</th>
+                    <th colspan="10" style="text-align: center;">@Recursos.Idioma.PaletsTotals</th>
+                </tr>
+            </thead>
+            <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                @if (Model.Sortides.Count() > 0)
+                {
+                    var total = 0;
+
+                    foreach (var entrada in Model.Sortides)
+                    {
+                        <tr>
+                            @if (entrada.Estats.Count() > 0)
+                            {
+                                <td colspan="10" style="text-align: center;">
+                                    @entrada.NomTraduit
+                                </td>
+
+                                <td colspan="10" style="text-align: center;">
+                                    @entrada.Estats.Last().PaletsTotals
+                                </td>
+
+                                total += entrada.Estats.Last().PaletsTotals;
+                            }
+                        </tr>
+                    }
+
+                    <tr style="background-color:darkgray">
+                        <th colspan="10" style="text-align: center;">@Recursos.Idioma.PaletsTotals @Recursos.Idioma.Periode</th>
+                        <td colspan="10" style="text-align: center;">
+                            @total
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerProdTotalsVies">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseProdTotalsVies" href="#collapseProdTotalsVies" aria-expanded="false" aria-controls="collapseProdTotalsVies">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.PaletsTotals / @Recursos.Idioma.Mosaic</p>
+    <div id="collapseProdTotalsVies" class="collapse show">
+        <div class="row" id="divProdTotalsVies" style="padding-bottom: 35px; padding-top: 20px;margin-top:20px;">
+		<div class="col" id="TableProductesTotalsVies" style="min-width: 300px; margin-right:2%">
+                <div class="col" style="border-radius:10px;">
+                    <table class="table" style="border-radius:10px;">
+                        <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">@Recursos.Idioma.Mosaic</th>
+                                <th scope="col">@Recursos.Idioma.PaletsTotals</th>
+                                <th scope="col">%</th>
+                                <th scope="col">@Recursos.Idioma.Duracio</th>
+                                <th scope="col">%</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                            @foreach (var item in Model.ProductesTotals)
+                            {
+                                <tr>
+                                    <td style="display:inline-block; width: 15px; margin-top: 10px; margin-bottom: 10px; border: 1px solid black; margin-left: 10px; border-radius: 10px;" bgcolor="@item.Color"></td>
+                                    <td>@item.Nom</td>
+                                    <td style="width:20%">@item.NumAlarmesTotals</td>
+                                    <td style="width:20%">@item.Percentatge % </td>
+                                    <td style="width:20%">@((item.Duracio.Days * 24 + item.Duracio.Hours).ToString() )h @(item.Duracio.Minutes.ToString())min @(item.Duracio.Seconds.ToString())s</td>
+                                    <td style="width:20%">@item.PercentatgeDuracio % </td>
+                                </tr>
+                            }
+                            @if (Model.ProductesTotals.Count() > 0)
+                            {
+                                int alarmesTotals = 0;
+                                TimeSpan duracioTotal = TimeSpan.Zero;
+
+                                foreach (var item in Model.ProductesTotals)
+                                {
+                                    duracioTotal += item.Duracio;
+                                    alarmesTotals += item.NumAlarmesTotals;
+                                }
+                                <tr style="background-color:darkgray">
+                                    <td></td>
+                                    <td>@Recursos.Idioma.Total</td>
+                                    <td style="width:15%">@alarmesTotals</td>
+                                    <td>100 %</td>
+                                    <td style="width:15%">@((duracioTotal.Days * 24 + duracioTotal.Hours).ToString())h @(duracioTotal.Minutes.ToString())min @(duracioTotal.Seconds.ToString())s</td>
+                                    <td>100 %</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col" id="ProdTotalsVies" style="min-width: 300px;min-height: 300px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container backgroundGraphics" id="containerAlarmesTotalsVies">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmesTotalsVies" href="#collapseAlarmesTotalsVies" aria-expanded="false" aria-controls="collapseAlarmesTotalsVies">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Alarmes / @Recursos.Idioma.NomMaquina</p>
+    <div id="collapseAlarmesTotalsVies" class="collapse show">
+        <div class="row graficaAlarmesTotalsVies" id="divAlarmesTotalsVies" style="padding-bottom: 35px; padding-top: 20px;margin-top:20px;">
+            <div class="col" id="AlarmesTotalsVies" style="min-width: 300px;min-height: 300px;">
+            </div>
+            <div class="col" id="TableAlarmesTotalsVies" style="min-width: 300px; margin-right:2%">
+                <div class="col" style="border-radius:10px;">
+                    <table class="table" style="border-radius:10px;">
+                        <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">@Recursos.Idioma.Nom</th>
+                                <th scope="col">@Recursos.Idioma.NumeroAlarmes</th>
+                                <th scope="col">%</th>
+                                <th scope="col">@Recursos.Idioma.Duracio</th>
+                                <th scope="col">%</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                            @foreach (var item in Model.AlarmesTotals)
+                            {
+                                <tr>
+                                    <td style="display:inline-block; width: 15px; margin-top: 10px; margin-bottom: 10px; border: 1px solid black; margin-left: 10px; border-radius: 10px;" bgcolor="@item.Color"></td>
+                                    <td>@item.Nom</td>
+                                    <td style="width:20%">@item.NumAlarmesTotals</td>
+                                    <td style="width:20%">@item.Percentatge % </td>
+                                    <td style="width:20%">@(item.Duracio.Days * 24 + item.Duracio.Hours)h @(item.Duracio.Minutes.ToString())min @(item.Duracio.Seconds.ToString())s</td>
+                                    <td style="width:20%">@item.PercentatgeDuracio % </td>
+                                </tr>
+                            }
+                            @if (Model.AlarmesTotals.Count() > 0)
+                            {
+                                int alarmesTotals = 0;
+                                TimeSpan duracioTotal = TimeSpan.Zero;
+
+                                foreach (var item in Model.AlarmesTotals)
+                                {
+                                    duracioTotal += item.Duracio;
+                                    alarmesTotals += item.NumAlarmesTotals;
+                                }
+                                <tr style="background-color:darkgray">
+                                    <td></td>
+                                    <td>@Recursos.Idioma.Total</td>
+                                    <td style="width:15%">@alarmesTotals</td>
+                                    <td>100 %</td>
+                                    <td style="width:15%">@(duracioTotal.Days * 24 + duracioTotal.Hours)h @(duracioTotal.Minutes.ToString())min @(duracioTotal.Seconds.ToString())s</td>
+                                    <td>100 %</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerProductesAlarmesTotalsVies">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseProductesAlarmesTotalsVies" href="#collapseProductesAlarmesTotalsVies" aria-expanded="false" aria-controls="collapseProductesAlarmesTotalsVies">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Alarmes / @Recursos.Idioma.Mosaic</p>
+    <div id="collapseProductesAlarmesTotalsVies" class="collapse show">
+        <div class="row graficaProductesAlarmesTotalsVies" id="divProductesAlarmesTotalsVies" style="padding-bottom: 35px; padding-top: 20px;margin-top:20px;">
+            <div class="col" id="ProductesAlarmesTotalsVies" style="min-width: 300px;min-height: 300px;">
+            </div>
+            <div class="col" id="TableAlarmesTotalsVies" style="min-width: 300px; margin-right:2%">
+                <div class="col" style="border-radius:10px;">
+                    <table class="table" style="border-radius:10px;">
+                        <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">@Recursos.Idioma.Mosaic</th>
+                                <th scope="col">@Recursos.Idioma.NumeroAlarmes</th>
+                                <th scope="col">%</th>
+                                <th scope="col">@Recursos.Idioma.Duracio</th>
+                                <th scope="col">%</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                            @foreach (var item in Model.ProductesAlarmesTotals)
+                            {
+                                <tr>
+                                    <td style="display:inline-block; width: 15px; margin-top: 10px; margin-bottom: 10px; border: 1px solid black; margin-left: 10px; border-radius: 10px;" bgcolor="@item.Color"></td>
+                                    <td>@item.Nom</td>
+                                    <td style="width:20%">@item.NumAlarmesTotals</td>
+                                    <td style="width:20%">@item.Percentatge % </td>
+                                    <td style="width:20%">@(item.Duracio.Days * 24 + item.Duracio.Hours)h @(item.Duracio.Minutes.ToString())min @(item.Duracio.Seconds.ToString())s</td>
+                                    <td style="width:20%">@item.PercentatgeDuracio % </td>
+                                </tr>
+                            }
+                            @if (Model.ProductesAlarmesTotals.Count() > 0)
+                            {
+                                int alarmesTotals = 0;
+                                TimeSpan duracioTotal = TimeSpan.Zero;
+
+                                foreach (var item in Model.ProductesAlarmesTotals)
+                                {
+                                    duracioTotal += item.Duracio;
+                                    alarmesTotals += item.NumAlarmesTotals;
+                                }
+                                <tr style="background-color:darkgray">
+                                    <td></td>
+                                    <td>@Recursos.Idioma.Total</td>
+                                    <td style="width:15%">@alarmesTotals</td>
+                                    <td>100 %</td>
+                                    <td style="width:15%">@(duracioTotal.Days * 24 + duracioTotal.Hours)h @(duracioTotal.Minutes.ToString())min @(duracioTotal.Seconds.ToString())s</td>
+                                    <td>100 %</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="noAlarmes" style="display: none; margin-top:200px;margin-bottom:200px;">
+    <p align="center">@Recursos.Idioma.NoAlarmes</p>
+</div>
+
+<div id="TableAlarms" style="min-width: 300px; overflow: auto;">
+    <br />
+    @*<button type="button" class="btn btn-secondary pull-left" style="color:black; background-color:white; border-color:black" id="ShowAll">@Recursos.Idioma.Tot</button>*@
+    <table id="taulaAlarmesId" class="table table-striped table-hover" cellspacing="0" width="100%" style="border-collapse: collapse; overflow: hidden;">
+        <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+            <tr>
+                <th class="th">
+                    @Recursos.Idioma.NomMaquina
+                </th>
+                <th class="th">
+                    ID
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Duracio
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.IniciDurada
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Mosaic
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.InfoAlarma
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Video
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Descarregar
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Cameres
+                </th>
+            </tr>
+        </thead>
+        <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+            @if (Model.Robots.Count() > 0)
+            {
+                for (int i = 1; i <= Model.Robots.First().Alarmes.Count(); i++)
+                {
+                    var alarma = Model.Robots.First().Alarmes[i - 1];
+                    var cameresAlarmaId = "camerasAlarmaId" + i;
+                    <tr>
+                        <td>
+                            @Model.Robots.First().NomTraduit
+                        </td>
+                        <td>
+                            @alarma.AlarmaId
+                        </td>
+                        <td>
+                            @Convert.ToInt32(alarma.Duracio.TotalMinutes).ToString()min @Convert.ToInt32(alarma.Duracio.Seconds).ToString()s
+                        </td>
+                        <td>
+                            @alarma.Inici
+                        </td>
+                        <td>
+                            @alarma.ProducteId
+                        </td>
+                        <td>
+                            @alarma.Descripcio
+                        </td>
+                        <td>
+                            <a target="_blank" href="@alarma.EnllacVideo">
+                                <i class='fa fa-video-camera' style='margin-top:2%;'></i>
+                                @Recursos.Idioma.Video
+                            </a>
+                        </td>
+                        <td>
+                            <a style="cursor: pointer;" onclick="DescarregarVideo('@alarma.Inici','@i')">
+                                <i class='fa fa-download' style='margin-top:2%;'></i>
+                                @Recursos.Idioma.Descarregar
+                            </a>
+                        </td>
+                        <td>
+                            <select name="camerasAlarma" id="@cameresAlarmaId">
+                                @foreach (var camara in Model.Robots.First().Cameres)
+                                {
+                                    <option value="@camara">@camara</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                }
+            }
+            @if (Model.Entrades.Count() > 0)
+            {
+                foreach (var item in Model.Entrades)
+                {
+                    for (int i = 1; i <= item.Alarmes.Count(); i++)
+                    {
+                        var alarma = item.Alarmes[i - 1];
+                        var cameresAlarmaId = "camerasAlarmaId" + i;
+                        <tr>
+                            <td>
+                                @item.NomTraduit
+                            </td>
+                            <td>
+                                @alarma.AlarmaId
+                            </td>
+                            <td>
+                                @Convert.ToInt32(alarma.Duracio.TotalMinutes).ToString()min @Convert.ToInt32(alarma.Duracio.Seconds).ToString()s
+                            </td>
+                            <td>
+                                @alarma.Inici
+                            </td>
+                            <td>
+                                @alarma.ProducteId
+                            </td>
+                            <td>
+                                @alarma.Descripcio
+                            </td>
+                            <td>
+                                <a target="_blank" href="@alarma.EnllacVideo">
+                                    <i class='fa fa-video-camera' style='margin-top:2%;'></i>
+                                    @Recursos.Idioma.Video
+                                </a>
+                            </td>
+                            <td>
+                                <a style="cursor: pointer;" onclick="DescarregarVideo('@alarma.Inici','@i')">
+                                    <i class='fa fa-download' style='margin-top:2%;'></i>
+                                    @Recursos.Idioma.Descarregar
+                                </a>
+                            </td>
+                            <td>
+                                <select name="camerasAlarma" id="@cameresAlarmaId">
+                                    @foreach (var camara in item.Cameres)
+                                    {
+                                        <option value="@camara">@camara</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+            @if (Model.Sortides.Count() > 0)
+            {
+                foreach (var item in Model.Sortides)
+                {
+                    for (int i = 1; i <= item.Alarmes.Count(); i++)
+                    {
+                        var alarma = item.Alarmes[i - 1];
+                        var cameresAlarmaId = "camerasAlarmaId" + i;
+                        <tr>
+                            <td>
+                                @item.NomTraduit
+                            </td>
+                            <td>
+                                @alarma.AlarmaId
+                            </td>
+                            <td>
+                                @Convert.ToInt32(alarma.Duracio.TotalMinutes).ToString()min @Convert.ToInt32(alarma.Duracio.Seconds).ToString()s
+                            </td>
+                            <td>
+                                @alarma.Inici
+                            </td>
+                            <td>
+                                @alarma.ProducteId
+                            </td>
+                            <td>
+                                @alarma.Descripcio
+                            </td>
+                            <td>
+                                <a target="_blank" href="@alarma.EnllacVideo">
+                                    <i class='fa fa-video-camera' style='margin-top:2%;'></i>
+                                    @Recursos.Idioma.Video
+                                </a>
+                            </td>
+                            <td>
+                                <a style="cursor: pointer;" onclick="DescarregarVideo('@alarma.Inici','@i')">
+                                    <i class='fa fa-download' style='margin-top:2%;'></i>
+                                    @Recursos.Idioma.Descarregar
+                                </a>
+                            </td>
+                            <td>
+                                <select name="camerasAlarma" id="@cameresAlarmaId">
+                                    @foreach (var camara in item.Cameres)
+                                    {
+                                        <option value="@camara">@camara</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+            @if (Model.Giradors.Count() > 0)
+            {
+                foreach (var item in Model.Giradors)
+                {
+                    for (int i = 1; i <= item.Alarmes.Count(); i++)
+                    {
+                        var alarma = item.Alarmes[i - 1];
+                        var cameresAlarmaId = "camerasAlarmaId" + i;
+                        <tr>
+                            <td>
+                                @item.NomTraduit
+                            </td>
+                            <td>
+                                @alarma.AlarmaId
+                            </td>
+                            <td>
+                                @Convert.ToInt32(alarma.Duracio.TotalMinutes).ToString()min @Convert.ToInt32(alarma.Duracio.Seconds).ToString()s
+                            </td>
+                            <td>
+                                @alarma.Inici
+                            </td>
+                            <td>
+                                @alarma.ProducteId
+                            </td>
+                            <td>
+                                @alarma.Descripcio
+                            </td>
+                            <td>
+                                <a target="_blank" href="@alarma.EnllacVideo">
+                                    <i class='fa fa-video-camera' style='margin-top:2%;'></i>
+                                    @Recursos.Idioma.Video
+                                </a>
+                            </td>
+                            <td>
+                                <a style="cursor: pointer;" onclick="DescarregarVideo('@alarma.Inici','@i')">
+                                    <i class='fa fa-download' style='margin-top:2%;'></i>
+                                    @Recursos.Idioma.Descarregar
+                                </a>
+                            </td>
+                            <td>
+                                <select name="camerasAlarma" id="@cameresAlarmaId">
+                                    @foreach (var camara in item.Cameres)
+                                    {
+                                        <option value="@camara">@camara</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+            @if (Model.Apiladors.Count() > 0)
+            {
+                foreach (var item in Model.Apiladors)
+                {
+                    for (int i = 1; i <= item.Alarmes.Count(); i++)
+                    {
+                        var alarma = item.Alarmes[i - 1];
+                        var cameresAlarmaId = "camerasAlarmaId" + i;
+                        <tr>
+                            <td>
+                                @item.NomTraduit
+                            </td>
+                            <td>
+                                @alarma.AlarmaId
+                            </td>
+                            <td>
+                                @Convert.ToInt32(alarma.Duracio.TotalMinutes).ToString()min @Convert.ToInt32(alarma.Duracio.Seconds).ToString()s
+                            </td>
+                            <td>
+                                @alarma.Inici
+                            </td>
+                            <td>
+                                @alarma.ProducteId
+                            </td>
+                            <td>
+                                @alarma.Descripcio
+                            </td>
+                            <td>
+                                <a target="_blank" href="@alarma.EnllacVideo">
+                                    <i class='fa fa-video-camera' style='margin-top:2%;'></i>
+                                    @Recursos.Idioma.Video
+                                </a>
+                            </td>
+                            <td>
+                                <a style="cursor: pointer;" onclick="DescarregarVideo('@alarma.Inici','@i')">
+                                    <i class='fa fa-download' style='margin-top:2%;'></i>
+                                    @Recursos.Idioma.Descarregar
+                                </a>
+                            </td>
+                            <td>
+                                <select name="camerasAlarma" id="@cameresAlarmaId">
+                                    @foreach (var camara in item.Cameres)
+                                    {
+                                        <option value="@camara">@camara</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div id="TableSKU" style="min-width: 300px; overflow: auto;">
+    <br />
+    <table id="taulaSKUId" class="table table-striped table-hover" cellspacing="0" width="100%" style="border-collapse: collapse; overflow: hidden;">
+        <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+            <tr>
+                <th class="th">
+                    @Recursos.Idioma.NomMaquina
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Mosaic
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.IniciDurada
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Fi
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.PaletsTotals
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.CadenciaPaletsHora
+                </th>
+            </tr>
+        </thead>
+        <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+            @foreach (var item in Model.Sortides)
+            {
+                for (int i = 1; i <= item.Productes.Count; i++)
+                {
+                    var productes = item.Productes[i - 1];
+                <tr>
+                    <td>
+                        @productes.NomMaquina2
+                    </td>
+                    <td>
+                        @productes.ProducteId
+                    </td>
+                    <td width="30px">
+                        @productes.Inici
+                    </td>
+                    <td width="30px">
+                        @productes.Final
+                    </td>
+                    <td>
+                        @productes.PaletsTotals
+                    </td>
+                    <td>
+                        @Math.Round((double)productes.PaletsTotals/(productes.Final - productes.Inici).TotalHours,2)
+                    </td>
+                </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div id="noParades" style="display: none; margin-top:200px;margin-bottom:200px;">
+    <p align="center">@Recursos.Idioma.NoParadesProduccio</p>
+</div>
+
+<div class="container backgroundGraphics" id="containerParadesTotalsVies">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseParadesTotalsVies" href="#collapseParadesTotalsVies" aria-expanded="false" aria-controls="collapseParadesTotalsVies">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.ParadesProduccio</p>
+    <div id="collapseParadesTotalsVies" class="collapse show">
+        <div class="row graficaParadesTotalsVies" id="divParadesTotalsVies" style="padding-bottom: 35px; padding-top: 20px;margin-top:20px;">
+            <div class="col" id="ParadesTotalsVies" style="min-width: 300px;min-height: 300px;">
+            </div>
+            <div class="col" id="TableParadesTotalsVies" style="min-width: 300px; margin-right:2%">
+                <div class="col" style="border-radius:10px;">
+                    <table class="table" style="border-radius:10px;">
+                        <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">@Recursos.Idioma.Nom</th>
+                                <th scope="col">@Recursos.Idioma.NumeroParades</th>
+                                <th scope="col">%</th>
+                                <th scope="col">@Recursos.Idioma.Duracio</th>
+                                <th scope="col">%</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                            @foreach (var item in Model.ParadesTotals)
+                            {
+                                <tr>
+                                    <td style="display:inline-block; width: 15px; margin-top: 10px; margin-bottom: 10px; border: 1px solid black; margin-left: 10px; border-radius: 10px;" bgcolor="@item.Color"></td>
+                                    <td>@item.Nom</td>
+                                    <td style="width:20%">@item.NumAlarmesTotals</td>
+                                    <td style="width:20%">@item.Percentatge % </td>
+                                    <td style="width:20%">@(item.Duracio.Days * 24 + item.Duracio.Hours)h @(item.Duracio.Minutes.ToString())min @(item.Duracio.Seconds.ToString())s</td>
+                                    <td style="width:20%">@item.PercentatgeDuracio % </td>
+                                </tr>
+                            }
+                            @if (Model.ParadesTotals.Count() > 0)
+                            {
+                                int alarmesTotals = 0;
+                                TimeSpan duracioTotal = TimeSpan.Zero;
+
+                                foreach (var item in Model.ParadesTotals)
+                                {
+                                    duracioTotal += item.Duracio;
+                                    alarmesTotals += item.NumAlarmesTotals;
+                                }
+                                <tr style="background-color:darkgray">
+                                    <td></td>
+                                    <td>@Recursos.Idioma.Total</td>
+                                    <td style="width:15%">@alarmesTotals</td>
+                                    <td>100 %</td>
+                                    <td style="width:15%">@(duracioTotal.Days * 24 + duracioTotal.Hours)h @(duracioTotal.Minutes.ToString())min @(duracioTotal.Seconds.ToString())s</td>
+                                    <td>100 %</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="row justify-content-center" id="divPDF">
+        <div class="col text-center" style="margin: 15px;margin-top:20px;">
+            <button id="Pdfbutton" type="button" class="btn" onclick="PDFBackend();"><img src="~/Images/pdfImage.png" width="80" height="80"></button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/Scripts/JS_Formadora.js"></script>
+<script type="text/javascript" src="~/PDF/GestorPDF.js"></script>
+<script type="text/javascript" src="~/PDF/jquery.color-animation.js"></script>
+<script type="text/javascript" src="~/Scripts/Plotly/plotly.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Plotly/plotly-d3.js"></script>
+<script type="text/javascript" src="~/Scripts/Plotly/plotly-2.6.3.min.js"></script>
+
+<script>
+
+    function PDFBackend() {
+       window.location.href = "@Html.Raw(@Url.Action("GenerarPDF", "Paletitzador", new { nomMaquina=@Model.NomMaquina, inici=@Model.DataInici.ToString(), final=@Model.DataFi.ToString(), torn=0 , idMaquina= @Model.IdMaquina}))";
+    }
+
+    var machine = "@Model.NomMaquina";
+    var idMaquina = @Model.IdMaquina;
+
+    $(document).ready(function () {
+
+        //SeleccionarMenu(machine, idMaquina);//Selecciona la màquina activa
+
+        //Actualitzem la durada
+        refreshDuration();
+
+        //JS Primera gràfica
+        var table = $('#taulaAlarmesId').DataTable({
+            "dom": '<"top"fl>rt<"bottom"ip><"clear">',
+            "lengthMenu": [
+                [3,5,10, 25, 50, -1],
+                ['3','5','10', '25', '50', "@Recursos.Idioma.Tots"]
+
+            ],
+            "language": {
+                "sProcessing": "@Recursos.Idioma.Processant",
+                "sLengthMenu": "@Recursos.Idioma.MostrarMenu",
+                "sZeroRecords": "@Recursos.Idioma.SenseResultats",
+                "sEmptyTable": "@Recursos.Idioma.TaulaBuida",
+                    "sLast": "@Recursos.Idioma.Ultim",
+                    "sNext": "@Recursos.Idioma.Seguent",
+                  "sInfo": "@Recursos.Idioma.InfoTaula",
+                "sInfoEmpty": "@Recursos.Idioma.InfoBuida",
+                "sInfoFiltered": "@Recursos.Idioma.InfoFiltrada",
+                "sInfoPostFix": "",
+                "sSearch": "@Recursos.Idioma.Buscar",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "@Recursos.Idioma.CarregantDades",
+                "oPaginate": {
+                    "sFirst": "@Recursos.Idioma.Primer",
+                  "sPrevious": "@Recursos.Idioma.Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": "@Recursos.Idioma.OrdreAscendent",
+                    "sSortDescending": "@Recursos.Idioma.OrdreDescendent"
+                }
+            },
+            "pagingType": "full_numbers"
+        });
+        $('.dataTables_length').addClass('bs-select')
+        $('#ShowAll').click(function () {
+            table.search('').draw();
+            $().val('');
+        });
+
+        //JS Primera gràfica
+        var table2 = $('#taulaSKUId').DataTable({
+            "dom": '<"top"fl>rt<"bottom"ip><"clear">',
+            "lengthMenu": [
+                [3,5,10, 25, 50, -1],
+                ['3','5','10', '25', '50', "@Recursos.Idioma.Tots"]
+
+            ],
+            "language": {
+                "sProcessing": "@Recursos.Idioma.Processant",
+                "sLengthMenu": "@Recursos.Idioma.MostrarMenu",
+                "sZeroRecords": "@Recursos.Idioma.SenseResultats",
+                "sEmptyTable": "@Recursos.Idioma.TaulaBuida",
+                    "sLast": "@Recursos.Idioma.Ultim",
+                    "sNext": "@Recursos.Idioma.Seguent",
+                  "sInfo": "@Recursos.Idioma.InfoTaula",
+                "sInfoEmpty": "@Recursos.Idioma.InfoBuida",
+                "sInfoFiltered": "@Recursos.Idioma.InfoFiltrada",
+                "sInfoPostFix": "",
+                "sSearch": "@Recursos.Idioma.Buscar",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "@Recursos.Idioma.CarregantDades",
+                "oPaginate": {
+                    "sFirst": "@Recursos.Idioma.Primer",
+                  "sPrevious": "@Recursos.Idioma.Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": "@Recursos.Idioma.OrdreAscendent",
+                    "sSortDescending": "@Recursos.Idioma.OrdreDescendent"
+                }
+            },
+            "pagingType": "full_numbers"
+        });
+        $('.dataTables_length').addClass('bs-select')
+        $('#ShowAll').click(function () {
+            table2.search('').draw();
+            $().val('');
+        });
+
+        setTimeout(() => {
+            $('.modebar-btn.plotlyjsicon.modebar-btn--logo').hide();
+            $('div.js-plotly-plot svg.main-svg').css('border-radius', '10px');
+        }, 1000);
+
+    });
+
+    $('#noData').hide();
+    $('#containerProductesTotalsVies').show();
+    $('#TableSKU').hide();
+
+    var estatsJson = CrearDates(@Html.Raw(Model.Entrades.First().EstatsJson));
+
+    if (estatsJson) {
+        var datesMaximes = @Html.Raw(Model.ObtenirDatesMaximes());
+        var minimumDate = moment(datesMaximes["Minima"], "DD/MM/YYYY HH:mm:ss");
+        var maximumDate = moment(datesMaximes["Maxima"], "DD/MM/YYYY HH:mm:ss");
+
+        var iniciData = moment("@Model.DataInici", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+        var finalData = moment("@Model.DataFi", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+
+        var iniciDataAnterior = moment("@Html.Raw(Model.DataIniciAnterior)", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+        var finalDataAnterior = moment("@Html.Raw(Model.DataFiAnterior)", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+
+        var lineArr = [];
+        var MAX_LENGTH = 600; //numero de punts3000
+        var duration = 100; //interval entre updates de la grafica (en milisegons)600
+
+        var llistaProductes = @Html.Raw(Json.Encode(Model.ProductesTotals));
+        var productesTotalsVies = @Html.Raw(Json.Encode(Model.ProductesTotals));
+        var productestotals = 0;
+
+        for (var i in llistaProductes) {
+            productestotals += llistaProductes[i].NumAlarmesTotals;
+        }
+
+        donutchart("#ProdTotalsVies", productesTotalsVies, 30, "Nom");
+
+        var llistaAlarmes = @Html.Raw(Json.Encode(Model.AlarmesTotals));
+        var AlarmesTotalsVies = @Html.Raw(Json.Encode(Model.AlarmesTotals));
+        var ProductesAlarmesTotalsVies = @Html.Raw(Json.Encode(Model.ProductesAlarmesTotals));
+        var MosaicsPalet =  @Html.Raw(Json.Encode(Model.ProductesTotals));         
+        var alarmestotals = 0;
+
+        for (var i in llistaAlarmes) {
+
+            alarmestotals += llistaAlarmes[i].NumAlarmesTotals;
+        }
+
+        if (alarmestotals != 0) {
+            donutchart("#AlarmesTotalsVies", AlarmesTotalsVies, 30, "Nom");
+            donutchart("#ProductesAlarmesTotalsVies", ProductesAlarmesTotalsVies, 30, "Nom");
+            $('#containerAlarmesTotalsVies').hide();
+            $('#containerProductesAlarmesTotalsVies').hide();
+            $('#TableAlarms').hide();
+        } else {
+            $('#containerAlarmesTotalsVies').hide();
+            $('#TableAlarms').hide();
+        }
+
+        var llistaParades = @Html.Raw(Json.Encode(Model.ParadesTotals));
+        var ParadesTotalsVies = @Html.Raw(Json.Encode(Model.ParadesTotals));
+        var paradestotals = 0;
+
+        for (var i in llistaParades) {
+            paradestotals += llistaParades[i].NumAlarmesTotals;
+        }
+
+        if (paradestotals != 0) {
+            donutchart("#ParadesTotalsVies", ParadesTotalsVies, 30, "Nom");
+            $('#containerParadesTotalsVies').hide();
+        } else {
+            $('#containerParadesTotalsVies').hide();
+        }
+
+        showGraphics();
+        $('#divPDF').show();
+    }
+    else {
+        hideGraphics();
+        $('#containerAlarmesTotalsVies').hide();
+        $('#containerProductesAlarmesTotalsVies').hide();
+        $('#containerParadesTotalsVies').hide();
+        $('#TableAlarms').hide();
+        $('#divPDF').hide();
+        $('#noData').show();
+    }
+
+    $("#divLoading").hide();
+
+    //Actualitzem la navbarSupportedContent per tal de dividir les gràfiques
+    ActualitzarNavbar();
+
+    function CrearDivCameres(x, y, nomMaquina) {
+
+        var div = document.createElement("div");
+
+        div.id = nomMaquina.trim();
+        div.style.position = "absolute";
+        div.style.top = (x - 1) + "%";
+        div.style.left = (y + 7) + "%";
+        div.style.transform = "translate(-50%, -50%)";
+        div.style.fontSize = "30px";
+        div.style.height = "4%";
+        div.style.cursor = "pointer";
+        div.style.borderRadius = "20px";
+
+        return div;
+    }
+
+    function CrearDates(jsonObj) {
+
+        for (var i in jsonObj) {
+            jsonObj[i].Inici = new Date(jsonObj[i].Inici);
+            jsonObj[i].Final = new Date(jsonObj[i].Final);
+        }
+        return jsonObj;
+    }
+
+    function CrearIconCameres() {
+
+        var icon = document.createElement("i");
+
+        icon.className = "fa fa-video-camera";
+
+        return icon;
+    }
+
+    function AfegirLinksCameres(nomMaquina, UrlAxxon) {
+
+        var div = document.getElementById(nomMaquina.trim());
+
+        if (div !== null) {
+
+            if (UrlAxxon == null) {
+                div.remove();
+            }
+            else {
+                div.onclick = function () {
+                    window.open(
+                        "" + UrlAxxon,
+                        '_blank'
+                    );
+                };
+            }
+        }
+    }
+
+    function ActualitzarNavbar(){
+        $('#navbarSupportedContent').find('a').remove();
+        $("#navbarSupportedContent").prepend("<a onclick='hideAlarms();' href='#' class='nav-item nav-link' style='margin-right:10px'><i class='fa fa-pie-chart pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.ParadesProduccio</a>");
+        $("#navbarSupportedContent").prepend("<a onclick='hideGraphics();' href='#' class='nav-item nav-link' style='margin-right:10px;'><i class='fa fa-bell pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.LlistaAlarmes</a>");
+        $("#navbarSupportedContent").prepend("<a onclick='showGraphics();' href='#' class='nav-item nav-link' style='margin-right:10px'><i class='fa fa-bar-chart pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.Grafiques</a>");
+    }
+
+    function hideGraphics() {
+        $('#containerCadencies').hide();
+        $('#containerCaixesTotalsEntrada').hide();
+        $('#containerCadenciesSortida').hide();
+        $('#containerCaixesTotalsSortida').hide();
+        $('#containerCadenciesRobot').hide();
+        $('#TableSKU').hide();
+        $('#imatgeFabrica').hide();
+        $('#containerParadesTotalsVies').hide();
+        $('#containerProdTotalsVies').hide();
+
+        var llistaAlarmes = @Html.Raw(Json.Encode(Model.AlarmesTotals));
+        var alarmestotals = 0;
+
+        for (var i in llistaAlarmes) {
+
+            alarmestotals += llistaAlarmes[i].NumAlarmesTotals;
+        }
+
+        if (alarmestotals != 0) {
+            $('#containerAlarmesTotalsVies').show();
+            $('#containerProductesAlarmesTotalsVies').show();
+            $('#TableAlarms').show();
+        } else {
+            $('#containerAlarmesTotalsVies').hide();
+            $('#containerProductesAlarmesTotalsVies').hide();
+            $('#TableAlarms').hide();
+            $('#noAlarmes').show();
+        }
+
+        var llistaParades = @Html.Raw(Json.Encode(Model.ParadesTotals));
+        var paradestotals = 0;
+
+        for (var i in llistaParades) {
+
+            paradestotals += llistaParades[i].NumAlarmesTotals;
+        }
+
+        if (paradestotals != 0) {
+            $('#containerParadesTotalsVies').hide();
+        } else {
+            $('#containerParadesTotalsVies').hide();
+            $('#noParades').hide();
+        }
+    }
+
+    function hideAlarms() {
+        $('#containerCadencies').hide();
+        $('#containerCaixesTotalsEntrada').hide();
+        $('#containerCadenciesSortida').hide();
+        $('#containerCaixesTotalsSortida').hide();
+        $('#containerCadenciesRobot').hide();
+        $('#containerProdTotalsVies').hide();
+        $('#TableSKU').hide();
+
+        var llistaAlarmes = @Html.Raw(Json.Encode(Model.AlarmesTotals));
+        var alarmestotals = 0;
+
+        for (var i in llistaAlarmes) {
+            alarmestotals += llistaAlarmes[i].NumAlarmesTotals;
+        }
+
+        if (alarmestotals != 0) {
+            $('#containerAlarmesTotalsVies').hide();
+            $('#containerProductesAlarmesTotalsVies').hide();
+            $('#TableAlarms').hide();
+        } else {
+            $('#containerAlarmesTotalsVies').hide();
+            $('#containerProductesAlarmesTotalsVies').hide();
+            $('#TableAlarms').hide();
+            $('#noAlarmes').hide();
+        }
+
+        var llistaParades = @Html.Raw(Json.Encode(Model.ParadesTotals));
+        var paradestotals = 0;
+
+        for (var i in llistaParades) {
+
+            paradestotals += llistaParades[i].NumAlarmesTotals;
+        }
+
+        if (paradestotals != 0) {
+            $('#containerParadesTotalsVies').show();
+            $('#divPDF').show();
+        } else {
+            $('#containerParadesTotalsVies').hide();
+            $('#noParades').show();
+        }
+    }
+
+    function showGraphics() {
+        $('#containerCadencies').show();
+        $('#containerCaixesTotalsEntrada').show();
+        $('#containerCadenciesSortida').show();
+        $('#containerCaixesTotalsSortida').show();
+        $('#containerCadenciesRobot').show();
+        $('#imatgeFabrica').show();
+        $('#containerProdTotalsVies').show();
+
+        if (MosaicsPalet.length > 0) {
+            $('#TableSKU').show();
+        }
+
+        var llistaAlarmes = @Html.Raw(Json.Encode(Model.AlarmesTotals));
+        var alarmestotals = 0;
+
+        for (var i in llistaAlarmes) {
+            alarmestotals += llistaAlarmes[i].NumAlarmesTotals;
+        }
+
+        if (alarmestotals != 0) {
+            $('#containerAlarmesTotalsVies').hide();
+            $('#containerProductesAlarmesTotalsVies').hide();
+            $('#TableAlarms').hide();
+            $('#noAlarmes').hide();
+        } else {
+            $('#containerAlarmesTotalsVies').hide();
+            $('#containerProductesAlarmesTotalsVies').hide();
+            $('#TableAlarms').hide();
+            $('#noAlarmes').hide();
+        }
+
+        var llistaParades = @Html.Raw(Json.Encode(Model.ParadesTotals));
+        var paradestotals = 0;
+
+        for (var i in llistaParades) {
+
+            paradestotals += llistaParades[i].NumAlarmesTotals;
+        }
+
+        if (paradestotals != 0) {
+            $('#containerParadesTotalsVies').hide();
+        } else {
+            $('#containerParadesTotalsVies').hide();
+            $('#noParades').hide();
+        }
+    }
+
+    function increaseZoom() {
+        var oldDateStart = "@Html.Raw(Model.DataInici).ToString()";
+        var oldDateEnd = "@Html.Raw(Model.DataFi).ToString()";
+
+        var dateEnd = oldDateEnd.split("/");
+        var dateStart = oldDateStart.split("/");
+
+        var milisecondsEnd = Date.parse(dateEnd[1] + "/" + dateEnd[0] + "/" + dateEnd[2]);
+        var milisecondsStart = Date.parse(dateStart[1] + "/" + dateStart[0] + "/" + dateStart[2]);
+
+        var newDateMilli = milisecondsStart + ((milisecondsEnd - milisecondsStart) / 10);
+        var newDate = new Date(newDateMilli);
+        var newDateSplit = newDate.toString().split(" ");
+
+        var test = newDateSplit[2] + "/" + returnMonthNumber(newDateSplit[1]) + "/" + newDate.getFullYear() + " " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds();
+
+        $("#divLoading").show();
+        var antInitDate = document.getElementById("dataInicial").value;
+        var antFinalDate = document.getElementById("dataFinal").value;
+        var list = document.getElementById('shiftDropDownList');
+        var selectedShift = list.options[list.selectedIndex].value;
+        $("#partial").load("/Paletitzador/PaletitzadorParentPartial", { inici: test, final: antFinalDate, torn: selectedShift, iniciAnt: antInitDate, finalAnt: antFinalDate, nomMaquina: machine , idMaquina: @Model.IdMaquina});
+    }
+
+    function previosZoom() {
+        $("#divLoading").show();
+        document.getElementById("dataInicial").value = iniciDataAnterior._i;
+        document.getElementById("dataFinal").value = finalDataAnterior._i;
+        var list = document.getElementById('shiftDropDownList');
+        var selectedShift = list.options[list.selectedIndex].value;
+        $("#partial").load("/Paletitzador/PaletitzadorParentPartial", { inici: iniciDataAnterior._i, final: finalDataAnterior._i, torn: selectedShift, iniciAnt: minimumDate._i, finalAnt: maximumDate._i, nomMaquina: machine , idMaquina: @Model.IdMaquina});
+    }
+
+    function returnMonthNumber(monthname) {
+        var monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        var month = monthShortNames.indexOf(monthname);
+        return month ? month + 1 : 0;
+    }
+
+    function refreshDuration() {
+        var newDataIn = new Date(moment("@Html.Raw(Model.DataInici).ToString()", "DD/MM/YYYY HH:mm:ss"));
+        var newDataFi = new Date(moment("@Html.Raw(Model.DataFi).ToString()", "DD/MM/YYYY HH:mm:ss"));
+        var duration = convertMSGrafica(Math.abs(newDataFi.getTime() - newDataIn.getTime()));
+        var newDuration = "@Html.Raw(Recursos.Idioma.Duracio)" + ": " + duration;
+        $("#textDurada").text(newDuration);
+        document.getElementById('dataInicial').value = "@Html.Raw(Model.DataInici.ToString())";
+        document.getElementById('dataFinal').value = "@Html.Raw(Model.DataFi.ToString())";
+    }
+	
+	function DescarregarVideo(datainici, index) {
+ 
+        var llistaCameres = document.getElementById("camerasAlarmaId" + index);
+        var camaraId = llistaCameres.options[llistaCameres.selectedIndex].text;
+ 
+ 
+        var url = "@Html.Raw(@Url.Action("DescarregarVideo", "Axxon", new { inici="iniciParam", idCamera = "idCameraParam"}))";
+        url = url.replace("iniciParam", datainici);
+        url = url.replace("idCameraParam", camaraId);
+ 
+        window.open(url,"_blank");
+ 
+    }
+
+    $("a").click(function () {
+        if ($(this).hasClass("fa-minus-circle")) {
+            $(this).removeClass("fa-minus-circle");
+            $(this).addClass("fa-plus-circle");
+        }
+        else if($(this).hasClass("fa-plus-circle")) {
+            $(this).removeClass("fa-plus-circle");
+            $(this).addClass("fa-minus-circle");
+        }
+    });
+
+</script>

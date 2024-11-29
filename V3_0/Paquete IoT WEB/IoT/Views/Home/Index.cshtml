@@ -1,0 +1,342 @@
+﻿@model IoT_Web.Models.HomeModel
+@{Layout = "~/Views/Shared/_Layout.cshtml";}
+@{
+    ViewBag.Title = "Home Page";
+}
+<link href="~/Content/ParagraphCustom.css" rel="stylesheet" />
+<link href="~/Content/FabricaStyles.css" rel="stylesheet" />
+<link href="~/Content/Contenedors.css" rel="stylesheet" />
+
+<div class="containerImage" id="imatgeFabrica" style="margin-top:10px;">
+    <img src="~/Images/Fabriques/@Html.Raw(@Model.NomFabrica + ".jpg")" alt="Snow">
+</div>
+
+<br>
+
+ <!-- Contenedor de estado -->
+<div id="status" style="display: flex; flex-direction: column; justify-content: center; align-items: center; border: 0.2px solid rgba(111, 111, 111, 1); border-radius: 16px; padding: 10px;">
+    <div style="display: flex; align-items: center;">
+        <!-- Estado CAMS ONLINE -->
+        <span id="result" style="color: #999; margin: 0 10px; position: relative; padding-left: 20px;">
+            <span style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background-color: green; border-radius: 50%;"></span>
+            CAMS ONLINE...
+        </span>
+        <!-- Estado CAMS OFFLINE -->
+        <span id="non-functional" style="color: #999; margin: 0 10px; position: relative; padding-left: 20px;">
+            <span style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background-color: red; border-radius: 50%;"></span>
+            CAMS OFFLINE...
+        </span>
+        <!-- Última hora de actualización -->
+        <p id="pUltimaHora" style="color: #999; margin-left: 10px;"></p>
+    </div>
+
+    <div style="display: flex; align-items: center;">
+        <span id="online-ids" style="color: #999; margin: 0 10px; position: relative; padding-left: 20px;">
+            <span style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background-color: green; border-radius: 50%;"></span>
+            SCAN IDs ONLINE...
+        </span>.
+
+        <span id="offline-ids" style="color: #999; margin: 0 10px; position: relative; padding-left: 20px;">
+            <span style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background-color: red; border-radius: 50%;"></span>
+            SCAN IDs OFFLINE...
+        </span>
+    </div>
+</div>
+
+
+<script>
+		const ips = [];
+
+		for (let i = 10; i <= 12; i++) {
+			ips.push(`172.19.192.${i}`);
+		}
+
+        let accessibleIps = 0;
+        let nonFunctionalIps = 0;
+        let checkedCount = 0;
+        let onlineIds = [];
+        let offlineIds = [];
+
+        const checkIP = (ip) => {
+            const img = new Image();
+            img.onload = () => {
+                accessibleIps++;
+                const id = ip.split('.').pop();
+                onlineIds.push(id);
+                updateResult();
+            };
+            img.onerror = () => {
+                nonFunctionalIps++;
+                const id = ip.split('.').pop();
+                offlineIds.push(id);
+                updateResult();
+            };
+            img.src = `http://${ip}/image/loginlogo-dh.jpg?version=2.400`
+        };
+
+        const updateResult = () => {
+            checkedCount++;
+            if (checkedCount === ips.length) {
+                document.getElementById('result').innerHTML = `<span style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background-color: green; border-radius: 50%;"></span>CAMS ONLINE: ${accessibleIps}`;
+                document.getElementById('non-functional').innerHTML = `<span style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background-color: red; border-radius: 50%;"></span>CAMS OFFLINE: ${nonFunctionalIps}`;
+            
+                console.log('Online IDs:', onlineIds);
+                console.log('Offline IDs:', offlineIds);
+
+                // Display the online IDs in the specified div
+                document.getElementById('online-ids').innerHTML = `<span style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background-color: green; border-radius: 50%;"></span> IDs Online: ${onlineIds}`;
+                document.getElementById('offline-ids').innerHTML = `<span style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background-color: red; border-radius: 50%;"></span> IDs Offline: ${offlineIds}`;
+            
+                // Añadir iconos FontAwesome
+                document.getElementById('online-ids').insertAdjacentHTML('afterbegin', '<i class="fa fa-video-camera"></i>');
+                document.getElementById('offline-ids').insertAdjacentHTML('afterbegin', '<i class="fa fa-video-camera"></i>');
+            }
+        };
+
+        ips.forEach(ip => checkIP(ip));
+    </script>
+
+<div class="row" id="contentPanel">
+</div>
+
+<div class="row" id="contentPanel">
+</div>
+
+<div class="row">
+    <div class="col-sm text-center">
+		<div class="contenedor" style="margin-top: 10px;">
+			<div>
+				<img class="card-img-top w-auto" src="~/Images/camera.png" alt="" height="200">
+			</div>
+			<div class="card-header" style="color: #efefef;">
+				<h4 class="card-category"><i class="fa fa-video-camera"></i> @Recursos.Idioma.Cameres</h4>
+			</div>
+			<div class="card-footer">
+				<div class="stats">
+					<a href="@IoT_Web.InfoSessio.Sessio.GetHttpIpAxxonLinia()" class="card-link text-danger">@Recursos.Idioma.AnarA @Recursos.Idioma.Cameres</a>
+				</div>
+			</div>
+		</div>
+</div>
+
+<div class="col-sm text-center">
+    <div class="contenedor" style="margin-top:10px;">
+        <div>
+            <img class="card-img-top w-auto" src="~/Images/calendari.png" alt="" height="200">
+        </div>
+        <div class="card-header" style="color: #efefef;">
+            <h4 class="card-category"><i class="fa fa-pencil"></i> @Recursos.Idioma.Configuracio @Recursos.Idioma.Torns</h4>
+        </div>
+        <div class="card-footer">
+            <div class="stats">
+                <a href="/Configuration/Index" class="card-link text-danger">@Recursos.Idioma.AnarA @Recursos.Idioma.Configuracio @Recursos.Idioma.Torns</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<script type="text/javascript" src="~/Scripts/JS_Formadora.js"></script>
+
+<script>
+    var nomTipusMaquina,nom,nomTraduit;
+    var imatge_url, hrefMaquina, pdfBackend,url, idMaquina, UrlAxxon;
+    var cadencia, numAlarmes, productesTotals, horaActualitzacio, ultimaHoraActualitzacio="";
+    var funcionament;
+
+    var llistaMaquines = @Html.Raw(Json.Encode(Model.llistaMaquines));
+
+    var posicioBotons = @Html.Raw(Json.Encode(Model.llistaBotons));
+
+    for (var j in posicioBotons) { //Posem els botons dins del layout
+
+        var x = parseInt(posicioBotons[j].X);
+        var y= parseInt(posicioBotons[j].Y);
+        var nomMaquina = posicioBotons[j].NomMaquina;
+
+
+        var divBotons = $('<button class="btn" style="position: absolute;top: ' + y + '%;left: ' + x + '%;transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);background-color: rgb(50 50 50);color: white;font-size: 16px;height:4%;cursor: pointer;border-radius: 20px; border-color: antiquewhite; box-shadow: -5px 5px 8px 1px rgb(0 0 0 / 40%)" id="button' + nomMaquina + '">Error_Button</button>');
+
+		// Agregar evento mouseover
+		divBotons.mouseover(function() {
+			$(this).css('background-color', 'red');
+		});
+
+		// Agregar evento mouseout
+		divBotons.mouseout(function() {
+			$(this).css('background-color', 'rgb(50 50 50)');
+		});
+
+        var div = $('<div style="position: absolute; top: ' + (y + 12) + '%; left: ' + x + '%; transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); " id="info' + nomMaquina + '"></div>');
+        divBotons.appendTo('#imatgeFabrica');
+        div.appendTo('#imatgeFabrica');
+
+        var divCameres = CrearDivCameres(y,x, nomMaquina);
+        var iconCameres = CrearIconCameres();
+
+        divCameres.appendChild(iconCameres);
+        document.getElementById('imatgeFabrica').appendChild(divCameres);
+    }
+
+    for (var i in llistaMaquines) {
+
+        idMaquina = llistaMaquines[i].IdMaquina;
+        UrlAxxon = llistaMaquines[i].UrlAxxon;
+        Estat = llistaMaquines[i].Estat;
+		CadenciaLY = llistaMaquines[i].Cadencia;
+		AlarmaLY = llistaMaquines[i].NumeroAlarmes;
+        nomTipusMaquina = llistaMaquines[i].NomTipusMaquina;
+        nomTraduit = llistaMaquines[i].NomTraduit;
+        nom = llistaMaquines[i].Nom;
+        no_data = "No Data";
+        horaActualitzacio = "@Recursos.Idioma.ActualitzatA " + llistaMaquines[i].HoraActualitzacio;
+        imatge_url = "/Images/Maquines_3d/" + nomTipusMaquina + ".png";
+        hrefMaquina = "/" + nomTipusMaquina + "/" + nomTipusMaquina + "BaseView?nomMaquina=" + nom + "&idMaquina=" + idMaquina;
+        url = "/" + nomTipusMaquina + "/GenerarPDF";
+        desconegut = llistaMaquines[i].Desconegut;
+        esperant = llistaMaquines[i].Esperant;
+        aturat = llistaMaquines[i].Aturat;
+        restablint = llistaMaquines[i].Restablint;
+        funcionament = llistaMaquines[i].Funcionament;
+        canviDeFormat = llistaMaquines[i].CanviDeFormat;
+        interromput = llistaMaquines[i].Interromput;
+        retingut = llistaMaquines[i].Retingut;
+
+        AfegirLinksCameres(nom,UrlAxxon);
+
+        if (ultimaHoraActualitzacio.length < 1 || ultimaHoraActualitzacio < llistaMaquines[i].HoraActualitzacio) {
+            ultimaHoraActualitzacio = llistaMaquines[i].HoraActualitzacio;
+        }        
+
+        if ($("#button" + nom).length) {
+
+            $("#button" + nom).text(nomTraduit);
+            $("#button" + nom).attr('onClick', 'window.location.href=\''+hrefMaquina+'\'');
+			var cadenciaFormateada = CadenciaLY.toFixed(2);  // Limita a 2 decimales
+			
+            if (AlarmaLY > 0) {
+				var alarmaHTML = '<br><span style="color: red; font-weight: bold; ">N. @Recursos.Idioma.Alarmes: ' + AlarmaLY + '</span>';
+				setInterval(function() {
+					$("#info" + nom + " span").fadeOut(500).fadeIn(500);
+				}, 1000);
+			} else {
+				var alarmaHTML = '<br><span style="font-weight: bold; ">N. @Recursos.Idioma.Alarmes: ' + AlarmaLY + '</span>';
+			}
+
+			if (funcionament) {
+				$("#info" + nom).append('<div style="text-align: center; padding: 10px; border-radius: 20px 20px 20px 20px; z-index: 5000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); background: linear-gradient(-35deg, rgb(167 167 167 / 54%), #a7a7a78a);"><i class="fa fa-check-circle" style="color:green;margin-right: 5px;" aria-hidden="true"></i>' + Estat + alarmaHTML + '</div>');
+			} else if (desconegut) {
+				$("#info" + nom).append('<div style="text-align: center; padding: 10px; border-radius: 20px 20px 20px 20px; z-index: 5000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); background: linear-gradient(-35deg, rgb(167 167 167 / 54%), #a7a7a78a);"><i class="fa fa-question-circle" style="color:purple;margin-right: 5px;" aria-hidden="true"></i>' + Estat + alarmaHTML + '</div>');
+			} else if (esperant) {
+				$("#info" + nom).append('<div style="text-align: center; padding: 10px; border-radius: 20px 20px 20px 20px; z-index: 5000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); background: linear-gradient(-35deg, rgb(167 167 167 / 54%), #a7a7a78a);"><i class="fa fa-spinner" style="color:#3AC93A;margin-right: 5px;" aria-hidden="true"></i>' + Estat + alarmaHTML + '</div>');
+			} else if (aturat) {
+				$("#info" + nom).append('<div style="text-align: center; padding: 10px; border-radius: 20px 20px 20px 20px; z-index: 5000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); background: linear-gradient(-35deg, rgb(167 167 167 / 54%), #a7a7a78a);"><i class="fa fa-power-off" style="color:blue;margin-right: 5px;" aria-hidden="true"></i>' + Estat + alarmaHTML + '</div>');
+			} else if (restablint) {
+				$("#info" + nom).append('<div style="text-align: center; padding: 10px; border-radius: 20px 20px 20px 20px; z-index: 5000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); background: linear-gradient(-35deg, rgb(167 167 167 / 54%), #a7a7a78a);"><i class="fa fa-refresh" style="color:#f9feae;margin-right: 5px;" aria-hidden="true"></i>' + Estat + alarmaHTML + '</div>');
+			} else if (canviDeFormat) {
+				$("#info" + nom).append('<div style="text-align: center; padding: 10px; border-radius: 20px 20px 20px 20px; z-index: 5000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); background: linear-gradient(-35deg, rgb(167 167 167 / 54%), #a7a7a78a);"><i class="fa fa-exchange" style="color:#fec0df;margin-right: 5px;" aria-hidden="true"></i>' + Estat + alarmaHTML + '</div>');
+			} else if (interromput) {
+				$("#info" + nom).append('<div style="text-align: center; padding: 10px; border-radius: 20px 20px 20px 20px; z-index: 5000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); background: linear-gradient(-35deg, rgb(167 167 167 / 54%), #a7a7a78a);"><i class="fa fa-exclamation-triangle" style="color:red;margin-right: 5px;" aria-hidden="true"></i>' + Estat + alarmaHTML + '</div>');
+			} else if (retingut) {
+				$("#info" + nom).append('<div style="text-align: center; padding: 10px; border-radius: 20px 20px 20px 20px; z-index: 5000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); background: linear-gradient(-35deg, rgb(167 167 167 / 54%), #a7a7a78a);"><i class="fa fa-pause" style="color:yellow;margin-right: 5px;" aria-hidden="true"></i>' + Estat + alarmaHTML + '</div>');
+			} else if (nomTipusMaquina == 'Paletitzador') {
+				$("#info" + nom).append('<div style="text-align: center; padding: 10px; border-radius: 20px 20px 20px 20px; z-index: 5000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); background: linear-gradient(-35deg, rgb(167 167 167 / 54%), #a7a7a78a);"><i class="" style="color:#FF4500;margin-right: 5px;" aria-hidden="true"></i>' + Estat + alarmaHTML + '</div>');
+			} else {
+				$("#info" + nom).append('<div style="text-align: center; padding: 10px; border-radius: 20px 20px 20px 20px; z-index: 5000; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); background: linear-gradient(-35deg, rgb(167 167 167 / 54%), #a7a7a78a);"><i class="fa fa-window-close" style="color:#8B0000;margin-right: 5px;" aria-hidden="true"></i>' + no_data + alarmaHTML + '</div>');
+			}
+
+
+        }
+
+        //if (!imageExists(imatge_url)) imatge_url = "/Images/Maquines_3d/Formadora.png";
+
+        if (funcionament) var divFuncionament = $('<div style="margin-bottom: 5px;"><i class="fa fa-check-circle" style="color:green;margin-right: 5px;" aria-hidden="true"></i><strong style="display: inline-block">' + Estat + '</strong></div>');
+        else var divFuncionament = $('<div style="margin-bottom: 5px;"><i class="fa fa-exclamation-triangle" style="color:red;margin-right: 5px;" aria-hidden="true"></i><strong style="display: inline-block">' + Estat + '</strong></div>');
+
+        @*var divGeneral = $('<div class="column" style="margin-top:10px; width:48%;margin-left: 15px;float: left;"></div>');
+        var divTarjeta = $('<div class="card flex-row flex-wrap" style="background: linear-gradient(to left, #9daaaf, #eaeaea)"></div>');
+        var divImatge = $('<div class="card-header border-0" style="background: white" ><img src=" ' + imatge_url + '" alt="" height="200"></div>');
+        var divTarjetaBloc = $('<div class="card-block px-2"></div>');
+        var informacioGeneral = $('<h4 class="card-title">' + nomTraduit + '</h4><p class="card-subtitle mb-2 text-muted"><small>' + horaActualitzacio + '</small></p>');
+        var divAlarmesProductes = $('<div style="overflow: hidden;"><p class="textNegre" style="float: left;"><strong>' + "@Recursos.Idioma.Alarmes" + ':</strong>' + numAlarmes + '</p><p class="textNegre" style="float: right;"><strong>' + "@Recursos.Idioma.ProducteActual" + ':</strong>' + producteActual + '</p></div>');
+        var divCadenciaProdTotals = $('<div style="overflow: hidden;"><p class="textNegre" style="float: left;"><strong>' + "@Recursos.Idioma.Cadencia" + ':</strong>' + cadencia + '</p><p class="textNegre" style="float: right;"><strong>' + "@Recursos.Idioma.ProductesTotals " + ':</strong>' + productesTotals + '</p></div>');
+        var divBotons = $('<div style="position:relative;margin-top:20%;"><a href="' + hrefMaquina + '" class="btn btn-primary flex flex-column" style="margin-top:2px;margin-right:2px;color: #fff; background-color: #6c757d; border-color: #6c757d;">' + "@Recursos.Idioma.MesDetalls" + '</a><a href="#" onclick="' + pdfBackend + '" class="btn btn-primary flex flex-column" style="margin-top:2px;margin-left:2px;color: #fff; background-color: #6c757d; border-color: #6c757d;">' + "@Recursos.Idioma.PDFUltimDia" + '</a></div>');*@
+
+        //informacioGeneral.appendTo(divTarjetaBloc);
+        //divFuncionament.appendTo(divTarjetaBloc);
+        //divAlarmesProductes.appendTo(divTarjetaBloc);
+        //divCadenciaProdTotals.appendTo(divTarjetaBloc);
+        //divBotons.appendTo(divTarjetaBloc);
+
+        //divImatge.appendTo(divTarjeta);
+        //divTarjetaBloc.appendTo(divTarjeta);
+
+        //divTarjeta.appendTo(divGeneral);
+
+        //divGeneral.appendTo('#contentPanel');
+    }
+    $("#pUltimaHora").text("@Recursos.Idioma.ActualitzatA :"+ultimaHoraActualitzacio)
+
+    function imageExists(image_url){
+        var http = new XMLHttpRequest();
+
+        http.open('HEAD', image_url, false);
+        http.send();
+
+        return http.status != 404;
+    }
+
+    function PDFBackend(url) {
+        window.location.href = url;
+    }
+
+    function CrearDivCameres(x, y, nomMaquina) {
+
+        var div = document.createElement("div");
+
+        div.id = nomMaquina.trim();
+        div.style.position = "absolute";
+        div.style.top = (x - 17) + "%";
+        div.style.left = (y + 7) + "%";
+        div.style.transform = "translate(-340%, 180%)";
+		div.style.color = "#323232";
+        div.style.fontSize = "25px";
+        div.style.height = "4%";
+        div.style.cursor = "pointer";
+        div.style.borderRadius = "20px";
+
+        return div;
+    }
+
+    function CrearIconCameres() {
+
+        var icon = document.createElement("i");
+
+        icon.className = "fa fa-video-camera";
+
+        return icon;
+    }
+
+    function AfegirLinksCameres(nomMaquina, UrlAxxon) {
+    var div = document.getElementById(nomMaquina.trim());
+
+    if (div !== null) {
+        if (UrlAxxon == null) {
+            div.remove();
+        } else {
+            // Reemplazar "mode=archive" por "mode=live" en la URL
+            UrlAxxon = UrlAxxon.replace("mode=archive", "mode=live");
+
+            div.onclick = function () {
+                window.open(
+                    UrlAxxon,
+                    '_blank'
+                );
+            };
+        }
+    }
+}
+
+
+</script>
