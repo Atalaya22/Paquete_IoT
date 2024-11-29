@@ -1,0 +1,322 @@
+﻿#ui;ca;es;en;ru;fr;pol;por;hol
+
+{0}
+Acceptar
+Activat
+Adreça IP
+Adreça IP incorrecte
+Adreça IP:
+Afegir
+Afegir enllaços de variables de la màquina {0}
+Afegir fàbrica a la base de dades d'usuaris
+Afegir màquina {0} a la taula de màquines de la base de dades
+Afegir optimització de la màquina {0} a la base de dades
+Afegir text no trobat
+After wait
+Anterior
+Apilador
+Assistent
+Assistent de configuració
+Atenció
+Aturant el servei
+Aturant ODB.
+Aturant socket client del PLC
+Aturat
+Autorització requerida
+AutoScroll
+Base de dades
+Bases (visió)
+Before wait
+Bindings
+Build: 
+Cancel·lar
+Canvi sessió usuari
+Carregar configuració PLC
+Carregar CSV
+Carregar la configuració per defecte de la màquina {0}
+Comprovar connexió
+Comprovar connexions
+Configuració
+Configuració Connexió
+Configuració desada
+Configuració ODB
+Connector ID
+Connector ID:
+Connector:
+Connexió OPC UA:
+Connexió SQL
+Connexions
+Constant previa:
+Constant prèvia:
+Contrasenya:
+Control Maniobres
+Creació múltiple:
+Creació taules màquina
+Creador de taules
+Crear base de dades {0}
+Crear BDD
+Crear DB
+Crear les taules de la màquina {0} a la base de dades
+Crear màquines
+Crear taules
+Crear taules CFG
+Cridant stopped
+Desar
+Desar a la BDD
+Desar la configuració
+Desinstal·lant
+Desinstal·lat
+Desitja desar la configuració?
+Desitja restaurar la configuració?
+Dins la funcio iniciant
+Directori d'escriptura del log: {0}
+Directori:
+Diverses màquines:
+Duració màxima:
+El binding del node {0} ha canviat: {1}
+El codi introduït no es vàlid.
+El fitxer s'ha carregat correctament.
+El tipus {0} no existeix
+Eliminar
+Eliminar base de dades {0}
+Els enllaços de la màquina s'han afegit correctament
+Els índexs no poden ser negatius.
+En marxa
+Entrada
+Entrar
+Error
+Error a l'actualitzar la variable de heartbeat per la connexió {0}...
+Error a l'escriure la variable de heartbeat per la connexió {0}...
+Error a l'inserir dades a la base de dades: {0} 
+Error a l'inserir definitius a la taula {1}. Error: {0}
+Error a l'obrir la connexió amb {0} a la direcció IP {1} i port {2}: {3}
+Error ajuntant temporals. Error: {0}
+Error al carregar el fitxer
+Error al carregar la configuració per defecte de la màquina
+Error al carregar les màquines disponibles: {0}
+Error al connectar {0} a la direcció IP {1} i port {2}: {3}
+Error al crear les taules de la màquina
+Error al desar a la BDD
+Error al inicialitzar inicialitzar el context d'execució.
+Error al inicialitzar les variables a partir de la configuració: {0}
+Error al inserir dades a la base de dades: {0} 
+Error al obtenir les columnes de les taules de la base de dades. {0}
+Error al obtenir les taules de la base de dades. {0}
+Error al obtenir les variables de la base de dades.
+Error al obtenir les variables de la base de dades. {0}
+Error al obtenir les variables de la connexió OPC UA {0}.
+Error al obtenir les variables de la connexió OPC UA {0}. {1}
+Error al refrescar el valor del binding OPC amb ID {0} al fer el insert a la BDD.
+Error al subscriure la variable {0} de la connexió {1}: {2}
+Error al subscriure la variable {0}: {1}
+Error al subscriure les variables de heartbeat: {0}
+Error creant les dades de la màquina {0}: {1}
+Error creant les taules a la BDD: {0}
+Error creant les taules CFG en el creador de taules: {0}
+Error creant les taules CFG en el creador de taules: Error creant les taules a la BDD: Ya hay un objeto con el nombre 'CFG_Festius' en la base de datos.
+Error creant les taules CFG en el creador de taules: Error executant script a la BDD: Ya hay un objeto con el nombre 'CFG_Festius' en la base de datos.
+Error creant query per llegir estats temporals a la taula {1}. Error: {0}
+Error desant cadències a la taula {1}. Error: {0}
+Error desinstal·lant el servei
+Error eliminant temporals de la taula {1}. Error: {0}
+Error en el creador de taules: {0}
+Error executant script a la BDD: {0}
+Error iniciant el servei
+Error instal·lant el servei
+Error llegint interval taula. Error: {0}
+Error llegint valors temporals a la taula {1}. Error: {0}
+Error optimitzant {1}. {0}
+Error reiniciant el servei
+Error SQL a l'inserir dades a la base de dades: {0}
+Error SQL al inserir dades a la base de dades: {0}
+Es crearà la BDD definida a Configuració Connexió: 
+Esperi un moment, si us plau...
+Estat de la connexió {0}: {1}
+Estat desconegut
+Estat servei ODB
+Excepció desconnectant socket: {0}
+Excepció Shutdown {0}
+Executant accions...
+Executar
+Finalitzant client
+Finalitzar
+Fora final:
+Formadora
+Freqüència escriure (ms):
+Freqüència llegir
+Freqüència llegir (ms):
+Frqüència d'execució (minuts):
+General
+Habilitada
+Heartbeat
+Heartbeat PC:
+Heartbeat PLC:
+Hi ha errors de validació. No es pot continuar amb les dades actuals.
+Hi ha hagut algun error al connectar les variables per la connexió {0}.
+Hi ha hagut algun error al connectar les variables per la connexió {0}. Ho tornem a intentar...
+Hi ha haut un error al intentar carregar les dades del fitxer CSV:
+Hi ha haut un error al intentar desar les dades a la BDD:
+Hora inici:
+Horari
+Identificador
+Identificador dades:
+Identificador de línia obtingut correctament
+Identificador:
+Idioma
+Idioma:
+Índex final:
+Índex inicial:
+Indicador de grup:
+Informació
+Inici
+Iniciant
+Iniciant {0}
+Iniciant desde canvi
+Iniciant ODB.
+Instal·lant
+Interval connexió OPC UA (ms):
+Introdueix un valor numèric
+Ja existeix una base de dades amb el nom '{0}'. Desitja eliminar-la?
+La base de dades s'ha creat i configurat correctament
+La base de dades s'ha eliminat correctament
+La configuració de les màquines de tipus {0} és desconeguda
+La configuració per defecte de la màquina s'ha carregat correctament
+La configuració s'ha desat correctament
+La configuració s'ha desat correctament.
+La configuració s'ha desat correctament. Desitja reiniciar el servei?
+La configuració s'ha desat correctament. S'ha de reiniciar el servei per aplicar els canvis.
+La fàbrica s'ha afegit a la taula d'usuaris correctament
+La màquina s'ha afegit a la base de dades correctament
+Les dades s'han inserit a la base de dades correctament.
+Les taules de la màquina s'han afegit correctament
+L'índex final no pot ser inferior a l'índex inicial.
+Linia
+Llegir configuració del PLC
+Llista de connexions OPC UA:
+Llista de taules a optimitzar:
+Llista de variables BDD
+Llista de variables OPC UA:
+Log
+L'script ./TablesData//ScriptsMaquines/Apilador/Apilador.sql no existeix.
+L'script ./TablesData/Aranya.sql no existeix.
+L'script ./TablesData/ScriptsMaquines/Paletitzador/Paletitzador.sql no existeix.
+Màquines
+MAquines carregades
+Mida màx. fitxer (MB):
+Missatge
+Mostrar les opcions avançades
+MultiTrigger
+MXP
+MXP_Entrada
+MXP_Robot
+MXP_Sortida
+Nivell
+No
+No s'ha actualitzat el heartbeat del PLC per la connexió {0}...
+No s'ha actualitzat el heartbeat del PLC. Reiniciem la connexió {0}...
+No s'ha actualitzat el heartbeat del PLC. Reiniciem la connexió...
+No s'ha pogut carregar la llista de tipus màquines. {0}
+No s'ha pogut carregar la llista d'usuaris.
+No s'ha pogut crear i configurar la BDD: {0}
+No s'ha pogut crear la base de dades {0} : {1}
+No s'ha pogut crear la màquina {0} : {1}
+No s'ha pogut crear o configurar la base de dades
+No s'ha pogut desar des dades a la BDD perquè no hi ha cap línia per desar.
+No s'ha pogut eliminar la base de dades
+No s'ha pogut realitzar la connexió amb el PLC: {0}
+No s'ha trobat la configuració per defecte pel tipus de màquina {0}
+No s'ha trobat l'script per crear i configurar la base de dades.
+No s'ha trobat l'script per crear la màquina de tipus: Apilador
+No s'ha trobat l'script per crear la màquina de tipus: Aranya
+No s'ha trobat l'script per crear la màquina de tipus: Formadora
+No s'ha trobat l'script per crear la màquina de tipus: NO TYPE
+No s'ha trobat l'script per crear la màquina de tipus: Paletitzador
+No s'ha trobat l'script per crear la màquina de tipus: Robot
+No s'ha trobat una plantilla pel tipus de màquina {0}
+Node ID
+Node ID:
+Node:
+Nom
+Nom client:
+Nom màquina:
+Nom taula
+Nom taula BDD:
+Nom:
+Nombre de màquines:
+Número màx. d'intents de connexió OPC UA:
+Número màx. fitxers:
+Obrir
+Obtenir identificador de la línia on s'afegiran les màqunies
+ODB Aturat.
+ODB Iniciat.
+Opcions
+Optimització {2} finalitzada de la taula {0} a la taula {1}.
+Optimització finalitzada sense cap registre per optimitzar a la taula {0}.
+Optimitzador
+P&P
+Paletitzador
+Per modificar el servei heu d'executar l'aplicació com a administrador.
+PLC
+PLC:
+Port
+Port incorrecte
+Port:
+Pre.´Idx
+Quant al 
+Reconnectant en {0} mil·lisegons...
+Reiniciant el servei
+Reiniciem la connexió OPC-UA {0}...
+Restaurar
+Resultat
+Resum
+Revisió: 
+Robot
+Següent
+Servei aturat
+Servei aturat correctament
+Servei desinstal·lat
+Servei desinstal·lat correctament
+Servei iniciat
+Servei iniciat correctament
+Servei instal·lat
+Servei instal·lat correctament
+Servei ODB:
+Servei reiniciat correctament
+S'ha de proporcionar un nom per la màquina.
+S'ha detectat una seqüència de dates incorrectes al optimitzar la taula {0} - Anterior: {1} Següent: {2}
+S'ha perdut la connexió amb el servidor {0}. Error: {1}
+S'ha restaurat la configuració correctament.
+S'han creat les taules de tipus: {0}
+S'han desat les dades a la BDD correctament.
+Si
+Sortida
+Sortir
+Tancadora
+Tapador
+Taula
+Taula definitiva
+Taula definitiva:
+Taula original
+Taula original:
+Taula:
+Taules actuals:
+Taules CFG
+Text
+Text incorrecte
+Tipus
+Tipus de dades:
+Tipus màquina:
+Tipus:
+Tornar
+Transfer
+Trigger
+Usuari:
+Valor incorrecte
+Variable de Heartbeat PC subscrita per {0}.
+Variable trigger
+Variables
+Variables de Heartbeat subscrites per {0}.
+Variables reconnectades de {0}. Total: {1}, reconnectades: {2}
+Variables subscrites de {0}. Total: {1}, connectades: {2}, reconnectades: {3}
+Variables subscrites de {0}. Total: {1}, connectades: {2}, reconnectades: {3}, ignorades: {4}
+Versió: 

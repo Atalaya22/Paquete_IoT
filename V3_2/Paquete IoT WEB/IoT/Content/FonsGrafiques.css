@@ -1,0 +1,7 @@
+﻿.backgroundGraphics {
+    background-color: #3f4143;
+    border-radius: 10px;
+    max-width: 97%;
+	border: 0.2px solid rgba(111, 111, 111, 1);
+	box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Permisos: Inici, Log, EstatServei, Configuracio, ConfiguracioAvançada -->
+<Usuaris>
+  <Nivell>
+    <Nom>Usuari</Nom>
+    <Codi></Codi>
+    <Permisos>
+      <Permis>Inici</Permis>
+      <Permis>Log</Permis>
+    </Permisos>
+  </Nivell>
+  <Nivell>
+    <Nom>PMX</Nom>
+    <Codi>0105</Codi>
+    <Permisos>
+      <Permis>Inici</Permis>
+      <Permis>Log</Permis>
+      <Permis>EstatServei</Permis>
+      <Permis>Configuracio</Permis>
+    </Permisos>
+  </Nivell>
+  <Nivell>
+    <Nom>Administrador</Nom>
+    <Codi>77</Codi>
+    <Permisos>
+      <Permis>Inici</Permis>
+      <Permis>Log</Permis>
+      <Permis>EstatServei</Permis>
+      <Permis>Configuracio</Permis>
+      <Permis>ConfiguracioAvançada</Permis>
+    </Permisos>
+  </Nivell>
+</Usuaris>

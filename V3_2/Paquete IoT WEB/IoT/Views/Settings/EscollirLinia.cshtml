@@ -1,0 +1,53 @@
+﻿@model IoT_Web.Models.LiniaModel
+
+@{Layout = "~/Views/Shared/_LayoutNoLogin.cshtml";}
+@{
+    ViewBag.Title = "Escollir Linia";
+}
+@Styles.Render("~/Content/maps/MapStyle.css")
+
+<div class="col-auto" id="llistaLinies" style="width:300px;max-width: 300px;">
+
+</div>
+
+<div class="col-auto" id="machineImage" style="width: 50%;">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="320pt" height="160pt" viewBox="0 0 320 160" version="1.1">
+        <g id="surface1">
+            <path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity:1;" d="M 109.199219 41.550781 L 109.125 68.875 L 6.375 69.125 L 5.199219 69.699219 C 3.625 70.476562 1.648438 72.675781 1.050781 74.324219 C 0.0234375 77.023438 -0.125 78.300781 0.351562 80.148438 C 0.976562 82.601562 1.851562 84.300781 3.148438 85.5 C 4.398438 86.648438 6.023438 87.476562 7 87.5 C 7.375 87.5 7.773438 87.625 7.949219 87.800781 C 8.175781 88.023438 8.25 94.75 8.25 116.550781 L 8.25 145 L 10.5 145 L 10.550781 116.425781 L 10.625 87.875 L 36.699219 87.800781 L 62.75 87.75 L 62.75 145 L 65 145 L 65.050781 116.425781 L 65.125 87.875 L 87.199219 87.800781 L 109.25 87.75 L 109.25 145.5 L 210.75 145.5 L 210.75 87.75 L 241.75 87.75 L 241.75 145 L 244 145 L 244.050781 116.425781 L 244.125 87.875 L 310.375 87.875 L 310.449219 116.425781 L 310.5 145 L 312.75 145 L 312.800781 116.351562 L 312.875 87.726562 L 314.351562 87.125 C 317.074219 86 318.800781 83.75 319.648438 80.125 C 320.074219 78.300781 320.074219 78.25 319.523438 76.199219 C 318.648438 72.925781 317.148438 70.851562 314.773438 69.699219 L 313.625 69.125 L 210.875 68.875 L 210.875 42.148438 L 212 41.949219 C 214.050781 41.601562 215.273438 40.25 215.449219 38.175781 C 215.648438 35.800781 214.449219 34.226562 212.023438 33.601562 L 210.875 33.324219 L 210.800781 23.773438 L 210.75 14.25 L 109.25 14.25 Z M 183.148438 26.125 L 183.75 26.726562 L 183.699219 45.023438 C 183.625 62.773438 183.601562 63.300781 183.148438 63.648438 C 182.726562 63.949219 177.898438 64 150.726562 64 C 122.023438 64 118.75 63.949219 118.398438 63.601562 C 118.050781 63.25 118 61.226562 118 44.898438 C 118 25.898438 118 26.023438 119 25.675781 C 119.199219 25.601562 133.574219 25.523438 150.949219 25.523438 L 182.523438 25.5 Z M 183.148438 26.125 " />
+        </g>
+    </svg>
+</div>
+<script>
+    var linies = @Html.Raw(Json.Encode(Model.listLinies));
+    var counter = 1;
+    for (var i in linies) {
+        var currentLinia = linies[i];
+        $("#llistaLinies").append("<div style='margin-bottom: 20px;'><button type='button' class='btn btn-secondary' onclick='showLinia(\"linia" + i + "\")'>Linia " + counter + "</button><div id='linia" + i + "' class='dropdown-contentProva' style='text-align:center'></div></div>");
+        $("#linia" + i).append("<a style='cursor: pointer;text-align:center' onclick=submitLinia('" + currentLinia.Tipus + "')>" + currentLinia.Nom_linia + "</a>");
+        counter++;
+    }
+
+    function showLinia(id) {
+        if ($("#" + id).hasClass("showContinent")) {
+            $("#" + id).removeClass("showContinent");
+
+        }
+        else {
+            $("div").removeClass("showContinent");
+            document.getElementById(id).classList.toggle("showContinent");
+        }
+    }
+    function submitLinia(idLinia) {
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: '/Settings/GoToMenu',
+            data: { linia: idLinia },
+            success: function () {
+               window.location.href = '@Url.Action("Index", "Home")';
+            }
+
+
+        });
+    }
+</script>
