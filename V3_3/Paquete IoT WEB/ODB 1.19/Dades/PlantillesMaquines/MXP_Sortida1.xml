@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConfiguracioODB>
+	<BindingsOPC>
+		<BindingOPC>
+			<VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:IoT.Sortides[1].Cadencia.Desar</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:IoT.Sortides[1].Cadencia.Cadencia</VariablesEscriureBDD>
+	<VariableOPC NodeID="ns=6;s=::AsGlobalPV:IoT.Sortides[1].Cadencia.Desar" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100"/>
+</BindingOPC>
+<BindingOPC>
+	<VariableBDD Nom="Cadencia" Taula="dbo.{NOM_MAQUINA}_Cadencies">
+		<VideoConfiguration>
+			<VideoTriggers />
+		</VideoConfiguration>
+	</VariableBDD>
+	<VariableOPC NodeID="ns=6;s=::AsGlobalPV:IoT.Sortides[1].Cadencia.Cadencia" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+</BindingOPC>
+<BindingOPC>
+	<VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:IoT.Sortides[1].Estats.Desar</VariablesEscriureBDD>
+	<VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:IoT.Sortides[1].Estats.Palets_Totals</VariablesEscriureBDD>
+	<VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:IoT.Sortides[1].Estats.Alarma_ID</VariablesEscriureBDD>
+	<VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:IoT.Sortides[1].Estats.Info_ID</VariablesEscriureBDD>
+	<VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:IoT.Sortides[1].Estats.Estat_ID</VariablesEscriureBDD>
+	<VariableOPC NodeID="ns=6;s=::AsGlobalPV:IoT.Sortides[1].Estats.Desar" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+</BindingOPC>
+<BindingOPC>
+	<VariableBDD Nom="EstatId" Taula="dbo.Temp_{NOM_MAQUINA}">
+		<VideoConfiguration>
+			<VideoTriggers />
+		</VideoConfiguration>
+	</VariableBDD>
+	<VariableOPC NodeID="ns=6;s=::AsGlobalPV:IoT.Sortides[1].Estats.Estat_ID" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+</BindingOPC>
+<BindingOPC>
+	<VariableBDD Nom="InfoId" Taula="dbo.Temp_{NOM_MAQUINA}">
+		<VideoConfiguration>
+			<VideoTriggers />
+		</VideoConfiguration>
+	</VariableBDD>
+	<VariableOPC NodeID="ns=6;s=::AsGlobalPV:IoT.Sortides[1].Estats.Info_ID" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+</BindingOPC>
+<BindingOPC>
+	<VariableBDD Nom="AlarmaId" Taula="dbo.Temp_{NOM_MAQUINA}">
+		<VideoConfiguration>
+			<VideoTriggers />
+		</VideoConfiguration>
+	</VariableBDD>
+	<VariableOPC NodeID="ns=6;s=::AsGlobalPV:IoT.Sortides[1].Estats.Alarma_ID" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+</BindingOPC>
+<BindingOPC>
+	<VariableBDD Nom="PaletsTotals" Taula="dbo.Temp_{NOM_MAQUINA}">
+		<VideoConfiguration>
+			<VideoTriggers />
+		</VideoConfiguration>
+	</VariableBDD>
+	<VariableOPC NodeID="ns=6;s=::AsGlobalPV:IoT.Sortides[1].Estats.Palets_Totals" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+</BindingOPC>
+</BindingsOPC>
+<Optimitzador>
+	<TaulesOptimitzar>
+		<Optimitzador Nom="{NOM_MAQUINA}">
+		<VariablesOptimitzar>
+			<VariableOptimitzar NomOriginal="Inici" NomDefinitiva="Inici" Tipus="CadenaCaracters" />
+			<VariableOptimitzar NomOriginal="EstatId" NomDefinitiva="EstatId" Tipus="Numeric" />
+			<VariableOptimitzar NomOriginal="InfoId" NomDefinitiva="InfoId" Tipus="Numeric" />
+			<VariableOptimitzar NomOriginal="AlarmaId" NomDefinitiva="AlarmaId" Tipus="Numeric" />
+			<VariableOptimitzar NomOriginal="PaletsTotals" NomDefinitiva="PaletsTotals" Tipus="Numeric" />
+			<VariableOptimitzar NomOriginal="MosaicId" NomDefinitiva="MosaicId" Tipus="CadenaCaracters" />
+		</VariablesOptimitzar>
+		<Cfg DuracioMaximaEstatXml="10" TaulaOriginal="Temp_{NOM_MAQUINA}" TaulaDefinitiva="{NOM_MAQUINA}">
+			<VariablesTrigger>
+			<string>EstatId</string>
+			<string>InfoId</string>
+			<string>AlarmaId</string>
+			<string>MosaicId</string>
+			</VariablesTrigger>
+		</Cfg>
+		</Optimitzador>
+	</TaulesOptimitzar>
+</Optimitzador>
+</ConfiguracioODB>

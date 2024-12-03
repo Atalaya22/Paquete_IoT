@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConfiguracioODB>
+	<BindingsOPC>
+		<BindingOPC>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_Cadencia_IoT.Desar</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_Cadencia_IoT.CadenciaInstantania</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_Cadencia_IoT.CadenciaMitja</VariablesEscriureBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_Cadencia_IoT.Desar" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="CadenciaInstantania" Taula="dbo.{NOM_MAQUINA}_Cadencies">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_Cadencia_IoT.CadenciaInstantania" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="CadenciaMitja" Taula="dbo.{NOM_MAQUINA}_Cadencies">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_Cadencia_IoT.CadenciaMitja" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.Desar</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.EstatId</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.InfoId</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.AlarmaId</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.Magatzem</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.CaixaId</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.ProducteId_1</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.ProducteId_2</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.ProducteId_3</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.ProducteId_4</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.CaixesTotals</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.CaixesTotals_1</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.CaixesTotals_2</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.CaixesTotals_3</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Formadora_IoT.CaixesTotals_4</VariablesEscriureBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.Desar" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="EstatId" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.EstatId" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="InfoId" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.InfoId" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="AlarmaId" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.AlarmaId" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="Magatzem" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.Magatzem" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="CaixaId" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.CaixaId" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="ProducteId_1" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.ProducteId_1" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="ProducteId_2" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.ProducteId_2" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="ProducteId_3" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.ProducteId_3" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="ProducteId_4" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.ProducteId_4" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="CaixesTotals" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.CaixesTotals" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="CaixesTotals_1" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.CaixesTotals_1" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="CaixesTotals_2" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.CaixesTotals_2" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="CaixesTotals_3" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.CaixesTotals_3" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="CaixesTotals_4" Taula="dbo.Temp_{NOM_MAQUINA}">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Formadora_IoT.CaixesTotals_4" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Productes_Formadora_IoT.Desar</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Productes_Formadora_IoT.Id</VariablesEscriureBDD>
+		  <VariablesEscriureBDD>{ID_CONNECTOR}_ns=6;s=::AsGlobalPV:Productes_Formadora_IoT.Nom</VariablesEscriureBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Productes_Formadora_IoT.Desar" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="Id" Taula="dbo.Info_{NOM_MAQUINA}_Productes">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Productes_Formadora_IoT.Id" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+		<BindingOPC>
+		  <VariableBDD Nom="Nom" Taula="dbo.Info_{NOM_MAQUINA}_Productes">
+			<VideoConfiguration>
+			  <VideoTriggers />
+			</VideoConfiguration>
+		  </VariableBDD>
+		  <VariableOPC NodeID="ns=6;s=::AsGlobalPV:Productes_Formadora_IoT.Nom" ConnectorID="{ID_CONNECTOR}" FrequenciaLlegir="100" />
+		</BindingOPC>
+	</BindingsOPC>
+	<Optimitzador>
+		<TaulesOptimitzar>
+		  <Optimitzador Nom="{NOM_MAQUINA}">
+			<VariablesOptimitzar>
+			  <VariableOptimitzar NomOriginal="Inici" NomDefinitiva="Inici" Tipus="CadenaCaracters" />
+			  <VariableOptimitzar NomOriginal="EstatId" NomDefinitiva="EstatId" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="InfoId" NomDefinitiva="InfoId" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="AlarmaId" NomDefinitiva="AlarmaId" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="Magatzem" NomDefinitiva="Magatzem" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="CaixaId" NomDefinitiva="CaixaId" Tipus="CadenaCaracters" />
+			  <VariableOptimitzar NomOriginal="ProducteId_1" NomDefinitiva="ProducteId_1" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="ProducteId_2" NomDefinitiva="ProducteId_2" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="ProducteId_3" NomDefinitiva="ProducteId_3" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="ProducteId_4" NomDefinitiva="ProducteId_4" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="CaixesTotals" NomDefinitiva="CaixesTotals" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="CaixesTotals_1" NomDefinitiva="CaixesTotals_1" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="CaixesTotals_2" NomDefinitiva="CaixesTotals_2" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="CaixesTotals_3" NomDefinitiva="CaixesTotals_3" Tipus="Numeric" />
+			  <VariableOptimitzar NomOriginal="CaixesTotals_4" NomDefinitiva="CaixesTotals_4" Tipus="Numeric" />
+			</VariablesOptimitzar>
+			<Cfg DuracioMaximaEstatXml="10" TaulaOriginal="Temp_{NOM_MAQUINA}" TaulaDefinitiva="{NOM_MAQUINA}">
+			  <VariablesTrigger>
+				<string>EstatId</string>
+				<string>InfoId</string>
+				<string>AlarmaId</string>
+				<string>Magatzem</string>
+				<string>CaixaId</string>
+				<string>ProducteId_1</string>
+				<string>ProducteId_2</string>
+				<string>ProducteId_3</string>
+				<string>ProducteId_4</string>
+			  </VariablesTrigger>
+			</Cfg>
+		  </Optimitzador>
+		</TaulesOptimitzar>
+	</Optimitzador>
+</ConfiguracioODB>

@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - </title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/ResponsiveLogin.css")
+    @Styles.Render("~/Content/Site.css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <script src="~/Scripts/Libraries/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/Libraries/popper.js"></script>
+    <script src="~/Scripts/Libraries/bootstrap.min.js"></script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript" src="~/Scripts/Libraries/moment.js"></script>
+    <script src="~/Scripts/Libraries/es.js" charset="UTF-8"></script>
+    <script src="~/Scripts/Libraries/en.js" charset="UTF-8"></script>
+    <script src="~/Scripts/Libraries/ca.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="~/Scripts/Libraries/tempusdominus-bootstrap-4.js"></script>
+    <link rel="stylesheet" href="~/Content/Libraries/tempusdominus-bootstrap-4.css" />
+
+    <script src="~/Scripts/JS_Login.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="~/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <link rel="icon" type="image/png" href="~/Images/icons/logo_nav.ico" />
+
+</head>
+<body class="body-login" style="padding-top: 0px; padding-bottom: 0px">
+        <div class="container-login100 container body-content">
+            @RenderBody()
+        </div>
+
+    <script src="~/Scripts/Libraries/select2.min.js"></script>
+    <script src="~/Scripts/Libraries/tilt.jquery.min.js"></script>
+    <script>
+        $('.js-tilt').tilt({
+            scale: 1.1
+        })
+    </script>
+</body>
+</html>
+
