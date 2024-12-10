@@ -1,0 +1,57 @@
+﻿@model IoT_Web.Models.DiaVacances
+
+@{
+    Layout = "~/Views/Shared/_LayoutNoLogin.cshtml";
+}
+
+@{
+    ViewBag.Title = Recursos.Idioma.EditarDiaFesta;
+}
+
+<div class="container-login100">
+    <div class="row justify-content-center wrap-login100">
+        @using (Html.BeginForm("ActualitzarDiesFestius", "Configuration", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            <span class="login100-form-title">
+                @Recursos.Idioma.EditarDiaFesta
+            </span>
+            <div>
+                @Html.HiddenFor(m => m.Id)
+                <div class="wrap-input100">
+                    <div class="input-group date" id="datetimepickerDiaFestiu" data-target-input="nearest" style="margin-top: 10px">
+                        @Html.TextBoxFor(m => m.diaVacances, new { @class = "input100 datetimepicker-input form-control", @placeholder = Recursos.Idioma.DiaFesta, @required = "required" })
+                        <div class="input-group-append" data-target="#datetimepickerDiaFestiu" data-toggle="datetimepicker">
+                            <div class="input-group-text" style=" border-bottom-right-radius: 25px; border-top-right-radius: 25px;">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="container-login100-form-btn">
+                <button class="login100-form-btn">
+                    @Recursos.Idioma.Guardar
+                </button>
+            </div>
+            <div class="text-center p-t-136" style="margin-top: 30px;margin-bottom:20%;">
+                <a class="txt2">
+                    @Html.ActionLink(Recursos.Idioma.Tornar, "Index", "Configuration")
+                    <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $('#datetimepickerDiaFestiu').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

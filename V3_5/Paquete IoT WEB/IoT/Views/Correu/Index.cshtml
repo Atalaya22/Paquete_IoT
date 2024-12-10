@@ -1,0 +1,143 @@
+﻿@model IoT_Web.Models.CorreuModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript" src="~/Scripts/Libraries/jquery.dataTables.js"></script>
+
+<link rel="stylesheet" href="~/Content/Libraries/dataTables.bootstrap4.min.css" />
+<link rel="stylesheet" href="~/Content/Libraries/buttons.bootstrap4.min.css" />
+<link rel="stylesheet" href="~/Content/DataTableCustom.css" />
+<link rel="stylesheet" href="~/Content/Overlay.css" />
+
+<script type="text/javascript" src="~/Scripts/Libraries/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Libraries/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Libraries/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Libraries/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Libraries/buttons.bootstrap4.min.js"></script>
+
+<div style="min-width: 300px; overflow: auto;">
+    <h2 class="h1-responsive font-weight-bold text-center my-4"><font color="white">@Recursos.Idioma.LlistatCorreus</font></h2>
+    <br/>
+    <button type="button" class="btn btn-secondary pull-left" style="color:black; background-color:white; border-color:black" id="ShowAll">@Recursos.Idioma.Tot</button>
+
+    <table id="taulaCorreusId" class="table table-striped table-bordered table-sm table-hover" cellspacing="0" width="100%" style="border-collapse: collapse;border-radius: 1em; overflow: hidden;">
+        <thead style="color: black;background: linear-gradient(0deg, #3A4F59, #C8D8DB);">
+            <tr>
+                <th class="th">
+                    @Recursos.Idioma.NomMaquina
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.IniciDurada
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Fi
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Dies
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.HoraEnviament
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Receptors
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Idiomes
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Accions
+                </th>
+            </tr>
+        </thead>
+        <tbody style="color: black;background-color: white;">
+            @foreach (var item in Model.llistaCorreus)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NomTraduit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IniciInforme)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FinalInforme)
+                    </td>
+                    <td>
+                        @if (item.Dilluns)
+                        {@Recursos.Idioma.Dilluns}
+                        @if (item.Dimarts)
+                        {@Recursos.Idioma.Dimarts}
+                        @if (item.Dimecres)
+                        {@Recursos.Idioma.Dimecres}
+                        @if (item.Dijous)
+                        {@Recursos.Idioma.Dijous}
+                        @if (item.Divendres)
+                        {@Recursos.Idioma.Divendres}
+                        @if (item.Dissabte)
+                        {@Recursos.Idioma.Dissabte}
+                        @if (item.Diumenge)
+                        {@Recursos.Idioma.Diumenge}
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeEnviament)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CorreuReceptor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdiomaTraduit)
+                    </td>
+                    <td>
+                        @Html.ActionLink(Recursos.Idioma.Editar, "EditarCorreu", new { id = item.Id }) |
+                        @Html.ActionLink(Recursos.Idioma.Eliminar, "EliminarCorreu", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div style="min-width: 300px; overflow: auto;">
+    @Html.ActionLink(Recursos.Idioma.NouCorreu, "CrearNouCorreu", "Correu", null, new { @class = "button" })
+</div>
+
+
+    <script>
+    $(document).ready(function () {
+        //JS Primera gràfica
+        var table = $('#taulaCorreusId').DataTable({
+            "dom": '<"top"fl>rt<"bottom"ip><"clear">',
+            "language": {
+                "sProcessing": "@Recursos.Idioma.Processant",
+                "sLengthMenu": "@Recursos.Idioma.MostrarMenu",
+                "sZeroRecords": "@Recursos.Idioma.SenseResultats",
+                "sEmptyTable": "@Recursos.Idioma.TaulaBuida",
+                "sInfo": "@Recursos.Idioma.InfoTaula",
+                "sInfoEmpty": "@Recursos.Idioma.InfoBuida",
+                "sInfoFiltered": "@Recursos.Idioma.InfoFiltrada",
+                "sInfoPostFix": "",
+                "sSearch": "@Recursos.Idioma.Buscar",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "@Recursos.Idioma.CarregantDades",
+                "oPaginate": {
+                    "sFirst": "@Recursos.Idioma.Primer",
+                    "sLast": "@Recursos.Idioma.Ultim",
+                    "sNext": "@Recursos.Idioma.Seguent",
+                    "sPrevious": "@Recursos.Idioma.Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": "@Recursos.Idioma.OrdreAscendent",
+                    "sSortDescending": "@Recursos.Idioma.OrdreDescendent"
+                }
+            },
+            "pagingType": "full_numbers"
+        });
+        $('.dataTables_length').addClass('bs-select')
+        $('#ShowAll').click(function () {
+            table.search('').draw();
+            $().val('');
+        });
+    });
+    </script>

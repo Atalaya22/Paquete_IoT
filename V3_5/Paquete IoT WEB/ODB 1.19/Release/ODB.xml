@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConfiguracioODB>
+  <TaulesManteniment />
+  <SincronitzadorAzure />
+  <General IntervalConnexioOPC="1000" MaxIntentsConnexioOPC="0" />
+  <Horari Activat="false" Inici="0" Final="0" />
+  <ConfiguracioLog Directori=".\Log" MidaMaxFitxer="1" NumMaxFitxers="10" />
+  <ConfiguracioL10n AfegirNoTrobats="false" IdiomaSeleccionat="ca" />
+  <ConfiguracioBDD DireccioIP="127.0.0.1" Port="1433" Nom="" Usuari="iot" Contrasenya="IoT_0105" FrequenciaEscriure="0" />
+  <ConnexionsOPC />
+  <ConfiguracionsTCP />
+  <ConfiguracioCameres />
+  <BindingsOPC />
+  <BindingsTCP />
+  <VariablesTCP />
+  <Optimitzador FreqExecucioMinuts="30">
+    <TaulesOptimitzar />
+  </Optimitzador>
+</ConfiguracioODB>
