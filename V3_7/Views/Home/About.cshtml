@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = Recursos.Idioma.QuantAl;
+}
+<script src="https://d3js.org/d3.v3.js"></script>
+<style>
+    ul.timeline {
+        list-style-type: none;
+        position: relative;
+    }
+
+        ul.timeline:before {
+            content: ' ';
+            background: #d4d9df;
+            display: inline-block;
+            position: absolute;
+            left: 29px;
+            width: 2px;
+            height: 100%;
+            z-index: 400;
+        }
+
+        ul.timeline > li {
+            margin: 20px 0;
+            padding-left: 50px;
+        }
+
+            ul.timeline > li:before {
+                content: ' ';
+                background: white;
+                display: inline-block;
+                position: absolute;
+                border-radius: 50%;
+                border: 3px solid #e02b20;
+                left: 20px;
+                width: 20px;
+                height: 20px;
+                z-index: 400;
+            }
+    .col-md-6 > h4 {
+        color: white;
+    }
+
+    .float-right {
+        color: white;
+    }
+
+    .card-title {
+        color: white;
+    }
+    li > p{
+        font-size:0.9em;
+    }
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .grid path,
+    .grid line {
+        fill: none;
+        stroke: rgba(250, 250, 255, 0.25);
+        shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+        display: none;
+    }
+
+    .line {
+        fill: none;
+        stroke-width: 2.5px;
+    }
+</style>
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h4>LA EVOLUCIÓN DE TAVIL EN EL TIEMPO</h4>
+            <ul class="timeline">
+                <li>
+                    <p target="_blank" class="card-title">Actualidad</p>
+                    <p>Nueva planta de producción de 102.000m2 con capacidad para fabricar las más modernas y grandes centrales mundiales de encajado y paletizado</p>
+                </li>
+                <li>
+                    <p href="#" class="card-title">2009</p>
+                    <p>Desarrollo de Max Palet, el software más fácil para introducir nuevos formatos en las instalaciones de paletizado</p>
+                </li>
+                <li>
+                    <p href="#" class="card-title">2000</p>
+                    <p>TAVIL se convirtió en líder mundial en innovación de la tecnología multiformato para el encajado automático, carga de producto e instalaciones de paletizado</p>
+                </li>
+                <li>
+                    <p href="#" class="card-title">1995</p>
+                    <p>Consolidación de la internacionalización con clientes alrededor del mundo</p>
+                </li>
+                <li>
+                    <p href="#" class="card-title">1990</p>
+                    <p>Desarrollo del cambio automático más rápido en instalaciones de encajado para trabajar con distintos tamaños de cajas, y expansión a los sectores alimentarios y no alimentarios</p>
+                </li>
+                <li>
+                    <p href="#" class="card-title">1984</p>
+                    <p>Nueva planta de producción de 15.000 m2, con 50 trabajadores</p>
+                </li>
+                <li>
+                    <p href="#" class="card-title">1978</p>
+                    <p>Desarrollo de la atadora automática y especialización en maquinaria para alta industrialización en procesos de productos cárnicos.</p>
+                </li>
+                <li>
+                    <p href="#" class="card-title">1952</p>
+                    <p>Fundación de la empresa fabricante de maquinaria industrial</p>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <div id="chart" style="height: 400px;">
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="row">
+    <div class="col-md-6" id="chart2" style="height: 300px;">
+    </div>
+</div>*@
+
+<script type="text/javascript" src="~/Scripts/JS_Formadora.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script>
+
+    var data = {
+        x: ["1925", "1952", "1978", "1984", "1990", "1995", "2000", "2009", "nowadays"],
+        y: [0, 1, 2, 5, 11, 20, 40, 60, 80]
+    };
+    tavilLinechart(data, "#chart", "#666666", true);
+</script>

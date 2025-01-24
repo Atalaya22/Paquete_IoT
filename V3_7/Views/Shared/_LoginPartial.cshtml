@@ -1,0 +1,11 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    <li><a href=@Url.Action("Index", "ApplicationUsers")>@Recursos.Idioma.Hola  @User.Identity.GetUserName() !<span style="float:left;margin-top: 2%;" class="fa fa-user-circle pull-left"></span></a></li>
+    <li><a href=@Url.Action("LogOff", "Account")>@Recursos.Idioma.TancarSessio<span style="float:left;margin-top: 2%;" class="fa fa-power-off pull-left"></span></a></li>
+}
+else
+{
+    <li>@Html.ActionLink(Recursos.Idioma.Registrarse, "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-item nav-link" })</li>
+    <li>@Html.ActionLink(Recursos.Idioma.IniciarSessio, "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-item nav-link" })</li>
+}

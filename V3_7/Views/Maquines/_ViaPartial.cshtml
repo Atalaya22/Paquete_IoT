@@ -1,0 +1,2000 @@
+﻿@model IoT_Web.Models.Maquines.ViaModel
+
+
+<link rel="stylesheet" href="~/Content/Overlay.css" />
+<link rel="stylesheet" href="~/Content/DataTableCustom.css" />
+<link rel="stylesheet" href="~/Content/FonsGrafiques.css" />
+
+<h2 id="NomEntrada" class="encabezado"></h2>
+
+<style>
+  .encabezado {
+    text-align: center;
+    color: white;
+    font-family: 'Roboto', sans-serif; /* Cambia por la fuente que prefieras */
+    font-size: 2.5rem; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    letter-spacing: 1px; /* Espaciado entre letras */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para destacar el texto */
+  }
+</style>
+
+
+
+<div class="container backgroundGraphics" id="containerProducteEntrada">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseProducte" href="#collapseProducte" aria-expanded="false" aria-controls="collapseProducte">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Mosaic</p>
+    <div id="collapseProducte" class="collapse show">   
+        <div class="row">
+            <div class="col" id="chartProducteEntrada" style="min-height: 170px; max-height:170px;">
+            </div>
+        </div>
+        <div style="text-align: center;" id="ProductesCheckboxEntrada">
+        </div>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerEstatsEntrada">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseEstatsEntrada" href="#collapseEstatsEntrada" aria-expanded="false" aria-controls="collapseEstatsEntrada">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.MaquinaEstats</p>
+    <div id="collapseEstatsEntrada" class="collapse show">
+        <div class="row">
+            <div class="col" id="chartContainerEntrada" style="min-height: 170px; max-height:170px;">
+            </div>
+        </div>
+        <div style="text-align: center;" id="EstatsCheckboxEntrada">
+        </div>
+    </div>
+
+</div>
+
+<div class="container backgroundGraphics" id="containerPercentatgeEstatsEntrada">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapsePercentatgeEstatsEntrada" href="#collapsePercentatgeEstatsEntrada" aria-expanded="false" aria-controls="collapsePercentatgeEstatsEntrada">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.PercentatgeEstats</p>
+    <div id="collapsePercentatgeEstats" class="collapse show">
+        <div class="row" id="divCircularChartContainerEntrada" style="padding-bottom: 35px; padding-top: 20px; margin-top:20px;">
+            <div class="col" id="CircularChartContainerEntrada" style="min-width: 300px; min-height: 300px;"></div>
+            <div class="col" id="TableTotalTimeStates" style="min-width: 300px; margin-right:2%;">
+                <div class="col" style="padding: 20px;">
+                    <table class="table" style="width: 100%; border-collapse: collapse; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
+                        <thead style="background-color: #2d2d2d; color: #ffffff;">
+                            <tr style="height: 50px;">
+                                <th scope="col" style="padding: 15px; text-align: center;"></th>
+                                <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.Estat</th>
+                                <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.Temps</th>
+                                <th scope="col" style="padding: 15px; text-align: right;">%</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background: #3a3a3a; color: #e0e0e0;">
+                            @foreach (var estat in Model.Entrada.EstatsFrequents)
+                            {
+                                <tr style="background: #3a3a3a; margin-bottom: 10px; border: 1px solid #444;">
+                                    <td style="padding: 15px; vertical-align: middle; text-align: center;">
+                                        <div style="width: 15px; height: 15px; background-color: @estat.Color; border-radius: 50%; border: 1px solid #ffffff;"></div>
+                                    </td>
+                                    <td style="padding: 15px; vertical-align: middle;">@estat.Estat</td>
+                                    <td style="padding: 15px; vertical-align: middle;">@(estat.Duracio.Days * 24 + estat.Duracio.Hours)h @estat.Duracio.Minutes.ToString()min @estat.Duracio.Seconds.ToString()s</td>
+                                    <td style="padding: 15px; font-weight: bold; text-align: right; color: #ffcc00; vertical-align: middle;">@estat.Percentatge.ToString() %</td>
+                                </tr>
+                            }
+							@if (Model.Entrada.EstatsFrequents.Count() > 0)
+							{
+								<tr style="background-color: #2d2d2d; color: #ffffff; font-weight: bold;">
+									<td></td>
+									<td>@Recursos.Idioma.Total</td>
+									<td style="padding: 15px;">@Model.Entrada.EstatsFrequents.Sum(e => e.Duracio.Days * 24 + e.Duracio.Hours)h @Model.Entrada.EstatsFrequents.Sum(e => e.Duracio.Minutes)min @Model.Entrada.EstatsFrequents.Sum(e => e.Duracio.Seconds)s</td>
+									<td style="padding: 15px; text-align: right;">@Model.Entrada.EstatsFrequents.Sum(e => e.Percentatge) %</td>
+								</tr>
+							}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table tbody tr {
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .table tbody tr:hover {
+        background-color: #525252;
+    }
+    .table thead th {
+        font-weight: bold;
+    }
+</style>
+
+<div class="container backgroundGraphics" id="containerAlarmesEntrada">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmesEntrada" href="#collapseAlarmesEntrada" aria-expanded="false" aria-controls="collapseAlarmesEntrada">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Alarmes</p>
+    <div id="collapseAlarmesEntrada" class="collapse show">
+        <div class="row">
+            <div class="col" id="chartContainerAlarmaEntrada" style="min-height: 170px; max-height:170px;">
+            </div>
+        </div>
+        <div style="text-align: center;" id="AlarmesCheckboxEntrada">
+        </div>
+    </div>
+
+</div>
+
+<div class="container backgroundGraphics" id="containerAlarmesFrequentsEntrada">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmesFrequentsEntrada" href="#collapseAlarmesFrequentsEntrada" aria-expanded="false" aria-controls="collapseAlarmesFrequentsEntrada">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.AlarmesFrequents</p>
+    <div id="collapseAlarmesFrequentsEntrada" class="collapse show">
+        <div class="row graficaAlarmes" id="divPercentatgeAlarmes" style="padding-bottom: 35px; padding-top: 20px; margin-top:20px;">
+            <div class="col" id="DonutAlarmesEntrada" style="min-width: 300px; min-height: 300px;"></div>
+            <div class="col" id="TableAlarmesPercentatge" style="min-width: 300px; margin-right:2%">
+                <div class="col" style="padding: 20px;">
+                    <table class="table" style="width: 100%; border-collapse: collapse; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
+                        <thead style="background-color: #2d2d2d; color: #ffffff;">
+                            <tr style="height: 50px;">
+                                <th scope="col" style="padding: 15px; text-align: center;"></th>
+                                <th scope="col" style="padding: 15px; text-align: left;">ID</th>
+                                <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.Descripcio</th>
+                                <th scope="col" style="padding: 15px; text-align: right;">%</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody style="background: #3a3a3a; color: #e0e0e0;">
+                            @foreach (var alarma in Model.Entrada.AlarmesFrequents)
+                            {
+                                <tr style="background: #3a3a3a; margin-bottom: 10px; border: 1px solid #444;">
+                                    <td style="padding: 15px; vertical-align: middle; text-align: center;">
+                                        <div style="width: 15px; height: 15px; background-color: @alarma.Color; border-radius: 50%; border: 1px solid #ffffff;"></div>
+                                    </td>
+                                    <td style="padding: 15px; vertical-align: middle;">@alarma.AlarmaId</td>
+                                    <td style="padding: 15px; vertical-align: middle;">@alarma.Descripcio</td>
+                                    <td style="padding: 15px; font-weight: bold; text-align: right; color: #ffcc00; vertical-align: middle;">@alarma.Percentatge % (@alarma.Quantitat)</td>
+
+                                </tr>
+                            }
+                            @if (Model.Entrada.Alarmes.Count() > 0)
+                            {
+                                <tr style="background-color: #2d2d2d; color: #ffffff; font-weight: bold;">
+                                    <td></td>
+                                    <td></td>
+                                    <td>@Recursos.Idioma.Total</td>
+                                    <td style="padding: 15px;">@Model.Entrada.Alarmes.Count()</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table tbody tr {
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .table tbody tr:hover {
+        background-color: #525252;
+    }
+    .table thead th {
+        font-weight: bold;
+    }
+    .btn-outline-light {
+        color: #ffcc00;
+        border-color: #ffcc00;
+    }
+    .btn-outline-light:hover {
+        background-color: #ffcc00;
+        color: #2d2d2d;
+    }
+</style>
+
+<div id="TableAlarmsEntrada" style="min-width: 300px; overflow: auto;">
+    <br />
+    <table id="taulaAlarmesIdEntrada" class="table table-striped table-hover" cellspacing="0" width="100%" style="border-collapse: collapse; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); overflow: hidden;">
+        <thead style="background-color: #2d2d2d; color: #ffffff;">
+            <tr style="height: 50px;">
+                <th class="th" style="padding: 15px; text-align: left;">ID</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Duracio</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.IniciDurada</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Caixa</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.InfoAlarma</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Video</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Descarregar</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Cameres</th>
+            </tr>
+        </thead>
+        <tbody style="background: #3a3a3a; color: #e0e0e0;">
+            @for (int i = 1; i <= Model.Entrada.Alarmes.Count(); i++)
+            {
+                var alarma = Model.Entrada.Alarmes[i - 1];
+                var cameresAlarmaId = "camerasAlarmaId" + i;
+                <tr style="background: #3a3a3a; margin-bottom: 10px; border: 1px solid #444;">
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.AlarmaId</td>
+                    <td style="padding: 15px; vertical-align: middle;">@Convert.ToInt32(alarma.Duracio.TotalMinutes).ToString()min @Convert.ToInt32(alarma.Duracio.Seconds).ToString()s</td>
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.Inici</td>
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.ProducteId</td>
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.Descripcio</td>
+                    <td style="padding: 15px; vertical-align: middle;">
+                        <a target="_blank" href="@alarma.EnllacVideo" class="btn btn-sm btn-outline-light" style="border-radius: 20px;">
+                            <i class='fa fa-video-camera'></i> Video
+                        </a>
+                    </td>
+                    <td style="padding: 15px; vertical-align: middle;">
+                        <a style="cursor: pointer;" onclick="DescarregarVideo('@alarma.Inici','@i')" class="btn btn-sm btn-outline-light" style="border-radius: 20px;">
+                            <i class='fa fa-download'></i> @Recursos.Idioma.Descarregar
+                        </a>
+                    </td>
+                    <td style="padding: 15px; vertical-align: middle;">
+                        <select name="camerasAlarma" id="@cameresAlarmaId" style="background-color: #2d2d2d; color: #ffffff; border: 1px solid #444; border-radius: 5px; padding: 5px;">
+                            @foreach (var camara in Model.Entrada.Cameres)
+                            {
+                                <option value="@camara">@camara</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .table tbody tr {
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .table tbody tr:hover {
+        background-color: #525252;
+    }
+    .table thead th {
+        font-weight: bold;
+    }
+    .btn-outline-light {
+        color: #ffcc00;
+        border-color: #ffcc00;
+    }
+    .btn-outline-light:hover {
+        background-color: #ffcc00;
+        color: #2d2d2d;
+    }
+</style>
+
+
+<div id="noData" style="display: none; margin-top:200px;margin-bottom:200px;">
+    <p align="center">@Recursos.Idioma.NoDades</p>
+</div>
+
+<div class="container backgroundGraphics" id="containerOEE">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseOEE" href="#collapseOEE" aria-expanded="false" aria-controls="collapseOEE">
+    </a>
+    <p style="font-size:20px;">OEE</p>
+    <div id="collapseOEE" class="collapse show">
+
+        <p style="font-size:20px; text-align:center;">OEE</p>
+
+        <div class="row" id="GrafiquesSemipiechart" style="margin-bottom:20px;">
+            <div id="GraficProductividad" class="col" style=" max-width:300px; height: 200px;">
+            </div>
+            <div id="GraficDisponibilitat" class="col" style=" max-width:300px; height: 200px;">
+            </div>
+            <div id="GraficQualitat" class="col" style=" max-width:300px; height: 200px;">
+            </div>
+            <div id="GraficOEE" class="col" style=" max-width:300px; height: 200px;">
+            </div>
+        </div>
+
+        <p style="font-size:20px;text-align:center;">@Recursos.Idioma.OEEIntern</p>
+
+        <div class="row" id="GrafiquesSemipiechart" style="margin-bottom:20px;">
+
+            <div id="GraficProductividadTavil" class="col" style=" max-width:300px; height: 200px;">
+            </div>
+            <div id="GraficDisponibilitatTavil" class="col" style=" max-width:300px; height: 200px;">
+            </div>
+            <div id="GraficQualitatTavil" class="col" style=" max-width:300px; height: 200px;">
+            </div>
+            <div id="GraficOEETavil" class="col" style=" max-width:300px; height: 200px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerCadenciaEntrada">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCadenciaEntrada" href="#collapseCadenciaEntrada" aria-expanded="false" aria-controls="collapseCadenciaEntrada">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.CadenciaCajasMinut</p>
+    <div id="collapseCadencia" class="collapse show">
+        <div class="container" id="containerCadenciaEntrada">
+            <div class="row">
+                <div class="col">
+                    <div id="GraficLinealCadenciaEntrada" style="min-width: 300px;min-height: 100px; width: 97%">
+                    </div>
+                    <div style="text-align: center; display:none;" id="GraficLinealCadenciaEntradaCheckbox">
+                        <div class="form-check form-check-inline" style="display:none">
+                            <input class="form-check-input" type="radio" id="GraficLinealCadenciaEntradaCheckbox1" onclick="ShowHideLine('d1GraficLinealCadenciaEntrada', 'GraficLinealCadenciaEntradaCheckbox1');" checked>
+                            <label class="form-check-label" for="GraficLinealCadenciaEntradaCheckbox1"><font color="#F08080">Picks</font></label>
+                        </div>
+                        
+                    </div>
+                </div>
+				
+				<div class="col-12" id="cadence-caixestotals-entrada">
+                </div>
+				
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container backgroundGraphics" id="containerCaixesTotalsEntrada">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCaixesTotalsEntrada" href="#collapseCaixesTotalsEntrada" aria-expanded="false" aria-controls="collapseCaixesTotalsEntrada">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.CaixesTotals</p>
+    <div id="collapseCaixesTotalsEntrada" class="collapse show">
+        <div class="container" id="containerCaixesTotalsEntrada">
+            <div class="row">
+                <div class="col">
+                    <div id="GraficLinealProducteEntrada" style="min-width: 300px; min-height: 100px; width: 97%">
+                    </div>
+                    <div style="text-align: center; display:none" id="GraficLinealProducteEntradaCheckbox">
+                        <div class="form-check form-check-inline" style="display:none">
+                            <input class="form-check-input" type="radio" id="GraficLinealProducteEntradaCheckbox1" onclick="ShowHideLine('d1GraficLinealProducteEntrada', 'GraficLinealProducteEntradaCheckbox1');" checked>
+                            <label class="form-check-label" for="GraficLinealProducteEntradaCheckbox1"><font color="#F08080">Picks</font></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<h2 id="NomApilador" style="text-align: center; color: white; margin-top: 15px; margin-bottom: 10px;"> </h2>
+
+<div id="noDataApilador" style="display: none; margin-top:200px;margin-bottom:200px;">
+    <p align="center">@Recursos.Idioma.NoAlarmes</p>
+</div>
+
+<div class="container backgroundGraphics" id="containerAlarmesApilador">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmesApilador" href="#collapseAlarmesApilador" aria-expanded="false" aria-controls="collapseAlarmesApilador">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Alarmes</p>
+    <div id="collapseAlarmesApilador" class="collapse show">
+        <div class="row">
+            <div class="col" id="chartContainerAlarmaApilador" style="min-height: 170px; max-height:170px;">
+            </div>
+        </div>
+        <div style="text-align: center;" id="AlarmesCheckboxApilador">
+        </div>
+    </div>
+
+</div>
+
+<div class="container backgroundGraphics" id="containerAlarmesFrequentsApilador">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmesFrequentsApilador" href="#collapseAlarmesFrequentsApilador" aria-expanded="false" aria-controls="collapseAlarmesFrequentsApilador">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.AlarmesFrequents</p>
+    <div id="collapseAlarmesFrequentsApilador" class="collapse show">
+        <div class="row graficaAlarmes" id="divPercentatgeAlarmes" style="padding-bottom: 35px; padding-top: 20px;margin-top:20px;">
+            <div class="col" id="DonutAlarmesApilador" style="min-width: 300px;min-height: 300px;">
+            </div>
+            <div class="col" id="TableAlarmesPercentatge" style="min-width: 300px; margin-right:2%">
+                <div class="col" style="border-radius:10px;">
+                    <table class="table" style="border-radius:10px;">
+                        <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">ID</th>
+                                <th scope="col">@Recursos.Idioma.Descripcio</th>
+                                <th scope="col">%</th>
+                                <th scope="col">@Recursos.Idioma.ZonaError</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                            @foreach (var alarma in Model.Apilador.AlarmesFrequents)
+                            {
+                                <tr>
+                                    <td style="display:inline-block; width: 15px; margin-top: 10px; margin-bottom: 10px; border: 1px solid black; margin-left: 10px; border-radius: 10px;" bgcolor="@alarma.Color"></td>
+                                    <td>@alarma.AlarmaId</td>
+                                    <td>@alarma.Descripcio</td>
+                                    <td style="width:15%">@alarma.Percentatge % (@alarma.Quantitat)</td>
+                                    <td style="width:15%"><i class='fa fa-external-link' style='margin-top:2%;'></i>Popup</td>
+                                </tr>
+                            }
+                            @if (Model.Apilador.Alarmes.Count() > 0)
+                            {
+                                <tr style="background-color:darkgray">
+                                    <td></td>
+                                    <td></td>
+                                    <td>@Recursos.Idioma.Total</td>
+                                    <td style="width:15%">@Model.Apilador.Alarmes.Count()</td>
+                                    <td style="width:15%"></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="TableAlarmsApilador" style="min-width: 300px; overflow: auto;">
+    <br />
+    <table id="taulaAlarmesIdApilador" class="table table-striped table-hover" cellspacing="0" width="100%" style="border-collapse: collapse; overflow: hidden;">
+        <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+            <tr>
+                <th class="th">
+                    ID
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Duracio
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.IniciDurada
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Caixa
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.InfoAlarma
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Video
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Descarregar
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Cameres
+                </th>
+            </tr>
+        </thead>
+        <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+            @for (int i = 1; i <= Model.Apilador.Alarmes.Count(); i++)
+            {
+                var alarma = Model.Apilador.Alarmes[i - 1];
+                var cameresAlarmaId = "camerasAlarmaId" + i;
+                <tr>
+                    <td>
+                        @alarma.AlarmaId
+                    </td>
+                    <td>
+                        @Convert.ToInt32(alarma.Duracio.TotalMinutes).ToString()min @Convert.ToInt32(alarma.Duracio.Seconds).ToString()s
+                    </td>
+                    <td>
+                        @alarma.Inici
+                    </td>
+                    <td>
+                        @alarma.ProducteId
+                    </td>
+                    <td>
+                        @alarma.Descripcio
+                    </td>
+                    <td>
+                        <a target="_blank" href="@alarma.EnllacVideo">
+                            <i class='fa fa-video-camera' style='margin-top:2%;'></i>
+                            Video
+                        </a>
+                    </td>
+                    <td>
+                        <a style="cursor: pointer;" onclick="DescarregarVideo('@alarma.Inici','@i')">
+                            <i class='fa fa-download' style='margin-top:2%;'></i>
+                            @Recursos.Idioma.Descarregar
+                        </a>
+                    </td>
+                    <td>
+
+                        <select name="camerasAlarma" id="@cameresAlarmaId">
+                            @foreach (var camara in Model.Entrada.Cameres)
+                            {
+                                <option value="@camara">@camara</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<h2 id="NomGirador" class="encabezado"></h2>
+
+<style>
+  .encabezado {
+    text-align: center;
+    color: white;
+    font-family: 'Roboto', sans-serif; /* Cambia por la fuente que prefieras */
+    font-size: 2.5rem; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    letter-spacing: 1px; /* Espaciado entre letras */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para destacar el texto */
+  }
+</style>
+
+
+<div id="noDataGirador" style="display: none; margin-top:200px;margin-bottom:200px;">
+    <p align="center">@Recursos.Idioma.NoAlarmes</p>
+</div>
+
+<div class="container backgroundGraphics" id="containerAlarmesGirador">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmesGirador" href="#collapseAlarmesGirador" aria-expanded="false" aria-controls="collapseAlarmesGirador">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Alarmes</p>
+    <div id="collapseAlarmesGirador" class="collapse show">
+        <div class="row">
+            <div class="col" id="chartContainerAlarmaGirador" style="min-height: 170px; max-height:170px;">
+            </div>
+        </div>
+        <div style="text-align: center;" id="AlarmesCheckboxGirador">
+        </div>
+    </div>
+
+</div>
+
+<div class="container backgroundGraphics" id="containerAlarmesFrequentsGirador">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmesFrequentsGirador" href="#collapseAlarmesFrequentsGirador" aria-expanded="false" aria-controls="collapseAlarmesFrequentsGirador">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.AlarmesFrequents</p>
+    <div id="collapseAlarmesFrequentsGirador" class="collapse show">
+        <div class="row graficaAlarmes" id="divPercentatgeAlarmes" style="padding-bottom: 35px; padding-top: 20px; margin-top:20px;">
+            <div class="col" id="DonutAlarmesGirador" style="min-width: 300px; min-height: 300px;"></div>
+            <div class="col" id="TableAlarmesPercentatge" style="min-width: 300px; margin-right: 2%;">
+                <div class="col" style="padding: 20px;">
+                    <table class="table" style="width: 100%; border-collapse: collapse; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
+                        <thead style="background-color: #2d2d2d; color: #ffffff;">
+                            <tr style="height: 50px;">
+                                <th scope="col" style="padding: 15px; text-align: center;"></th>
+                                <th scope="col" style="padding: 15px; text-align: left;">ID</th>
+                                <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.Descripcio</th>
+                                <th scope="col" style="padding: 15px; text-align: right;">%</th>
+                                <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.ZonaError</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background: #3a3a3a; color: #e0e0e0;">
+                            @foreach (var alarma in Model.Girador.AlarmesFrequents)
+                            {
+                                <tr style="margin-bottom: 10px; border: 1px solid #444;">
+                                    <td style="padding: 15px; text-align: center; vertical-align: middle;">
+                                        <div style="width: 15px; height: 15px; background-color: @alarma.Color; border-radius: 50%; border: 1px solid #ffffff;"></div>
+                                    </td>
+                                    <td style="padding: 15px; vertical-align: middle;">@alarma.AlarmaId</td>
+                                    <td style="padding: 15px; vertical-align: middle;">@alarma.Descripcio</td>
+                                    <td style="padding: 15px; text-align: right; font-weight: bold; color: #ffcc00; vertical-align: middle;">@alarma.Percentatge % (@alarma.Quantitat)</td>
+                                    <td style="padding: 15px; text-align: right; vertical-align: middle;">
+                                        <a href="#" class="btn btn-sm btn-outline-light" style="border-radius: 20px;">
+                                            <i class='fa fa-external-link'></i> Popup
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.Girador.Alarmes.Count() > 0)
+                            {
+                                <tr style="background-color: #2d2d2d; color: #ffffff; font-weight: bold;">
+                                    <td></td>
+                                    <td></td>
+                                    <td style="padding: 15px;">@Recursos.Idioma.Total</td>
+                                    <td style="padding: 15px; text-align: right;">@Model.Girador.Alarmes.Count()</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table tbody tr {
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .table tbody tr:hover {
+        background-color: #525252;
+    }
+    .table thead th {
+        font-weight: bold;
+    }
+</style>
+
+<div id="TableAlarmsGirador" style="min-width: 300px; overflow: auto;">
+    <br />
+    <table id="taulaAlarmesIdGirador" class="table table-striped table-hover" cellspacing="0" width="100%" style="border-collapse: collapse; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
+        <thead style="background-color: #2d2d2d; color: #ffffff;">
+            <tr style="height: 50px;">
+                <th class="th" style="padding: 15px; text-align: left;">ID</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Duracio</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.IniciDurada</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Caixa</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.InfoAlarma</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Video</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Descarregar</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Cameres</th>
+            </tr>
+        </thead>
+        <tbody style="background: #3a3a3a; color: #e0e0e0;">
+            @for (int i = 1; i <= Model.Girador.Alarmes.Count(); i++)
+            {
+                var alarma = Model.Girador.Alarmes[i - 1];
+                var cameresAlarmaId = "camerasAlarmaId" + i;
+                <tr style="background: #3a3a3a; margin-bottom: 10px; border: 1px solid #444;">
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.AlarmaId</td>
+                    <td style="padding: 15px; vertical-align: middle;">
+                        @Convert.ToInt32(alarma.Duracio.TotalMinutes).ToString()min @Convert.ToInt32(alarma.Duracio.Seconds).ToString()s
+                    </td>
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.Inici</td>
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.ProducteId</td>
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.Descripcio</td>
+                    <td style="padding: 15px; vertical-align: middle;">
+                        <a target="_blank" href="@alarma.EnllacVideo" class="btn btn-sm btn-outline-light" style="border-radius: 20px;">
+                            <i class='fa fa-video-camera'></i> Video
+                        </a>
+                    </td>
+                    <td style="padding: 15px; vertical-align: middle;">
+                        <a style="cursor: pointer;" onclick="DescarregarVideo('@alarma.Inici','@i')" class="btn btn-sm btn-outline-light" style="border-radius: 20px;">
+                            <i class='fa fa-download'></i> @Recursos.Idioma.Descarregar
+                        </a>
+                    </td>
+                    <td style="padding: 15px; vertical-align: middle;">
+                        <select name="camerasAlarma" id="@cameresAlarmaId" style="background-color: #2d2d2d; color: #ffffff; border: 1px solid #444; border-radius: 5px; padding: 5px;">
+                            @foreach (var camara in Model.Entrada.Cameres)
+                            {
+                                <option value="@camara">@camara</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .table tbody tr {
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .table tbody tr:hover {
+        background-color: #525252;
+    }
+    .table thead th {
+        font-weight: bold;
+    }
+    .btn-outline-light {
+        color: #ffcc00;
+        border-color: #ffcc00;
+    }
+    .btn-outline-light:hover {
+        background-color: #ffcc00;
+        color: #2d2d2d;
+    }
+</style>
+
+
+
+<h2 id="NomSortida" class="encabezado"></h2>
+
+<style>
+  .encabezado {
+    text-align: center;
+    color: white;
+    font-family: 'Roboto', sans-serif; /* Cambia por la fuente que prefieras */
+    font-size: 2.5rem; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    letter-spacing: 1px; /* Espaciado entre letras */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para destacar el texto */
+  }
+</style>
+
+
+<div class="container backgroundGraphics" id="containerProducteSortida">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseProducteSortida" href="#collapseProducteSortida" aria-expanded="false" aria-controls="collapseProducteSortida">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Mosaic</p>
+    <div id="collapseProducteSortida" class="collapse show">
+        <div class="row">
+            <div class="col" id="chartProducteSortida" style="min-height: 170px; max-height:170px;">
+            </div>
+        </div>
+        <div style="text-align: center;" id="ProductesCheckboxSortida">
+        </div>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerEstatsSortida">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseEstatsSortida" href="#collapseEstatsSortida" aria-expanded="false" aria-controls="collapseEstatsSortida">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.MaquinaEstats</p>
+    <div id="collapseEstatsSortida" class="collapse show">
+        <div class="row">
+            <div class="col" id="chartContainerSortida" style="min-height: 170px; max-height:170px;">
+            </div>
+        </div>
+        <div style="text-align: center;" id="EstatsCheckboxSortida">
+        </div>
+    </div>
+
+</div>
+
+<div class="container backgroundGraphics" id="containerPercentatgeEstatsSortida">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapsePercentatgeEstatsSortida" href="#collapsePercentatgeEstatsSortida" aria-expanded="false" aria-controls="collapsePercentatgeEstatsSortida">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.PercentatgeEstats</p>
+    <div id="collapsePercentatgeEstats" class="collapse show">
+        <div class="row" id="divCircularChartContainerSortida" style="padding-bottom: 35px; padding-top: 20px; margin-top:20px;">
+            <div class="col" id="CircularChartContainerSortida" style="min-width: 300px; min-height: 300px;"></div>
+            <div class="col" id="TableTotalTimeStates" style="min-width: 300px; margin-right:2%;">
+                <div class="col" style="padding: 20px;">
+                    <table class="table" style="width: 100%; border-collapse: collapse; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
+                        <thead style="background-color: #2d2d2d; color: #ffffff;">
+                            <tr style="height: 50px;">
+                                <th scope="col" style="padding: 15px; text-align: center;"></th>
+                                <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.Estat</th>
+                                <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.Temps</th>
+                                <th scope="col" style="padding: 15px; text-align: right;">%</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background: #3a3a3a; color: #e0e0e0;">
+                            @foreach (var estat in Model.Sortida.EstatsFrequents)
+                            {
+                                <tr style="background: #3a3a3a; margin-bottom: 10px; border: 1px solid #444;">
+                                    <td style="padding: 15px; vertical-align: middle; text-align: center;">
+                                        <div style="width: 15px; height: 15px; background-color: @estat.Color; border-radius: 50%; border: 1px solid #ffffff;"></div>
+                                    </td>
+                                    <td style="padding: 15px; vertical-align: middle;">@estat.Estat</td>
+                                    <td style="padding: 15px; vertical-align: middle;">@(estat.Duracio.Days * 24 + estat.Duracio.Hours)h @estat.Duracio.Minutes.ToString()min @estat.Duracio.Seconds.ToString()s</td>
+                                    <td style="padding: 15px; font-weight: bold; text-align: right; color: #ffcc00; vertical-align: middle;">@estat.Percentatge.ToString() %</td>
+                                </tr>
+                            }
+							@if (Model.Sortida.EstatsFrequents.Count() > 0)
+							{
+								<tr style="background-color: #2d2d2d; color: #ffffff; font-weight: bold;">
+									<td></td>
+									<td>@Recursos.Idioma.Total</td>
+									<td style="padding: 15px;">@Model.Sortida.EstatsFrequents.Sum(e => e.Duracio.Days * 24 + e.Duracio.Hours)h @Model.Sortida.EstatsFrequents.Sum(e => e.Duracio.Minutes)min @Model.Sortida.EstatsFrequents.Sum(e => e.Duracio.Seconds)s</td>
+									<td style="padding: 15px; text-align: right;">@Model.Sortida.EstatsFrequents.Sum(e => e.Percentatge) %</td>
+								</tr>
+							}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table tbody tr {
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .table tbody tr:hover {
+        background-color: #525252;
+    }
+    .table thead th {
+        font-weight: bold;
+    }
+</style>
+<div class="container backgroundGraphics" id="containerAlarmesSortida">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmesSortida" href="#collapseAlarmesSortida" aria-expanded="false" aria-controls="collapseAlarmesSortida">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Alarmes</p>
+    <div id="collapseAlarmesSortida" class="collapse show">
+        <div class="row">
+            <div class="col" id="chartContainerAlarmaSortida" style="min-height: 170px; max-height:170px;">
+            </div>
+        </div>
+        <div style="text-align: center;" id="AlarmesCheckboxSortida">
+        </div>
+    </div>
+
+</div>
+
+<div class="container backgroundGraphics" id="containerAlarmesFrequentsSortida">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmesFrequentsSortida" href="#collapseAlarmesFrequentsSortida" aria-expanded="false" aria-controls="collapseAlarmesFrequentsSortida">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.AlarmesFrequents</p>
+    <div id="collapseAlarmesFrequentsSortida" class="collapse show">
+        <div class="row graficaAlarmes" id="divPercentatgeAlarmes" style="padding-bottom: 35px; padding-top: 20px; margin-top:20px;">
+            <div class="col" id="DonutAlarmesSortida" style="min-width: 300px; min-height: 300px;"></div>
+            <div class="col" id="TableAlarmesPercentatge" style="min-width: 300px; margin-right:2%">
+                <div class="col" style="padding: 20px;">
+                    <table class="table" style="width: 100%; border-collapse: collapse; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
+                        <thead style="background-color: #2d2d2d; color: #ffffff;">
+                            <tr style="height: 50px;">
+                                <th scope="col" style="padding: 15px; text-align: center;"></th>
+                                <th scope="col" style="padding: 15px; text-align: left;">ID</th>
+                                <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.Descripcio</th>
+                                <th scope="col" style="padding: 15px; text-align: right;">%</th>
+
+                            </tr>
+                        </thead>
+                        <tbody style="background: #3a3a3a; color: #e0e0e0;">
+                            @foreach (var alarma in Model.Sortida.AlarmesFrequents)
+                            {
+                                <tr style="background: #3a3a3a; margin-bottom: 10px; border: 1px solid #444;">
+                                    <td style="padding: 15px; vertical-align: middle; text-align: center;">
+                                        <div style="width: 15px; height: 15px; background-color: @alarma.Color; border-radius: 50%; border: 1px solid #ffffff;"></div>
+                                    </td>
+                                    <td style="padding: 15px; vertical-align: middle;">@alarma.AlarmaId</td>
+                                    <td style="padding: 15px; vertical-align: middle;">@alarma.Descripcio</td>
+                                    <td style="padding: 15px; font-weight: bold; text-align: right; color: #ffcc00; vertical-align: middle;">@alarma.Percentatge % (@alarma.Quantitat)</td>
+
+                                </tr>
+                            }
+                            @if (Model.Sortida.Alarmes.Count() > 0)
+                            {
+                                <tr style="background-color: #2d2d2d; color: #ffffff; font-weight: bold;">
+                                    <td></td>
+                                    <td></td>
+                                    <td>@Recursos.Idioma.Total</td>
+                                    <td style="padding: 15px;">@Model.Sortida.Alarmes.Count()</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table tbody tr {
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .table tbody tr:hover {
+        background-color: #525252;
+    }
+    .table thead th {
+        font-weight: bold;
+    }
+    .btn-outline-light {
+        color: #ffcc00;
+        border-color: #ffcc00;
+    }
+    .btn-outline-light:hover {
+        background-color: #ffcc00;
+        color: #2d2d2d;
+    }
+</style>
+
+<div id="TableAlarmsSortida" style="min-width: 300px; overflow: auto;">
+    <br />
+    <table id="taulaAlarmesIdSortida" class="table table-striped table-hover" cellspacing="0" width="100%" style="border-collapse: collapse; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); overflow: hidden;">
+        <thead style="background-color: #2d2d2d; color: #ffffff;">
+            <tr style="height: 50px;">
+                <th class="th" style="padding: 15px; text-align: left;">ID</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Duracio</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.IniciDurada</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Caixa</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.InfoAlarma</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Video</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Descarregar</th>
+                <th class="th" style="padding: 15px; text-align: left;">@Recursos.Idioma.Cameres</th>
+            </tr>
+        </thead>
+        <tbody style="background: #3a3a3a; color: #e0e0e0;">
+            @for (int i = 1; i <= Model.Sortida.Alarmes.Count(); i++)
+            {
+                var alarma = Model.Sortida.Alarmes[i - 1];
+                var cameresAlarmaId = "camerasAlarmaId" + i;
+                <tr style="margin-bottom: 10px; border: 1px solid #444;">
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.AlarmaId</td>
+                    <td style="padding: 15px; vertical-align: middle;">@Convert.ToInt32(alarma.Duracio.TotalMinutes).ToString()min @Convert.ToInt32(alarma.Duracio.Seconds).ToString()s</td>
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.Inici</td>
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.ProducteId</td>
+                    <td style="padding: 15px; vertical-align: middle;">@alarma.Descripcio</td>
+                    <td style="padding: 15px; vertical-align: middle;">
+                        <a target="_blank" href="@alarma.EnllacVideo" class="btn btn-sm btn-outline-light" style="border-radius: 20px;">
+                            <i class='fa fa-video-camera'></i> Video
+                        </a>
+                    </td>
+                    <td style="padding: 15px; vertical-align: middle;">
+                        <a style="cursor: pointer;" onclick="DescarregarVideo('@alarma.Inici','@i')" class="btn btn-sm btn-outline-light" style="border-radius: 20px;">
+                            <i class='fa fa-download'></i> @Recursos.Idioma.Descarregar
+                        </a>
+                    </td>
+                    <td style="padding: 15px; vertical-align: middle;">
+                        <select name="camerasAlarma" id="@cameresAlarmaId" style="background-color: #2d2d2d; color: #ffffff; border: 1px solid #444; border-radius: 5px; padding: 5px;">
+                            @foreach (var camara in Model.Sortida.Cameres)
+                            {
+                                <option value="@camara">@camara</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .table tbody tr {
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .table tbody tr:hover {
+        background-color: #525252;
+    }
+    .table thead th {
+        font-weight: bold;
+    }
+    .btn-outline-light {
+        color: #ffcc00;
+        border-color: #ffcc00;
+    }
+    .btn-outline-light:hover {
+        background-color: #ffcc00;
+        color: #2d2d2d;
+    }
+</style>
+
+
+<div class="container backgroundGraphics" id="containerCadenciaSortida">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCadenciaSortida" href="#collapseCadenciaSortida" aria-expanded="false" aria-controls="collapseCadenciaSortida">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.CadenciaPaletsHora</p>
+    <div id="collapseCadencia" class="collapse show">
+        <div class="container" id="containerCadenciaSortida">
+            <div class="row">
+                <div class="col">
+                    <div id="GraficLinealCadenciaSortida" style="min-width: 300px;min-height: 100px; width: 97%">
+                    </div>
+                    <div style="text-align: center; display:none;" id="GraficLinealCadenciaSortidaCheckbox">
+                        <div class="form-check form-check-inline" style="display:none">
+                            <input class="form-check-input" type="radio" id="GraficLinealCadenciaSortidaCheckbox1" onclick="ShowHideLine('d1GraficLinealCadenciaSortida', 'GraficLinealCadenciaSortidaCheckbox1');" checked>
+                            <label class="form-check-label" for="GraficLinealCadenciaSortidaCheckbox1"><font color="#F08080">Picks</font></label>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container backgroundGraphics" id="containerCaixesTotalsSortida">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCaixesTotalsSortida" href="#collapseCaixesTotalsSortida" aria-expanded="false" aria-controls="collapseCaixesTotalsSortida">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.PaletsTotals</p>
+    <div id="collapseCaixesTotalsSortida" class="collapse show">
+        <div class="container" id="containerCaixesTotalsSortida">
+            <div class="row">
+                <div class="col">
+                    <div id="GraficLinealProducteSortida" style="min-width: 300px; min-height: 100px; width: 97%">
+                    </div>
+                    <div style="text-align: center; display:none" id="GraficLinealProducteSortidaCheckbox">
+                        <div class="form-check form-check-inline" style="display:none">
+                            <input class="form-check-input" type="radio" id="GraficLinealProducteSortidaCheckbox1" onclick="ShowHideLine('d1GraficLinealProducteSortida', 'GraficLinealProducteSortidaCheckbox1');" checked>
+                            <label class="form-check-label" for="GraficLinealProducteSortidaCheckbox1"><font color="#F08080">Picks</font></label>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="col" id="tableContentVariables" style="min-width: 300px; overflow: auto;display:none;margin-top:30px">
+    <div class="table100 ver2 m-b-110">
+        <div class="table100-head">
+            <table id="tableVariableHeader">
+                <thead>
+                    <tr class="row100 head row100-head">
+                        <th style="width: 15%">
+                            @Recursos.Idioma.Nom
+                        </th>
+                        <th style="width: 22%">
+                            @Recursos.Idioma.Vact
+                        </th>
+                        <th style="width: 11%">
+                            @Recursos.Idioma.Vant
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="table100-body js-pscroll">
+            <table id="tableValueContentVariables">
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerDades">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapsedDades" href="#collapsedDades" aria-expanded="false" aria-controls="collapsedDades">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Resum</p>
+    <div id="collapsedDades" class="collapse show" style="margin-top:10px;">
+        <div class="row">
+            <div class="col">
+
+                <table class="table" style="width:50%;margin-left:auto;margin-right:auto;" border="1">
+                    <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                        <tr>
+                            <th colspan="2" style="text-align: center;">@Recursos.Idioma.ResumProduccio</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                        <tr align="center">
+                            @if (Model.Entrada.Estats.Count() > 0)
+                            {
+                                double result = Model.Entrada.Estats.Last().CaixesTotals;
+                                <td style="width:50%;">@Recursos.Idioma.CaixesTotals :</td>
+                                <td>@result</td>
+                            }
+                            else
+                            {
+                                int result = 0;
+                                <td>@Recursos.Idioma.CaixesTotals :</td>
+                                <td>@result</td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table" style="width:50%;margin-left:auto;margin-right:auto;" border="1">
+                    <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                        <tr>
+                            <th colspan="2" style="text-align: center;">@Recursos.Idioma.QuantitatProductes</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                        @foreach (var producte in @Model.Entrada.DadesGeneriques.ProductesFabricats)
+                        {
+                            <tr align="center">
+                                <td style="width:50%;">@producte.Value.Nom</td>
+                                <td style="width:50%;">@producte.Value.Quantitat</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+                <hr color="white">
+
+                <table class="table" style="width:50%;margin-left:auto;margin-right:auto;" border="1">
+                    <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                        <tr>
+                            <th colspan="2" style="text-align: center;">@Recursos.Idioma.TotalMaquina</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                        <tr align="center">
+                            <td>@Recursos.Idioma.TempsTotalFuncionament:</td>
+                            <td>@Model.Entrada.DadesGeneriques.TempsTotalFuncionament</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.CanvisFormat: </td>
+                            <td>@Model.Entrada.Estats.Where(e => e.EstatId == 5).Count()</td>
+                        </tr>
+                        <tr align="center">
+                            <td style="width:50%;">@Recursos.Idioma.CadenciaMitja:</td>
+                            <td>@Model.Entrada.DadesGeneriques.CadenciaMitja</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <hr color="white">
+
+                <table class="table" style="width:50%;margin-left:auto;margin-right:auto;" border="1">
+                    <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                        <tr>
+                            <th colspan="2" style="text-align: center;">OEE</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                        <tr align="center">
+                            <td style="width:50%;">OEE:</td>
+                            <td style="width:50%;">@Math.Round(Model.Entrada.OeeGeneral.General, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Rendiment:</td>
+                            <td>@Math.Round(Model.Entrada.OeeGeneral.Rendiment, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Disponibilitat: </td>
+                            <td>@Math.Round(Model.Entrada.OeeGeneral.Disponibilitat, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Qualitat: </td>
+                            <td>@Math.Round(Model.Entrada.OeeGeneral.Qualitat, 2)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <hr color="white">
+
+                <table class="table" style="width:50%;margin-left:auto;margin-right:auto;" border="1">
+                    <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                        <tr>
+                            <th colspan="2" style="text-align: center;">@Recursos.Idioma.OEEIntern</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                        <tr align="center">
+                            <td style="width:50%;">@Recursos.Idioma.OEEIntern:</td>
+                            <td style="width:50%;">@Math.Round(Model.Entrada.OeeIntern.General, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Rendiment:</td>
+                            <td>@Math.Round(Model.Entrada.OeeIntern.Rendiment, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Disponibilitat: </td>
+                            <td>@Math.Round(Model.Entrada.OeeIntern.Disponibilitat, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Qualitat: </td>
+                            <td>@Math.Round(Model.Entrada.OeeIntern.Qualitat, 2)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <hr color="white">
+
+                <p>@Recursos.Idioma.NumeroAlarmes: @Model.Entrada.Alarmes.Count() <a class="button" style="float:right;margin-bottom:20px;width:auto;height:auto" data-toggle="collapse" data-parent="#collapseAlarmesDades" href="#collapseAlarmesDades" aria-expanded="false" aria-controls="collapseAlarmesDades">+</a></p>
+                <div id="collapseAlarmesDades" class="collapse">
+                    <table class="table" style="border-radius:10px;">
+                        <thead style="background: linear-gradient(205deg, #2d2d2d, #2d2d2d);color: azure;">
+                            <tr>
+                                <th style="text-align:center;" scope="col">
+                                    ID
+                                </th>
+                                <th style="text-align:center;" scope="col">
+                                    @Recursos.Idioma.Caixa
+                                </th>
+                                <th style="width:50%; text-align:center;" scope="col">
+                                    @Recursos.Idioma.InfoAlarma
+                                </th>
+                                <th style="text-align:center;" scope="col">
+                                    @Recursos.Idioma.Quantitat
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody style="background: #585757;/* border: 0.2px solid rgba(255,255,255, 1); */color: antiquewhite;border-bottom: dashed white;">
+                            @foreach (var producte in @Model.Entrada.Alarmes.GroupBy(e => e.AlarmaId))
+                            {
+                                <tr align="center">
+                                    <td>@producte.Key</td>
+                                    <td>@Model.Entrada.Alarmes.FirstOrDefault(e => e.AlarmaId == producte.Key).ProducteId</td>
+                                    <td style="width:50%;">@Model.Entrada.Alarmes.FirstOrDefault(e => e.AlarmaId == producte.Key).Descripcio</td>
+                                    <td>@producte.Count()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <hr color="white">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div>
+    <div class="row justify-content-center" id="divPDF">
+        <div class="col text-center" style="margin: 15px;margin-top:20px;">
+            <button id="Pdfbutton" type="button" class="btn" onclick="PDFBackend();"><img src="~/Images/pdfImage.png" width="80" height="80"></button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/Scripts/JS_Formadora.js"></script>
+<script type="text/javascript" src="~/PDF/GestorPDF.js"></script>
+<script type="text/javascript" src="~/PDF/jquery.color-animation.js"></script>
+<script type="text/javascript" src="~/Scripts/Plotly/plotly.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Plotly/plotly-d3.js"></script>
+<script type="text/javascript" src="~/Scripts/Plotly/plotly-2.6.3.min.js"></script>
+
+<script>
+    var entrada = "@Model.Entrada.Nom";
+    var idEntrada = @Model.IdMaquina;
+
+    var apilador = "@Model.Apilador.Nom";
+    var idApilador = @Model.IdMaquina;
+
+    var girador = "@Model.Girador.Nom";
+    var idGirador = @Model.IdMaquina;
+
+    var sortida = "@Model.Sortida.Nom";
+    var idSortida = @Model.IdMaquina;
+
+    var via = "@Model.NomMaquina";
+    var idVia = @Model.IdMaquina;
+
+    $(document).ready(function () {
+
+        SeleccionarMenu(via, idVia);//Selecciona la màquina activa
+
+        //Actualitzem la durada
+        refreshDuration();
+
+        //JS Primera gràfica
+        var table = $('#taulaAlarmesIdSortida').DataTable({
+            "dom": '<"top"fl>rt<"bottom"ip><"clear">',
+            "lengthMenu": [
+                [3,5,10, 25, 50, -1],
+                ['3','5','10', '25', '50', "@Recursos.Idioma.Tots"]
+
+            ],
+            "language": {
+                "sProcessing": "@Recursos.Idioma.Processant",
+                "sLengthMenu": "@Recursos.Idioma.MostrarMenu",
+                "sZeroRecords": "@Recursos.Idioma.SenseResultats",
+                "sEmptyTable": "@Recursos.Idioma.TaulaBuida",
+                "sInfo": "@Recursos.Idioma.InfoTaula",
+                "sInfoEmpty": "@Recursos.Idioma.InfoBuida",
+                "sInfoFiltered": "@Recursos.Idioma.InfoFiltrada",
+                "sInfoPostFix": "",
+                "sSearch": "@Recursos.Idioma.Buscar",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "@Recursos.Idioma.CarregantDades",
+                "oPaginate": {
+                    "sFirst": "@Recursos.Idioma.Primer",
+                    "sLast": "@Recursos.Idioma.Ultim",
+                    "sNext": "@Recursos.Idioma.Seguent",
+                    "sPrevious": "@Recursos.Idioma.Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": "@Recursos.Idioma.OrdreAscendent",
+                    "sSortDescending": "@Recursos.Idioma.OrdreDescendent"
+                }
+            },
+            "pagingType": "full_numbers"
+        });
+        $('.dataTables_length').addClass('bs-select')
+        $('#ShowAll').click(function () {
+            table.search('').draw();
+            $().val('');
+        });
+    });
+    $(document).ready(function () {
+
+        SeleccionarMenu(via, idVia);//Selecciona la màquina activa
+
+        //Actualitzem la durada
+        refreshDuration();
+
+        //JS Primera gràfica
+        var table = $('#taulaAlarmesIdEntrada').DataTable({
+            "dom": '<"top"fl>rt<"bottom"ip><"clear">',
+            "lengthMenu": [
+                [3,5,10, 25, 50, -1],
+                ['3','5','10', '25', '50', "@Recursos.Idioma.Tots"]
+
+            ],
+            "language": {
+                "sProcessing": "@Recursos.Idioma.Processant",
+                "sLengthMenu": "@Recursos.Idioma.MostrarMenu",
+                "sZeroRecords": "@Recursos.Idioma.SenseResultats",
+                "sEmptyTable": "@Recursos.Idioma.TaulaBuida",
+                "sInfo": "@Recursos.Idioma.InfoTaula",
+                "sInfoEmpty": "@Recursos.Idioma.InfoBuida",
+                "sInfoFiltered": "@Recursos.Idioma.InfoFiltrada",
+                "sInfoPostFix": "",
+                "sSearch": "@Recursos.Idioma.Buscar",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "@Recursos.Idioma.CarregantDades",
+                "oPaginate": {
+                    "sFirst": "@Recursos.Idioma.Primer",
+                    "sLast": "@Recursos.Idioma.Ultim",
+                    "sNext": "@Recursos.Idioma.Seguent",
+                    "sPrevious": "@Recursos.Idioma.Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": "@Recursos.Idioma.OrdreAscendent",
+                    "sSortDescending": "@Recursos.Idioma.OrdreDescendent"
+                }
+            },
+            "pagingType": "full_numbers"
+        });
+        $('.dataTables_length').addClass('bs-select')
+        $('#ShowAll').click(function () {
+            table.search('').draw();
+            $().val('');
+        });
+    });
+    $(document).ready(function () {
+
+        SeleccionarMenu(via, idVia);//Selecciona la màquina activa
+
+        //Actualitzem la durada
+        refreshDuration();
+
+        //JS Primera gràfica
+        var table = $('#taulaAlarmesIdGirador').DataTable({
+            "dom": '<"top"fl>rt<"bottom"ip><"clear">',
+            "lengthMenu": [
+                [3,5,10, 25, 50, -1],
+                ['3','5','10', '25', '50', "@Recursos.Idioma.Tots"]
+
+            ],
+            "language": {
+                "sProcessing": "@Recursos.Idioma.Processant",
+                "sLengthMenu": "@Recursos.Idioma.MostrarMenu",
+                "sZeroRecords": "@Recursos.Idioma.SenseResultats",
+                "sEmptyTable": "@Recursos.Idioma.TaulaBuida",
+                "sInfo": "@Recursos.Idioma.InfoTaula",
+                "sInfoEmpty": "@Recursos.Idioma.InfoBuida",
+                "sInfoFiltered": "@Recursos.Idioma.InfoFiltrada",
+                "sInfoPostFix": "",
+                "sSearch": "@Recursos.Idioma.Buscar",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "@Recursos.Idioma.CarregantDades",
+                "oPaginate": {
+                    "sFirst": "@Recursos.Idioma.Primer",
+                    "sLast": "@Recursos.Idioma.Ultim",
+                    "sNext": "@Recursos.Idioma.Seguent",
+                    "sPrevious": "@Recursos.Idioma.Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": "@Recursos.Idioma.OrdreAscendent",
+                    "sSortDescending": "@Recursos.Idioma.OrdreDescendent"
+                }
+            },
+            "pagingType": "full_numbers"
+        });
+        $('.dataTables_length').addClass('bs-select')
+        $('#ShowAll').click(function () {
+            table.search('').draw();
+            $().val('');
+        });
+    });
+    $(document).ready(function () {
+
+        SeleccionarMenu(via, idVia);//Selecciona la màquina activa
+
+        //Actualitzem la durada
+        refreshDuration();
+
+        //JS Primera gràfica
+        var table = $('#taulaAlarmesIdApilador').DataTable({
+            "dom": '<"top"fl>rt<"bottom"ip><"clear">',
+            "lengthMenu": [
+                [3,5,10, 25, 50, -1],
+                ['3','5','10', '25', '50', "@Recursos.Idioma.Tots"]
+
+            ],
+            "language": {
+                "sProcessing": "@Recursos.Idioma.Processant",
+                "sLengthMenu": "@Recursos.Idioma.MostrarMenu",
+                "sZeroRecords": "@Recursos.Idioma.SenseResultats",
+                "sEmptyTable": "@Recursos.Idioma.TaulaBuida",
+                "sInfo": "@Recursos.Idioma.InfoTaula",
+                "sInfoEmpty": "@Recursos.Idioma.InfoBuida",
+                "sInfoFiltered": "@Recursos.Idioma.InfoFiltrada",
+                "sInfoPostFix": "",
+                "sSearch": "@Recursos.Idioma.Buscar",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "@Recursos.Idioma.CarregantDades",
+                "oPaginate": {
+                    "sFirst": "@Recursos.Idioma.Primer",
+                    "sLast": "@Recursos.Idioma.Ultim",
+                    "sNext": "@Recursos.Idioma.Seguent",
+                    "sPrevious": "@Recursos.Idioma.Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": "@Recursos.Idioma.OrdreAscendent",
+                    "sSortDescending": "@Recursos.Idioma.OrdreDescendent"
+                }
+            },
+            "pagingType": "full_numbers"
+        });
+        $('.dataTables_length').addClass('bs-select')
+        $('#ShowAll').click(function () {
+            table.search('').draw();
+            $().val('');
+        });
+    });
+
+    var interval;
+    var minuteNumber = 0;
+    //reset visibilitat divs
+    $('#noData').hide();
+    $('#atras').hide();
+    $('#containerDades').hide();
+    $('#containerOEE').hide();
+    $('#divPDF').hide();
+
+    $('#containerAlarmesEntrada').hide();
+    $('#containerAlarmesFrequentsEntrada').hide();
+    $('#TableAlarmsEntrada').hide();
+
+    $('#containerAlarmesSortida').hide();
+    $('#containerAlarmesFrequentsSortida').hide();
+    $('#TableAlarmsSortida').hide();
+
+    $('#containerAlarmesApilador').hide();
+    $('#containerAlarmesFrequentsApilador').hide();
+    $('#TableAlarmsApilador').hide();
+
+    $('#containerAlarmesGirador').hide();
+    $('#containerAlarmesFrequentsGirador').hide();
+    $('#TableAlarmsGirador').hide();
+
+    var estatsJsonEntrada = CrearDates(@Html.Raw(Model.Entrada.EstatsJson));
+    var estatsJsonGirador = CrearDates(@Html.Raw(Model.Girador.EstatsJson));
+    var estatsJsonSortida = CrearDates(@Html.Raw(Model.Sortida.EstatsJson));
+    var estatsJsonApilador = CrearDates(@Html.Raw(Model.Apilador.EstatsJson));
+
+    if (estatsJsonEntrada || estatsJsonGirador || estatsJsonApilador || estatsJsonApilador) {
+
+        var datesMaximes = @Html.Raw(Model.ObtenirDatesMaximes());
+
+        var minimumDate = moment(datesMaximes["Minima"], "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+        var maximumDate = moment(datesMaximes["Maxima"], "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+
+        var iniciData = moment("@Model.DataInici", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+        var finalData = moment("@Model.DataFi", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+
+        var iniciDataAnterior = moment("@Html.Raw(Model.DataIniciAnterior)", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+        var finalDataAnterior = moment("@Html.Raw(Model.DataFiAnterior)", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+
+        var lineArr = [];
+        var MAX_LENGTH = 600; //numero de punts3000
+        var duration = 100; //interval entre updates de la grafica (en milisegons)600
+
+
+        if (estatsJsonEntrada) {
+
+            var alarmesEntrada = CrearDates(@Html.Raw(Model.Entrada.AlarmesJson));
+            var llistaCadenciaEntrada = CrearDates(@Html.Raw(Model.Entrada.CadenciesJson));
+            var llistaEstatsFrequentsEntrada = @Html.Raw(Json.Encode(Model.Entrada.EstatsFrequents));
+            var alarmesFrequentsEntrada = @Html.Raw(Json.Encode(Model.Entrada.AlarmesFrequents));
+
+            barchart(estatsJsonEntrada, true, "#chartContainerEntrada", iniciData, finalData, "Estat", "Info", "Color", entrada, "Via", "Via","EstatsCheckboxEntrada", true, idEntrada);
+
+            if (alarmesEntrada && alarmesEntrada.length > 0) {
+                //barchartAlarmes(alarmesEntrada, "#chartContainerAlarmaEntrada", iniciData, finalData, entrada, "#taulaAlarmesId", "Entrada", true);
+                barchart(estatsJsonEntrada.filter((object) => object.AlarmaId && (object.AlarmaId !== '0')).map(object => ({ ...object })), true, "#chartContainerAlarmaEntrada", iniciData, finalData, "Alarma", "InfoAlarma", "ColorAlarma", entrada, "Via", "Via","AlarmesCheckboxEntrada", true, idEntrada);
+                $('#containerAlarmesEntrada').show();
+                $('#containerAlarmesFrequentsEntrada').show();
+                $('#TableAlarmsEntrada').show();
+            }
+            else {
+                $('#containerAlarmesEntrada').hide();
+                $('#containerAlarmesFrequentsEntrada').hide();
+                $('#TableAlarmsEntrada').hide();
+            }
+
+            if (alarmesFrequentsEntrada && alarmesFrequentsEntrada.length > 0) {
+                donutchart("#DonutAlarmesEntrada", alarmesFrequentsEntrada, 30, "AlarmaId");
+            }
+
+            barchart(estatsJsonEntrada.filter((object) => object.ProducteId && object.EstatId !== 2 && (object.ProducteId !== '-' && object.ProducteId !== '0')).map(object => ({ ...object })), true, "#chartProducteEntrada", iniciData, finalData, "Producte", null, "ColorProducte", entrada, "Via", "Via","ProductesCheckboxEntrada", true, idEntrada);
+
+            //barchart(estatsJsonEntrada.filter((object) => object.ProducteId && object.EstatId !== 2 && (object.ProducteId !== '-' && object.ProducteId !== '0')).map(object => ({ ...object })), true, "#chartSKUEntrada", iniciData, finalData, "SKUId", null, "ColorSKU", entrada, "Via", "Via", "SKUsCheckboxEntrada", true, idEntrada);
+
+            piechart("#CircularChartContainerEntrada", llistaEstatsFrequentsEntrada, "Estat");
+
+            linechartBarras("@Recursos.Idioma.Cadencia", llistaCadenciaEntrada, true, false, true, true, "#GraficLinealCadenciaEntrada", "Valor", iniciData, finalData, estatsJsonEntrada, "Color");
+            linechartBarrasDif("@Recursos.Idioma.CaixesTotals", estatsJsonEntrada, true, false, true, true, "#GraficLinealProducteEntrada", "CaixesTotals", iniciData, finalData, estatsJsonEntrada, "Color");
+
+            showCheckboxes();//Mostrem els checkboxes de les gràfiques
+
+            $(document).ready(function () {
+                minuteNumber = 0;
+                $('#sidebarCollapse').on('click', function () {
+                    setTimeout(function () {
+                        d3.select("#GraficOEE").selectAll("svg").remove()
+                        d3.select("#GraficProductividad").selectAll("svg").remove()
+                        d3.select("#GraficDisponibilitat").selectAll("svg").remove()
+                        d3.select("#GraficQualitat").selectAll("svg").remove()
+                        semipiechart("OEE", "gold", "@Html.Raw((Model.Entrada.OeeGeneral.General))", 100, false, "#GraficOEE")
+                        semipiechart("@Recursos.Idioma.Rendiment", "red", "@Html.Raw(Model.Entrada.OeeGeneral.Rendiment)", 100, false, "#GraficProductividad")
+                        semipiechart("@Recursos.Idioma.Disponibilitat", "green", "@Html.Raw(Model.Entrada.OeeGeneral.Disponibilitat)", 100, false, "#GraficDisponibilitat")
+                        semipiechart("@Recursos.Idioma.Qualitat", "steelblue", "@Html.Raw(Model.Entrada.OeeGeneral.Qualitat)", 100, false, "#GraficQualitat")
+                        semipiechart("OEE", "gold", "@Html.Raw((Model.Entrada.OeeIntern.General))", 100, false, "#GraficOEETavil");
+                        semipiechart("@Recursos.Idioma.Rendiment", "red", "@Html.Raw(Model.Entrada.OeeIntern.Rendiment)", 100, false, "#GraficProductividadTavil");
+                        semipiechart("@Recursos.Idioma.Disponibilitat", "green", "@Html.Raw(Model.Entrada.OeeIntern.Disponibilitat)", 100, false, "#GraficDisponibiliCaixesTotalsCaixesTotalstatTavil");
+                        semipiechart("@Recursos.Idioma.Qualitat", "steelblue", "@Html.Raw(Model.Entrada.OeeIntern.Qualitat)", 100, false, "#GraficQualitatTavil");
+                    }, 1000)
+                });
+            });
+
+            $("#NomEntrada").text("@Model.Entrada.NomTraduit").show();
+
+            $('#divPDF').show();
+        }
+
+        if (estatsJsonApilador) {
+
+            var alarmesApilador = CrearDates(@Html.Raw(Model.Apilador.AlarmesJson));
+            var alarmesFrequentsApilador = @Html.Raw(Json.Encode(Model.Apilador.AlarmesFrequents));
+
+            if (alarmesApilador && alarmesApilador.length > 0) {
+                //barchartAlarmes(alarmesApilador, "#chartContainerAlarmaApilador", iniciData, finalData, apilador, "#taulaAlarmesId", "Apilador", true);
+                barchart(estatsJsonApilador.filter((object) => object.AlarmaId && (object.AlarmaId !== '0')).map(object => ({ ...object })), true, "#chartContainerAlarmaApilador", iniciData, finalData, "Alarma", "InfoAlarma", "ColorAlarma", apilador, "Via", "Via","AlarmesCheckboxApilador", true, idApilador);
+                $("#NomApilador").text("@Model.Apilador.NomTraduit").show();
+                $('#containerAlarmesApilador').show();
+                $('#containerAlarmesFrequentsApilador').show();
+                $('#TableAlarmsApilador').show();
+                $('#noDataApilador').hide();
+            }
+            else {
+                $("#NomApilador").text("@Model.Apilador.NomTraduit").show();
+                $('#noDataApilador').show();
+                $('#containerAlarmesApilador').hide();
+                $('#containerAlarmesFrequentsApilador').hide();
+                $('#TableAlarmsApilador').hide();
+            }
+
+            if (alarmesFrequentsApilador && alarmesFrequentsApilador.length > 0) {
+                donutchart("#DonutAlarmesApilador", alarmesFrequentsApilador, 30, "AlarmaId");
+            }
+
+            showCheckboxes();//Mostrem els checkboxes de les gràfiques
+
+            $('#divPDF').show();
+        }
+
+        if (estatsJsonGirador) {
+
+            var alarmesGirador = CrearDates(@Html.Raw(Json.Encode(Model.Girador.Alarmes)));
+            var alarmesFrequentsGirador = @Html.Raw(Json.Encode(Model.Girador.AlarmesFrequents));
+
+            if (alarmesGirador && alarmesGirador.length > 0) {
+                //barchartAlarmes(alarmesGirador, "#chartContainerAlarmaGirador", iniciData, finalData, girador, "#taulaAlarmesId", "Girador", true, "AlarmesCheckbox");
+                barchart(estatsJsonGirador.filter((object) => object.AlarmaId && (object.AlarmaId !== '0')).map(object => ({ ...object })), true, "#chartContainerAlarmaGirador", iniciData, finalData, "Alarma", "InfoAlarma", "ColorAlarma", girador, "Via", "Via","AlarmesCheckboxGirador", true, idGirador);
+                $("#NomGirador").text("@Model.Girador.NomTraduit").show();
+                $('#containerAlarmesGirador').show();
+                $('#containerAlarmesFrequentsGirador').show();
+                $('#TableAlarmsGirador').show();
+            }
+            else {
+                $('#noDataGirador').show();
+                $("#NomGirador").text("@Model.Girador.NomTraduit").show();
+                $('#containerAlarmesGirador').hide();
+                $('#containerAlarmesFrequentsGirador').hide();
+                $('#TableAlarmsGirador').hide();
+            }
+
+            if (alarmesFrequentsGirador && alarmesFrequentsGirador.length > 0) {
+                donutchart("#DonutAlarmesGirador", alarmesFrequentsGirador, 30, "AlarmaId");
+            }
+
+            showCheckboxes();//Mostrem els checkboxes de les gràfiques
+
+
+            $('#divPDF').show();
+        }
+
+        if (estatsJsonSortida) {
+
+            var alarmesSortida = CrearDates(@Html.Raw(Model.Sortida.AlarmesJson));
+            var llistaCadenciaSortida = CrearDates(@Html.Raw(Model.Sortida.CadenciesJson));
+            var llistaEstatsFrequentsSortida = @Html.Raw(Json.Encode(Model.Sortida.EstatsFrequents));
+            var alarmesFrequentsSortida = @Html.Raw(Json.Encode(Model.Sortida.AlarmesFrequents));
+
+            barchart(estatsJsonSortida.filter((object) => object.ProducteId && object.EstatId !== 2 && (object.ProducteId !== '-' && object.ProducteId !== '0')).map(object => ({ ...object })), true, "#chartProducteSortida", iniciData, finalData, "Producte", null, "ColorProducte", entrada, "Via", "Via", "ProductesCheckboxSortida", true, idSortida);
+
+            barchart(estatsJsonSortida, true, "#chartContainerSortida", iniciData, finalData, "Estat", "Info", "Color", sortida, "Via", "Via","EstatsCheckboxSortida", true, idSortida);
+            $('#containerEstatsSortida').show();
+
+            if (alarmesSortida && alarmesSortida.length > 0) {
+                //barchartAlarmes(alarmesSortida, "#chartContainerAlarmaSortida", iniciData, finalData, sortida, "#taulaAlarmesId", "Sortida", true);
+                barchart(estatsJsonSortida.filter((object) => object.AlarmaId && (object.AlarmaId !== '0')).map(object => ({ ...object })), true, "#chartContainerAlarmaSortida", iniciData, finalData, "Alarma", "InfoAlarma", "ColorAlarma", sortida, "Via", "Via", "AlarmesCheckboxSortida", true, idSortida);
+                $('#containerAlarmesSortida').show();
+                $('#containerAlarmesFrequentsSortida').show();
+                $('#TableAlarmsSortida').show();
+            }
+            else {
+                $('#containerAlarmesSortida').hide();
+                $('#containerAlarmesFrequentsSortida').hide();
+                $('#TableAlarmsSortida').hide();
+            }
+
+            if (alarmesFrequentsSortida && alarmesFrequentsSortida.length > 0) {
+                donutchart("#DonutAlarmesSortida", alarmesFrequentsSortida, 30, "AlarmaId");
+            }
+
+            piechart("#CircularChartContainerSortida", llistaEstatsFrequentsSortida, "Estat");
+
+            linechartBarras("@Recursos.Idioma.Cadencia", llistaCadenciaSortida, true, false, true, true, "#GraficLinealCadenciaSortida", "Valor", iniciData, finalData, estatsJsonSortida, "Color");
+            linechartBarrasDif("@Recursos.Idioma.PaletsTotals", estatsJsonSortida, true, false, true, true, "#GraficLinealProducteSortida", "PaletsTotals", iniciData, finalData, estatsJsonSortida, "Color");
+
+            showCheckboxes();//Mostrem els checkboxes de les gràfiques
+
+            $(document).ready(function () {
+                minuteNumber = 0;
+                $('#sidebarCollapse').on('click', function () {
+                    setTimeout(function () {
+                        d3.select("#GraficOEE").selectAll("svg").remove()
+                        d3.select("#GraficProductividad").selectAll("svg").remove()
+                        d3.select("#GraficDisponibilitat").selectAll("svg").remove()
+                        d3.select("#GraficQualitat").selectAll("svg").remove()
+                        semipiechart("OEE", "gold", "@Html.Raw((Model.Entrada.OeeGeneral.General))", 100, false, "#GraficOEE")
+                        semipiechart("@Recursos.Idioma.Rendiment", "red", "@Html.Raw(Model.Entrada.OeeGeneral.Rendiment)", 100, false, "#GraficProductividad")
+                        semipiechart("@Recursos.Idioma.Disponibilitat", "green", "@Html.Raw(Model.Entrada.OeeGeneral.Disponibilitat)", 100, false, "#GraficDisponibilitat")
+                        semipiechart("@Recursos.Idioma.Qualitat", "steelblue", "@Html.Raw(Model.Entrada.OeeGeneral.Qualitat)", 100, false, "#GraficQualitat")
+                        semipiechart("OEE", "gold", "@Html.Raw((Model.Entrada.OeeIntern.General))", 100, false, "#GraficOEETavil");
+                        semipiechart("@Recursos.Idioma.Rendiment", "red", "@Html.Raw(Model.Entrada.OeeIntern.Rendiment)", 100, false, "#GraficProductividadTavil");
+                        semipiechart("@Recursos.Idioma.Disponibilitat", "green", "@Html.Raw(Model.Entrada.OeeIntern.Disponibilitat)", 100, false, "#GraficDisponibilitatTavil");
+                        semipiechart("@Recursos.Idioma.Qualitat", "steelblue", "@Html.Raw(Model.Entrada.OeeIntern.Qualitat)", 100, false, "#GraficQualitatTavil");
+                    }, 1000)
+                });
+            });
+
+            $("#NomSortida").text("@Model.Sortida.NomTraduit").show();
+            $('#divPDF').show();
+        }
+
+    } else {
+
+        hideGraphics();
+
+        $('#noData').show();
+        $('#atras').hide();
+
+        $('#containerAlarmesEntrada').hide();
+        $('#containerAlarmesFrequentsEntrada').hide();
+        $('#TableAlarmsEntrada').hide();
+
+        $('#containerAlarmesSortida').hide();
+        $('#containerAlarmesFrequentsSortida').hide();
+        $('#TableAlarmsSortida').hide();
+
+        $('#containerAlarmesApilador').hide();
+        $('#containerAlarmesFrequentsApilador').hide();
+        $('#TableAlarmsApilador').hide();
+
+        $('#containerAlarmesGirador').hide();
+        $('#containerAlarmesFrequentsGirador').hide();
+        $('#TableAlarmsGirador').hide();
+    }
+
+    $("#divLoading").hide();
+
+    //Actualitzem la navbarSupportedContent per tal de dividir les gràfiques
+    ActualitzarNavbar();
+
+    function ActualitzarNavbar(){
+        $('#navbarSupportedContent').find('a').remove();
+        $("#navbarSupportedContent").prepend("<a onclick='hideGraphics();' href='#' class='nav-item nav-link' style='margin-right:10px;'><i class='fa fa-bell pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.LlistaAlarmes</a>");
+        $("#navbarSupportedContent").prepend("<a onclick='showGraphics();' href='#' class='nav-item nav-link' style='margin-right:10px'><i class='fa fa-bar-chart pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.Grafiques</a>");
+        //$("#navbarSupportedContent").prepend("<a onclick='showDades();' href='#' class='nav-item nav-link' style='margin-right:10px'><i class='fa fa-pencil pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.Resum</a>");
+        //$("#navbarSupportedContent").find('li').prepend("<a onclick='showVariables();' href='#' style='margin-right:10px'>@Recursos.Idioma.CanviVariables</a>");
+    }
+
+    function seedData() {//valors inicials de realtimeChart
+        var endOfDate = (iniciData._i.split("/"))
+        var endNow = new Date(endOfDate[1] + "/" + endOfDate[0] + "/" + endOfDate[2])
+
+        for (var i = 0; i < MAX_LENGTH; ++i) {
+            lineArr.push({
+                time: new Date(endNow.getTime() - ((MAX_LENGTH - i) * duration)),
+                z: 0
+            });
+        }
+    }
+
+    function CrearDates(jsonObj) {
+
+        for (var i in jsonObj) {
+            jsonObj[i].Inici = new Date(jsonObj[i].Inici);
+            jsonObj[i].Final = new Date(jsonObj[i].Final);
+        }
+        return jsonObj;
+    }
+
+    function hideGraphics() {
+
+        $("#NomEntrada").text("@Model.Entrada.NomTraduit").hide();
+        $("#NomSortida").text("@Model.Sortida.NomTraduit").hide();
+        $("#NomGirador").text("@Model.Girador.NomTraduit").hide();
+        $("#NomApilador").text("@Model.Apilador.NomTraduit").hide();
+
+        $('#containerProducteEntrada').hide();
+        $('#containerProducteSortida').hide();
+        //$('#containerSKUEntrada').hide();
+        $('#containerEstatsEntrada').hide();
+        $('#containerEstatsSortida').hide();
+
+        $('#containerPercentatgeEstatsEntrada').hide();
+        $('#containerPercentatgeEstatsSortida').hide();
+        $('#containerOEE').hide();
+        $('#containerCadenciaEntrada').hide();
+        $('#containerCadenciaSortida').hide();
+        $('#containerCaixesTotalsEntrada').hide();
+        $('#containerCaixesTotalsSortida').hide();
+
+        $('#divPDF').hide();
+        $('#containerDades').hide();
+
+        if (alarmesEntrada && alarmesEntrada.length > 0) {
+            $("#NomEntrada").text("@Model.Entrada.NomTraduit").show();
+            $('#containerAlarmesEntrada').show();//alarmes!
+            $('#TableAlarmsEntrada').show();
+            $('#atras').show();
+            $('#containerAlarmesFrequentsEntrada').show();
+        }
+
+        if (alarmesApilador && alarmesApilador.length > 0) {
+            $("#NomApilador").text("@Model.Apilador.NomTraduit").show();
+            $('#containerAlarmesApilador').show();//alarmes!
+            $('#TableAlarmsApilador').show();
+            $('#atras').show();
+            $('#containerAlarmesFrequentsApilador').show();
+        }
+
+        if (alarmesGirador && alarmesGirador.length > 0) {
+            $("#NomGirador").text("@Model.Girador.NomTraduit").show();
+            $('#containerAlarmesGirador').show();//alarmes!
+            $('#TableAlarmsGirador').show();
+            $('#atras').show();
+            $('#containerAlarmesFrequentsGirador').show();
+        }
+
+        if (alarmesSortida && alarmesSortida.length > 0) {
+            $("#NomSortida").text("@Model.Sortida.NomTraduit").show();
+            $('#containerAlarmesSortida').show();//alarmes!
+            $('#TableAlarmsSortida').show();
+            $('#atras').show();
+            $('#containerAlarmesFrequentsSortida').show();
+        }
+
+        $('#tableContentVariables').hide();
+        $('#divTotalCaixes').hide();
+    }
+
+    function showGraphics() {
+
+        if (estatsJsonEntrada.length > 0) { //Per mantenir l'estructura de la pàgina, altrament es farà més petita i es solapen els elements.
+            $("#NomEntrada").text("@Model.Entrada.NomTraduit").show();
+            $('#containerProducteEntrada').show();
+            $('#containerProducteSortida').show();
+            //$('#containerSKUEntrada').show();
+            $('#containerEstatsEntrada').show();
+            $('#containerPercentatgeEstatsEntrada').show();
+            $('#containerOEE').hide();
+            $('#containerCadenciaEntrada').show();
+            $('#containerCaixesTotalsEntrada').show();
+            $('#divPDF').show();
+            if (alarmesEntrada && alarmesEntrada.length > 0) {
+                $('#containerAlarmesEntrada').show();//alarmes!
+                $('#containerAlarmesFrequentsEntrada').show();
+                $('#TableAlarmsEntrada').show();
+            }
+            $('#containerDades').hide();
+            $('#atras').hide();
+            $('#tableContentVariables').hide();
+            showCheckboxes();
+        }
+
+        if (estatsJsonApilador.length > 0) { //Per mantenir l'estructura de la pàgina, altrament es farà més petita i es solapen els elements.
+            $('#divPDF').show();
+            if (alarmesApilador && alarmesApilador.length > 0) {
+                $("#NomApilador").text("@Model.Apilador.NomTraduit").show();
+                $('#containerAlarmesApilador').show();//alarmes!
+                $('#containerAlarmesFrequentsApilador').show();
+                $('#TableAlarmsApilador').show();
+            }
+            $('#containerDades').hide();
+            $('#atras').hide();
+            $('#tableContentVariables').hide();
+            showCheckboxes();
+        }
+
+        if (estatsJsonGirador.length > 0) { //Per mantenir l'estructura de la pàgina, altrament es farà més petita i es solapen els elements.
+            $('#divPDF').show();
+            if (alarmesGirador && alarmesGirador.length > 0) {
+                $("#NomGirador").text("@Model.Girador.NomTraduit").show();
+                $('#containerAlarmesGirador').show();//alarmes!
+                $('#containerAlarmesFrequentsGirador').show();
+                $('#TableAlarmsGirador').show();
+            }
+            $('#containerDades').hide();
+            $('#atras').hide();
+            $('#tableContentVariables').hide();
+            showCheckboxes();
+        }
+
+        if (estatsJsonSortida.length > 0) { //Per mantenir l'estructura de la pàgina, altrament es farà més petita i es solapen els elements.
+            $("#NomSortida").text("@Model.Sortida.NomTraduit").show();
+            $('#containerEstatsSortida').show();
+            $('#containerPercentatgeEstatsSortida').show();
+            $('#containerOEE').hide();
+            $('#containerCadenciaSortida').show();
+            $('#containerCaixesTotalsSortida').show();
+            $('#divPDF').show();
+            if (alarmesSortida && alarmesSortida.length > 0) {
+                $('#containerAlarmesSortida').show();//alarmes!
+                $('#containerAlarmesFrequentsSortida').show();
+                $('#TableAlarmsSortida').show();
+            }
+            $('#containerDades').hide();
+            $('#atras').hide();
+            $('#tableContentVariables').hide();
+            showCheckboxes();
+        }
+    }
+    function showDades() {
+
+        if (estatsJsonEntrada.length > 0) {
+            hideGraphics();
+            $('#containerAlarmesEntrada').hide();
+            $('#containerAlarmesFrequentsEntrada').hide();
+            $('#TableAlarmsEntrada').hide();
+            $('#atras').hide();
+            $('#tableContentVariables').hide();
+            $('#containerDades').show();
+        }
+
+        if (estatsJsonApilador.length > 0) {
+            hideGraphics();
+            $('#containerAlarmesApilador').hide();
+            $('#containerAlarmesFrequentsApilador').hide();
+            $('#TableAlarmsApilador').hide();
+            $('#atras').hide();
+            $('#tableContentVariables').hide();
+            $('#containerDades').show();
+        }
+
+        if (estatsJsonGirador.length > 0) {
+            hideGraphics();
+            $('#containerAlarmesGirador').hide();
+            $('#containerAlarmesFrequentsGirador').hide();
+            $('#TableAlarmsGirador').hide();
+            $('#atras').hide();
+            $('#tableContentVariables').hide();
+            $('#containerDades').show();
+        }
+
+        if (estatsJsonSortida.length > 0) {
+            hideGraphics();
+            $('#containerAlarmesSortida').hide();
+            $('#containerAlarmesFrequentsSortida').hide();
+            $('#TableAlarmsSortida').hide();
+            $('#atras').hide();
+            $('#tableContentVariables').hide();
+            $('#containerDades').show();
+        }
+    }
+
+    function showCheckboxes() {
+        $('#GraficLinealCadenciaEntradaCheckbox').show();
+        $('#GraficLinealProducteEntradaCheckbox').show();
+        $('#GraficLinealCadenciaSortidaCheckbox').show();
+        $('#GraficLinealProducteSortidaCheckbox').show();
+    }
+
+    function ShowHideLine(div_id, checkboxId) {
+        if (document.body.contains(document.getElementById(div_id))) {
+            if (document.getElementById(div_id).style.opacity == 1 && $("input[id^='" + checkboxId.substring(0, checkboxId.length - 1) + "']:checked").length > 1) {//Esta actiu, el desactivem
+                d3.select("#" + div_id).style("opacity", 0);
+                document.getElementById(checkboxId).checked = false;
+            }
+            else {
+                d3.select("#" + div_id).style("opacity", 1);
+                document.getElementById(checkboxId).checked = true;
+            }
+        }
+    }
+
+    function ShowHideBackground(div_id, checkboxId) {
+        if (document.body.contains(document.getElementById(div_id))) {
+            if (document.getElementById(div_id).style.opacity != 0 && $("input[id^='" + checkboxId.substring(0, checkboxId.length - 1) + "']:checked").length > 1) {//Esta actiu, el desactivem
+                d3.selectAll("#" + div_id).style("opacity", 0);
+                document.getElementById(checkboxId).checked = false;
+            }
+            else {
+                d3.selectAll("#" + div_id).style("opacity", 0.1);
+                document.getElementById(checkboxId).checked = true;
+            }
+        }
+    }
+
+    function increaseZoom() {
+        var oldDateStart = "@Html.Raw(Model.DataInici).ToString()";
+        var oldDateEnd = "@Html.Raw(Model.DataFi).ToString()";
+
+        var dateEnd = oldDateEnd.split("/");
+        var dateStart = oldDateStart.split("/");
+
+        var milisecondsEnd = Date.parse(dateEnd[1] + "/" + dateEnd[0] + "/" + dateEnd[2]);
+        var milisecondsStart = Date.parse(dateStart[1] + "/" + dateStart[0] + "/" + dateStart[2]);
+
+        var newDateMilli = milisecondsStart + ((milisecondsEnd - milisecondsStart) / 10);
+        var newDate = new Date(newDateMilli);
+        var newDateSplit = newDate.toString().split(" ");
+
+        var test = newDateSplit[2] + "/" + returnMonthNumber(newDateSplit[1]) + "/" + newDate.getFullYear() + " " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds();
+
+        $("#divLoading").show();
+        var antInitDate = document.getElementById("dataInicial").value;
+        var antFinalDate = document.getElementById("dataFinal").value;
+        var list = document.getElementById('shiftDropDownList');
+        var selectedShift = list.options[list.selectedIndex].value;
+        $("#partial").load("/Via/ViaPartial", { inici: test, final: antFinalDate, torn: selectedShift, iniciAnt: antInitDate, finalAnt: antFinalDate, nomMaquina: via , idMaquina: @Model.IdMaquina});
+    }
+
+    function previosZoom() {
+        $("#divLoading").show();
+        document.getElementById("dataInicial").value = iniciDataAnterior._i;
+        document.getElementById("dataFinal").value = finalDataAnterior._i;
+        var list = document.getElementById('shiftDropDownList');
+        var selectedShift = list.options[list.selectedIndex].value;
+        $("#partial").load("/Via/ViaPartial", { inici: iniciDataAnterior._i, final: finalDataAnterior._i, torn: selectedShift, iniciAnt: minimumDate._i, finalAnt: maximumDate._i, nomMaquina: via , idMaquina: @Model.IdMaquina});
+    }
+
+    function returnMonthNumber(monthname) {
+        var monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        var month = monthShortNames.indexOf(monthname);
+        return month ? month + 1 : 0;
+    }
+
+    function refreshDuration() {
+        var newDataIn = new Date(moment("@Html.Raw(Model.DataInici).ToString()", "DD/MM/YYYY HH:mm:ss"));
+        var newDataFi = new Date(moment("@Html.Raw(Model.DataFi).ToString()", "DD/MM/YYYY HH:mm:ss"));
+        var duration = convertMSGrafica(Math.abs(newDataFi.getTime() - newDataIn.getTime()));
+        var newDuration = "@Html.Raw(Recursos.Idioma.Duracio)" + ": " + duration;
+        $("#textDurada").text(newDuration);
+        document.getElementById('dataInicial').value = "@Html.Raw(Model.DataInici.ToString())";
+        document.getElementById('dataFinal').value = "@Html.Raw(Model.DataFi.ToString())";
+    }
+
+    function PDFBackend() {
+        window.location.href = "@Html.Raw(@Url.Action("GenerarPDF", "Via", new { nomMaquina=@Model.NomMaquina, inici=@Model.DataInici, final=@Model.DataFi, torn=0, idMaquina= @Model.IdMaquina }))";
+    }
+
+    function DescarregarVideo(datainici, index) {
+
+        var llistaCameres = document.getElementById("camerasAlarmaId" + index);
+        var camaraId = llistaCameres.options[llistaCameres.selectedIndex].text;
+
+
+        var url = "@Html.Raw(@Url.Action("DescarregarVideo", "Axxon", new { inici="iniciParam", idCamera = "idCameraParam"}))";
+        url = url.replace("iniciParam", datainici);
+        url = url.replace("idCameraParam", camaraId);
+
+        window.open(url,"_blank");
+
+    }
+
+    $("a").click(function () {
+        if ($(this).hasClass("fa-minus-circle")) {
+            $(this).removeClass("fa-minus-circle");
+            $(this).addClass("fa-plus-circle");
+        }
+        else if($(this).hasClass("fa-plus-circle")) {
+            $(this).removeClass("fa-plus-circle");
+            $(this).addClass("fa-minus-circle");
+        }
+    });
+
+</script>

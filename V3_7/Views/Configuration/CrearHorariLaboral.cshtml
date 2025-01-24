@@ -1,0 +1,142 @@
+﻿@model IoT_Web.Models.HorariLaboral
+
+@{
+    Layout = "~/Views/Shared/_LayoutNoLogin.cshtml";
+}
+
+@{
+    ViewBag.Title = Recursos.Idioma.CrearHorariLaboral;
+}
+
+<div class="container-login100">
+    <div class="row justify-content-center wrap-login100">
+        @using (Html.BeginForm("CrearHorariLaboral", "Configuration", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            <span class="login100-form-title">
+                @Recursos.Idioma.NouHorariLaboral
+            </span>
+            <div>
+                <div class="wrap-input100">
+                    @Html.TextBoxFor(m => m.Nom, new { @class = "input100", @placeholder = Recursos.Idioma.Nom, @required = "required" })
+                </div>
+            </div>
+            <div>
+                <div class="wrap-input100">
+                    <div class="input-group date" id="datetimepickerBegin" data-target-input="nearest">
+                        @Html.TextBoxFor(m => m.Inici, new { @class = "input100 datetimepicker-input form-control", @placeholder = Recursos.Idioma.HoraInici, @required = "required" })
+                        @*<input id="dataFinal" type="text" class="input100 datetimepicker-input form-control" data-target="#datetimepickerBegin" placeholder="Hora de inicio:" />*@
+                        <div class="input-group-append" data-target="#datetimepickerBegin" data-toggle="datetimepicker">
+                            <div class="input-group-text" style=" border-bottom-right-radius: 25px; border-top-right-radius: 25px;">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group date" id="datetimepickerEnd" data-target-input="nearest" style="margin-top: 10px">
+                        @Html.TextBoxFor(m => m.Final, new { @class = "input100 datetimepicker-input form-control", @placeholder = Recursos.Idioma.HoraFi, @required = "required" })
+                        @*<input id="dataFinal" type="text" class="input100 datetimepicker-input form-control" data-target="#datetimepickerEnd" placeholder="Hora de finalización:" />*@
+                        <div class="input-group-append" data-target="#datetimepickerEnd" data-toggle="datetimepicker">
+                            <div class="input-group-text" style=" border-bottom-right-radius: 25px; border-top-right-radius: 25px;">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group date" id="datetimepickerIntervalInicial" data-target-input="nearest" style="margin-top: 10px">
+                        @Html.TextBoxFor(m => m.IntervalInici, "{0:dd/MM/yyyy}", new { @class = "input100 datetimepicker-input form-control", @placeholder = Recursos.Idioma.DiaInicial, @required = "required" })
+                        @*<input id="dataFinal" type="text" class="input100 datetimepicker-input form-control" data-target="#datetimepickerEnd" placeholder="Hora de finalización:" />*@
+                        <div class="input-group-append" data-target="#datetimepickerIntervalInicial" data-toggle="datetimepicker">
+                            <div class="input-group-text" style=" border-bottom-right-radius: 25px; border-top-right-radius: 25px;">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group date" id="datetimepickerIntervalFinal" data-target-input="nearest" style="margin-top: 10px">
+                        @Html.TextBoxFor(m => m.IntervalFinal, "{0:dd/MM/yyyy}", new { @class = "input100 datetimepicker-input form-control", @placeholder = Recursos.Idioma.DiaFinal, @required = "required" })
+                        @*<input id="dataFinal" type="text" class="input100 datetimepicker-input form-control" data-target="#datetimepickerEnd" placeholder="Hora de finalización:" />*@
+                        <div class="input-group-append" data-target="#datetimepickerIntervalFinal" data-toggle="datetimepicker">
+                            <div class="input-group-text" style=" border-bottom-right-radius: 25px; border-top-right-radius: 25px;">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(function () {
+                    $('#datetimepickerBegin').datetimepicker({
+                        format: 'HH:mm'
+                    });
+                    $('#datetimepickerEnd').datetimepicker({
+                        format: 'HH:mm'
+                    });
+                    
+                });
+            </script>
+            <div>
+                <h5 style="text-align: center; margin-top: 30px">
+                    @Recursos.Idioma.DiesLaborables
+                </h5>
+            </div>
+            <div class="row justify-content-center" style="margin-top: 20px">
+                <div style="max-width: 90%; min-width: 220px; margin-left: 20px">
+                    <div class="row justify-content-center">
+                        <div class="col-6">
+                            @Html.CheckBoxFor(m => m.Dilluns)
+                            @Html.LabelFor(m => m.Dilluns, Recursos.Idioma.Dilluns)
+                        </div>
+                        <div class="col-6">
+                            @Html.CheckBoxFor(m => m.Dimarts)
+                            @Html.LabelFor(m => m.Dimarts, Recursos.Idioma.Dimarts)
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-6">
+                            @Html.CheckBoxFor(m => m.Dimecres)
+                            @Html.LabelFor(m => m.Dimecres, Recursos.Idioma.Dimecres)
+                        </div>
+                        <div class="col-6">
+                            @Html.CheckBoxFor(m => m.Dijous)
+                            @Html.LabelFor(m => m.Dijous, Recursos.Idioma.Dijous)
+                        </div>
+                    </div>
+                    <div class="row justify-content-between">
+                        <div class="col-6">
+                            @Html.CheckBoxFor(m => m.Divendres)
+                            @Html.LabelFor(m => m.Divendres, Recursos.Idioma.Divendres)
+                        </div>
+                        <div class="col-6">
+                            @Html.CheckBoxFor(m => m.Dissabte)
+                            @Html.LabelFor(m => m.Dissabte, Recursos.Idioma.Dissabte)
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            @Html.CheckBoxFor(m => m.Diumenge)
+                            @Html.LabelFor(m => m.Diumenge, Recursos.Idioma.Diumenge)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-login100-form-btn">
+                <button class="login100-form-btn">
+                    @Recursos.Idioma.GuardarHorariLaboral
+                </button>
+            </div>
+            <div class="text-center p-t-136" style="margin-top: 30px">
+                <a class="txt2">
+                    @Html.ActionLink(Recursos.Idioma.Tornar, "Index", "Configuration")
+                    <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

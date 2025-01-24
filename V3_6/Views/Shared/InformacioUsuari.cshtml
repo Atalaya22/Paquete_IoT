@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNet.Identity
+
+
+@if (Request.IsAuthenticated)
+{
+    <div class="sidebar-item sidebar-header d-flex flex-nowrap">
+        <div class="user-pic">
+            <img class="img-circle profile_img" src="~/Images/user.jpg" style="border-radius:50%" alt="User picture" width="80" height="70">
+        </div>
+        <div class="user-info">
+            <span class="user-name">
+                <a href=@Url.Action("Index", "ApplicationUsers")>  <font color="black" id="nomUsuari"><strong>@User.Identity.GetUserName()</strong></font></a>
+            </span>
+            @if (User.IsInRole("Admin"))
+            {
+                <span class="user-role" style="font-style:italic;"><font color="blue">Admin</font></span>
+            }
+            else
+            {
+                <span class="user-role" style="font-style:italic;"><font color="blue">Employee</font></span>
+            }
+            <br />
+            <span class="user-status">
+                <i class="fa fa-circle" style="color: #5cb85c;"></i>
+                <span>Online</span>
+            </span>
+        </div>
+    </div>
+}
+else
+{
+    <li>@Html.ActionLink(Recursos.Idioma.IniciarSessio, "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-item nav-link" })</li>
+    @*<li>@Html.ActionLink(Recursos.Idioma.Registrarse, "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-item nav-link" })</li>
+        <li>@Html.ActionLink(Recursos.Idioma.IniciarSessio, "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-item nav-link" })</li>*@
+}

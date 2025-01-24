@@ -1,0 +1,1030 @@
+﻿@model IoT_Web.Models.Maquines.StrapexModel
+
+<link rel="stylesheet" href="~/Content/Overlay.css" />
+<link rel="stylesheet" href="~/Content/DataTableCustom.css" />
+<link rel="stylesheet" href="~/Content/FonsGrafiques.css" />
+
+<div class="container backgroundGraphics" id="containerEstats">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseEstats" href="#collapseEstats" aria-expanded="false" aria-controls="collapseEstats">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.MaquinaEstats</p>
+    <div id="collapseEstats" class="collapse show">
+        <div class="row">
+            <div class="col" id="chartContainer" style="min-height: 170px; max-height:170px;">
+            </div>
+        </div>
+        <div style="text-align: center;" id="EstatsCheckbox">
+        </div>
+    </div>
+
+</div>
+
+<div class="container backgroundGraphics" id="containerPercentatgeEstats">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapsePercentatgeEstats" href="#collapsePercentatgeEstats" aria-expanded="false" aria-controls="collapsePercentatgeEstats">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.PercentatgeEstats</p>
+    <div id="collapsePercentatgeEstats" class="collapse show">
+        <div class="row" id="divCircularChartContainer" style="padding-bottom: 35px; padding-top: 20px;margin-top:20px;">
+            <div class="col" id="CircularChartContainer" style="min-width: 300px;min-height: 300px;">
+            </div>
+            <div class="col" id="TableTotalTimeStates" style="min-width: 300px; margin-right:2%;">
+                <div class="col" style="border-radius:10px;">
+                    <table class="table" style="border-radius:10px;">
+                        <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">@Recursos.Idioma.Estat</th>
+                                <th scope="col">@Recursos.Idioma.Temps</th>
+                                <th scope="col">%</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background:white;">
+                            @foreach (var estat in Model.Strapex.EstatsFrequents)
+                            {
+                                <tr>
+                                    <td style="display:inline-block; width: 15px; margin-top: 10px; margin-bottom: 10px; border: 1px solid black; margin-left: 10px; border-radius: 10px;" bgcolor="@estat.Color"></td>
+                                    <td title="@estat.Estat">@estat.Estat</td>
+                                    <td>@(estat.Duracio.Days * 24 + estat.Duracio.Hours)h @estat.Duracio.Minutes.ToString()min @estat.Duracio.Seconds.ToString()s</td>
+                                    <td>@estat.Percentatge.ToString() %</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <table class="table" style="border-radius:10px;">
+            <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                <tr>
+                    <th colspan="4" style="text-align: center;">@Recursos.Idioma.EstadistiquesGenerals</th>
+                </tr>
+            </thead>
+            <tbody style="background:white;">
+                <tr>
+                    @if (Model.Strapex.Estats.Count() > 0)
+                    {
+                        <td>@Recursos.Idioma.CaixesTotals:</td>
+                        <td>
+                            @Model.Strapex.Estats.Last().CaixesTotals
+                        </td>
+                        <td>@Recursos.Idioma.Rebutjats:</td>
+                        <td>
+                            @Model.Strapex.Estats.Last().RebuigTotals
+                        </td>
+                    }
+                    else
+                    {
+                        <td>@Recursos.Idioma.CaixesTotals:</td>
+                        <td>
+                            0
+                        </td>
+                        <td>@Recursos.Idioma.Rebutjats:</td>
+                        <td>
+                            0
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table" style="border-radius:10px;">
+            <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                <tr>
+                    <th colspan="4" style="text-align: center;">Errors downtime</th>
+                </tr>
+            </thead>
+            <tbody style="background:white;">
+                <tr>
+                    <td>Labeller_App_Error:</td>
+                    <td>@(Model.Strapex.EstatsParades.Labeller_App_Error.Days * 24 + Model.Strapex.EstatsParades.Labeller_App_Error.Hours)h @Model.Strapex.EstatsParades.Labeller_App_Error.Minutes.ToString()min @Model.Strapex.EstatsParades.Labeller_App_Error.Seconds.ToString()s</td>
+                    <td>Transport_Error:</td>
+                    <td>
+                        @(Model.Strapex.EstatsParades.Transport_Error.Days * 24 + Model.Strapex.EstatsParades.Transport_Error.Hours)h @Model.Strapex.EstatsParades.Transport_Error.Minutes.ToString()min @Model.Strapex.EstatsParades.Transport_Error.Seconds.ToString()s
+                    </td>
+                </tr>
+                <tr>
+                    <td>Strappex_Error</td>
+                    <td>@(Model.Strapex.EstatsParades.Strappex_Error.Days * 24 + Model.Strapex.EstatsParades.Strappex_Error.Hours)h @Model.Strapex.EstatsParades.Strappex_Error.Minutes.ToString()min @Model.Strapex.EstatsParades.Strappex_Error.Seconds.ToString()s</td>
+                    <td>PopUpPDB_active</td>
+                    <td>@(Model.Strapex.EstatsParades.PopUpPDB_active.Days * 24 + Model.Strapex.EstatsParades.PopUpPDB_active.Hours)h @Model.Strapex.EstatsParades.PopUpPDB_active.Minutes.ToString()min @Model.Strapex.EstatsParades.PopUpPDB_active.Seconds.ToString()s</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<div class="container backgroundGraphics" id="containerAlarmes">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmes" href="#collapseAlarmes" aria-expanded="false" aria-controls="collapseAlarmes">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Alarmes</p>
+    <div id="collapseAlarmes" class="collapse show">
+        <div class="row">
+            <div class="col" id="chartContainer2" style="min-height: 170px; max-height:170px;">
+            </div>
+        </div>
+        <div style="text-align: center;" id="AlarmesCheckbox">
+        </div>
+    </div>
+
+</div>
+
+<div class="container backgroundGraphics" id="containerAlarmesFrequents">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmesFrequents" href="#collapseAlarmesFrequents" aria-expanded="false" aria-controls="collapseAlarmesFrequents">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.AlarmesFrequents</p>
+    <div id="collapseAlarmesFrequents" class="collapse show">
+        <div class="row graficaAlarmes" id="divPercentatgeAlarmes" style="padding-bottom: 35px; padding-top: 20px;margin-top:20px;">
+            <div class="col" id="DonutAlarmes" style="min-width: 300px;min-height: 300px;">
+            </div>
+            <div class="col" id="TableAlarmesPercentatge" style="min-width: 300px; margin-right:2%">
+                <div class="col" style="border-radius:10px;">
+                    <table class="table" style="border-radius:10px;">
+                        <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">ID</th>
+                                <th scope="col">@Recursos.Idioma.Descripcio</th>
+                                <th scope="col">%</th>
+                                <th scope="col">@Recursos.Idioma.ZonaError</th>
+                            </tr>
+                        </thead>
+                        <tbody style="background:white;">
+                            @foreach (var alarma in Model.Strapex.AlarmesFrequents)
+                            {
+                                <tr>
+                                    <td style="display:inline-block; width: 15px; margin-top: 10px; margin-bottom: 10px; border: 1px solid black; margin-left: 10px; border-radius: 10px;" bgcolor="@alarma.Color"></td>
+                                    <td>@alarma.AlarmaId</td>
+                                    <td>@alarma.Descripcio</td>
+                                    <td style="width:15%">@alarma.Percentatge % (@alarma.Quantitat)</td>
+                                    <td style="width:15%"><i class='fa fa-external-link' style='margin-top:2%;'></i>Popup</td>
+                                </tr>
+                            }
+                            @if (Model.Strapex.Alarmes.Count() > 0)
+                            {
+                                <tr style="background-color:darkgray">
+                                    <td></td>
+                                    <td></td>
+                                    <td>@Recursos.Idioma.Total</td>
+                                    <td style="width:15%">@Model.Strapex.Alarmes.Count()</td>
+                                    <td style="width:15%"></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="TableAlarms" style="min-width: 300px; overflow: auto;">
+    <br />
+    @*<button type="button" class="btn btn-secondary pull-left" style="color:black; background-color:white; border-color:black" id="ShowAll">@Recursos.Idioma.Tot</button>*@
+    <table id="taulaAlarmesId" class="table table-striped table-hover" cellspacing="0" width="100%" style="border-collapse: collapse; overflow: hidden;">
+        <thead style="color: black;background: linear-gradient(205deg, #829ca8, #C8D8DB);">
+            <tr>
+                <th class="th">
+                    ID
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Duracio
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.IniciDurada
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Caixa
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.InfoAlarma
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Video
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Descarregar
+                </th>
+                <th class="th">
+                    @Recursos.Idioma.Cameres
+                </th>
+            </tr>
+        </thead>
+        <tbody style="color: black;background-color: white;">
+            @for (int i = 1; i <= Model.Strapex.Alarmes.Count(); i++)
+            {
+                var alarma = Model.Strapex.Alarmes[i - 1];
+                var cameresAlarmaId = "camerasAlarmaId" + i;
+                <tr>
+                    <td>
+                        @alarma.AlarmaId
+                    </td>
+                    <td>
+                        @Convert.ToInt32(alarma.Duracio.TotalMinutes).ToString()min @Convert.ToInt32(alarma.Duracio.Seconds).ToString()s
+                    </td>
+                    <td>
+                        @alarma.Inici
+                    </td>
+                    <td>
+                        @alarma.ProducteId
+                    </td>
+                    <td>
+                        @alarma.Descripcio
+                    </td>
+                    <td>
+                        <a target="_blank" href="@alarma.EnllacVideo">
+                            <i class='fa fa-video-camera' style='margin-top:2%;'></i>
+                            Video
+                        </a>
+                    </td>
+                    <td>
+                        <a style="cursor: pointer;" onclick="DescarregarVideo('@alarma.Inici','@i')">
+                            <i class='fa fa-download' style='margin-top:2%;'></i>
+                            @Recursos.Idioma.Descarregar
+                        </a>
+                    </td>
+                    <td>
+
+                        <select name="camerasAlarma" id="@cameresAlarmaId">
+                            @foreach (var camara in Model.Strapex.Cameres)
+                            {
+                                <option value="@camara">@camara</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div id="noData" style="display: none; margin-top:200px;margin-bottom:200px;">
+    <p align="center">@Recursos.Idioma.NoDades</p>
+</div>
+
+<div class="container backgroundGraphics" id="containerCaixesTotalsEntrada">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCaixesTotalsEntrada" href="#collapseCaixesTotalsEntrada" aria-expanded="false" aria-controls="collapseCaixesTotalsEntrada">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.CaixesTotals</p>
+    <div id="collapseCaixesTotalsEntrada" class="collapse show">
+        <div class="container mb-2">
+            <div class="col-12" id="conjunt-caixestotals-entrada">
+            </div>
+
+            <script>
+
+                var dadesPlot = [];
+
+                var dadesChart = @Html.Raw(Json.Encode(Model.Strapex.ChartCadencies.Charts2));
+
+                if (dadesChart != null) {
+                    dadesChart.forEach(chart => {
+
+                        let xAxisDate = chart.XAxis.map(x => {
+                            let momentObj = moment(x, 'DD/MM/YYYY HH:mm:ss');
+                            return momentObj.toDate();
+                        });
+
+                        let tracePlot = {
+                            x: xAxisDate,
+                            y: chart.YAxis,
+                            type: 'bar',
+                            text: chart.YAxis.map(String),
+                            textposition: 'auto',
+                            name: chart.Titol,
+                            hovertemplate: "" +
+                                "<b>@Recursos.Idioma.CaixesTotals:</b> %{y:}<br>" +
+                                "<extra></extra>"
+                        }
+
+                        dadesPlot.push(tracePlot);
+
+                    });
+
+                    var layoutPlot = {
+                        showlegend: true,
+                        height: 600,
+                        width: 1080,
+                        autosize: false,
+                        plot_bgcolor: "#353c48",
+                        paper_bgcolor: "#353c48",
+                        xaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        yaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        font: {
+                            color: '#ffffff'
+                        }
+                    };
+
+                    var configPlot = {
+                        responsive: true
+                    }
+
+                    Plotly.newPlot('conjunt-caixestotals-entrada', dadesPlot, layoutPlot, configPlot);
+                }
+            </script>
+        </div>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerRebuigTotalStrapex">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseRebuigTotalStrapex" href="#collapseRebuigTotalStrapex" aria-expanded="false" aria-controls="collapseRebuigTotalStrapex">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Rebutjats</p>
+    <div id="collapseRebuigTotalStrapex" class="collapse show">
+        <div class="container mb-2">
+            <div class="col-12" id="conjunt-rebuigTotal-entrada">
+            </div>
+
+            <script>
+
+                var dadesPlotRebuig = [];
+
+                var dadesChartRebuig = @Html.Raw(Json.Encode(Model.Strapex.ChartRebuigTotal.Charts2));
+
+                if (dadesChartRebuig != null) {
+                    dadesChartRebuig.forEach(chartRebuig => {
+
+                        let xAxisDateRebuig = chartRebuig.XAxis.map(x => {
+                            let momentObj = moment(x, 'DD/MM/YYYY HH:mm:ss');
+                            return momentObj.toDate();
+                        });
+
+                        let tracePlotRebuig = {
+                            x: xAxisDateRebuig,
+                            y: chartRebuig.YAxis,
+                            type: 'bar',
+                            text: chartRebuig.YAxis.map(String),
+                            textposition: 'auto',
+                            name: chartRebuig.Titol,
+                            hovertemplate: "" +
+                                "<b>@Recursos.Idioma.Rebutjats:</b> %{y:}<br>" +
+                                "<extra></extra>"
+                        }
+
+                        dadesPlotRebuig.push(tracePlotRebuig);
+
+                    });
+
+                    var layoutPlotRebuig = {
+                        showlegend: true,
+                        height: 600,
+                        width: 1080,
+                        autosize: false,
+                        plot_bgcolor: "#353c48",
+                        paper_bgcolor: "#353c48",
+                        xaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        yaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        font: {
+                            color: '#ffffff'
+                        },
+                        colorway: ['#FFC107']
+                    };
+
+                    var configPlotRebuig = {
+                        responsive: true
+                    }
+
+                    Plotly.newPlot('conjunt-rebuigTotal-entrada', dadesPlotRebuig, layoutPlotRebuig, configPlotRebuig);
+                }
+            </script>
+        </div>
+    </div>
+</div>
+
+@*<div class="container backgroundGraphics" id="containerCadencia">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCadencia" href="#collapseCadencia" aria-expanded="false" aria-controls="collapseCadencia">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Cadencia</p>
+    <div id="collapseCadencia" class="collapse show">
+        <div class="container" id="containerCadencia">
+            <div class="row">
+                <div class="col">
+                    <div id="GraficLinealCadencia" style="min-width: 300px;min-height: 100px;">
+                    </div>
+                    <div style="text-align: center; display:none;" id="GraficLinealCadenciaCheckbox">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="GraficLinealCadenciaCheckbox1" onclick="ShowHideLine('d1GraficLinealCadencia', 'GraficLinealCadenciaCheckbox1');" checked>
+                            <label class="form-check-label" for="GraficLinealCadenciaCheckbox1"><font color="#F08080">Picks</font></label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="GraficLinealCadenciaCheckbox2" onclick="ShowHideLine('d2GraficLinealCadencia', 'GraficLinealCadenciaCheckbox2');" checked>
+                            <label class="form-check-label" for="GraficLinealCadenciaCheckbox2"><font color="#F0F080">Tendency</font></label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="GraficLinealCadenciaCheckbox3" onclick="ShowHideLine('d3GraficLinealCadencia', 'GraficLinealCadenciaCheckbox3');" checked>
+                            <label class="form-check-label" for="GraficLinealCadenciaCheckbox3"><font color="blue">Average</font></label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="GraficLinealCadenciaCheckbox4" onclick="ShowHideBackground('d4GraficLinealCadencia', 'GraficLinealCadenciaCheckbox4');" checked>
+                            <label class="form-check-label" for="GraficLinealCadenciaCheckbox4"><font color="red">Background</font></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<div class="container backgroundGraphics" id="containerCaixesTotals">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCaixesTotals" href="#collapseCaixesTotals" aria-expanded="false" aria-controls="collapseCaixesTotals">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.CaixesTotals</p>
+    <div id="collapseCaixesTotals" class="collapse show">
+        <div class="container" id="containerCaixesTotals">
+            <div class="row">
+                <div class="col">
+                    <div id="GraficLinealProducte" style="min-width: 300px; min-height: 100px;">
+                    </div>
+                    <div style="text-align: center; display:none" id="GraficLinealProducteCheckbox">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="GraficLinealProducteCheckbox1" onclick="ShowHideLine('d1GraficLinealProducte', 'GraficLinealProducteCheckbox1');" checked>
+                            <label class="form-check-label" for="GraficLinealProducteCheckbox1"><font color="#F08080">Picks</font></label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="GraficLinealProducteCheckbox2" onclick="ShowHideLine('d2GraficLinealProducte', 'GraficLinealProducteCheckbox2');" checked>
+                            <label class="form-check-label" for="GraficLinealProducteCheckbox2"><font color="#F0F080">Tendency</font></label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="GraficLinealProducteCheckbox3" onclick="ShowHideLine('d3GraficLinealProducte', 'GraficLinealProducteCheckbox3');" checked>
+                            <label class="form-check-label" for="GraficLinealProducteCheckbox3"><font color="blue">Average</font></label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="GraficLinealProducteCheckbox4" onclick="ShowHideBackground('d4GraficLinealProducte', 'GraficLinealProducteCheckbox4');" checked>
+                            <label class="form-check-label" for="GraficLinealProducteCheckbox4"><font color="red">Background</font></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row justify-content-center" id="divPDF">
+    <div class="col text-center" style="margin: 15px;margin-top:20px;">
+        <button id="Pdfbutton" type="button" class="btn" onclick="PDFBackend();"><img src="~/Images/pdfImage.png" width="180" height="60"></button>
+    </div>
+</div>
+
+<div class="col" id="tableContentVariables" style="min-width: 300px; overflow: auto;display:none;margin-top:30px">
+    <div class="table100 ver2 m-b-110">
+        <div class="table100-head">
+            <table id="tableVariableHeader">
+                <thead>
+                    <tr class="row100 head row100-head">
+                        <th style="width: 15%">
+                            @Recursos.Idioma.Nom
+                        </th>
+                        <th style="width: 22%">
+                            @Recursos.Idioma.Vact
+                        </th>
+                        <th style="width: 11%">
+                            @Recursos.Idioma.Vant
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="table100-body js-pscroll">
+            <table id="tableValueContentVariables">
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerDades">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapsedDades" href="#collapsedDades" aria-expanded="false" aria-controls="collapsedDades">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Resum</p>
+    <div id="collapsedDades" class="collapse show" style="margin-top:10px;">
+        <div class="row">
+            <div class="col">
+
+                <table class="table" style="width:50%;margin-left:auto;margin-right:auto;" border="1">
+                    <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                        <tr>
+                            <th colspan="2" style="text-align: center;">@Recursos.Idioma.ResumProduccio</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background:white;">
+                        <tr align="center">
+                            @if (Model.Strapex.Estats.Count() > 0)
+                            {
+                                double result = Model.Strapex.Estats.Last().CaixesTotals;
+                                <td style="width:50%;">@Recursos.Idioma.CaixesTotals :</td>
+                                <td>@result</td>
+                            }
+                            else
+                            {
+                                int result = 0;
+                                <td>@Recursos.Idioma.CaixesTotals :</td>
+                                <td>@result</td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table" style="width:50%;margin-left:auto;margin-right:auto;" border="1">
+                    <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                        <tr>
+                            <th colspan="2" style="text-align: center;">@Recursos.Idioma.QuantitatProductes</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background:white;">
+                        @foreach (var producte in @Model.Strapex.DadesGeneriques.ProductesFabricats)
+                        {
+                            <tr align="center">
+                                <td style="width:50%;">@producte.Value.Nom</td>
+                                <td style="width:50%;">@producte.Value.Quantitat</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+                <hr color="white">
+
+                <table class="table" style="width:50%;margin-left:auto;margin-right:auto;" border="1">
+                    <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                        <tr>
+                            <th colspan="2" style="text-align: center;">@Recursos.Idioma.TotalMaquina</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background:white;">
+                        <tr align="center">
+                            <td>@Recursos.Idioma.TempsTotalFuncionament:</td>
+                            <td>@Model.Strapex.DadesGeneriques.TempsTotalFuncionament</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.CanvisFormat: </td>
+                            <td>@Model.Strapex.Estats.Where(e => e.EstatId == 5).Count()</td>
+                        </tr>
+                        <tr align="center">
+                            <td style="width:50%;">@Recursos.Idioma.CadenciaMitja:</td>
+                            <td>@Model.Strapex.DadesGeneriques.CadenciaMitja</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <hr color="white">
+
+                <table class="table" style="width:50%;margin-left:auto;margin-right:auto;" border="1">
+                    <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                        <tr>
+                            <th colspan="2" style="text-align: center;">OEE</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background:white;">
+                        <tr align="center">
+                            <td style="width:50%;">OEE:</td>
+                            <td style="width:50%;">@Math.Round(Model.Strapex.OeeGeneral.General, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Rendiment:</td>
+                            <td>@Math.Round(Model.Strapex.OeeGeneral.Rendiment, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Disponibilitat: </td>
+                            <td>@Math.Round(Model.Strapex.OeeGeneral.Disponibilitat, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Qualitat: </td>
+                            <td>@Math.Round(Model.Strapex.OeeGeneral.Qualitat, 2)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <hr color="white">
+
+                <table class="table" style="width:50%;margin-left:auto;margin-right:auto;" border="1">
+                    <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                        <tr>
+                            <th colspan="2" style="text-align: center;">@Recursos.Idioma.OEEIntern</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background:white;">
+                        <tr align="center">
+                            <td style="width:50%;">@Recursos.Idioma.OEEIntern:</td>
+                            <td style="width:50%;">@Math.Round(Model.Strapex.OeeIntern.General, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Rendiment:</td>
+                            <td>@Math.Round(Model.Strapex.OeeIntern.Rendiment, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Disponibilitat: </td>
+                            <td>@Math.Round(Model.Strapex.OeeIntern.Disponibilitat, 2)</td>
+                        </tr>
+                        <tr align="center">
+                            <td>@Recursos.Idioma.Qualitat: </td>
+                            <td>@Math.Round(Model.Strapex.OeeIntern.Qualitat, 2)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <hr color="white">
+
+                <p>@Recursos.Idioma.NumeroAlarmes: @Model.Strapex.Alarmes.Count() <a class="button" style="float:right;margin-bottom:20px;width:auto;height:auto" data-toggle="collapse" data-parent="#collapseAlarmesDades" href="#collapseAlarmesDades" aria-expanded="false" aria-controls="collapseAlarmesDades">+</a></p>
+                <div id="collapseAlarmesDades" class="collapse">
+                    <table class="table" style="border-radius:10px;">
+                        <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                            <tr>
+                                <th style="text-align:center;" scope="col">
+                                    ID
+                                </th>
+                                <th style="text-align:center;" scope="col">
+                                    @Recursos.Idioma.Caixa
+                                </th>
+                                <th style="width:50%; text-align:center;" scope="col">
+                                    @Recursos.Idioma.InfoAlarma
+                                </th>
+                                <th style="text-align:center;" scope="col">
+                                    @Recursos.Idioma.Quantitat
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody style="background:white;">
+                            @foreach (var producte in @Model.Strapex.Alarmes.GroupBy(e => e.AlarmaId))
+                            {
+                                <tr align="center">
+                                    <td>@producte.Key</td>
+                                    <td>@Model.Strapex.Alarmes.FirstOrDefault(e => e.AlarmaId == producte.Key).ProducteId</td>
+                                    <td style="width:50%;">@Model.Strapex.Alarmes.FirstOrDefault(e => e.AlarmaId == producte.Key).Descripcio</td>
+                                    <td>@producte.Count()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <hr color="white">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="~/Scripts/JS_Formadora.js"></script>
+<script type="text/javascript" src="~/PDF/GestorPDF.js"></script>
+<script type="text/javascript" src="~/PDF/jquery.color-animation.js"></script>
+
+<script>
+    var machine = "@Model.Strapex.Nom";
+    var idMaquina = @Model.Strapex.IdMaquina;
+
+    $(document).ready(function () {
+
+        SeleccionarMenu(machine, idMaquina);//Selecciona la màquina activa
+
+        //Actualitzem la durada
+        refreshDuration();
+
+        //JS Primera gràfica
+        var table = $('#taulaAlarmesId').DataTable({
+            "dom": '<"top"fl>rt<"bottom"ip><"clear">',
+            "lengthMenu": [
+                [3,5,10, 25, 50, -1],
+                ['3','5','10', '25', '50', "@Recursos.Idioma.Tots"]
+
+            ],
+            "language": {
+                "sProcessing": "@Recursos.Idioma.Processant",
+                "sLengthMenu": "@Recursos.Idioma.MostrarMenu",
+                "sZeroRecords": "@Recursos.Idioma.SenseResultats",
+                "sEmptyTable": "@Recursos.Idioma.TaulaBuida",
+                "sInfo": "@Recursos.Idioma.InfoTaula",
+                "sInfoEmpty": "@Recursos.Idioma.InfoBuida",
+                "sInfoFiltered": "@Recursos.Idioma.InfoFiltrada",
+                "sInfoPostFix": "",
+                "sSearch": "@Recursos.Idioma.Buscar",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "@Recursos.Idioma.CarregantDades",
+                "oPaginate": {
+                    "sFirst": "@Recursos.Idioma.Primer",
+                    "sLast": "@Recursos.Idioma.Ultim",
+                    "sNext": "@Recursos.Idioma.Seguent",
+                    "sPrevious": "@Recursos.Idioma.Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": "@Recursos.Idioma.OrdreAscendent",
+                    "sSortDescending": "@Recursos.Idioma.OrdreDescendent"
+                }
+            },
+            "pagingType": "full_numbers"
+        });
+        $('.dataTables_length').addClass('bs-select')
+        $('#ShowAll').click(function () {
+            table.search('').draw();
+            $().val('');
+        });
+    });
+
+    var interval;
+    var minuteNumber = 0;
+    //reset visibilitat divs
+    $('#noData').hide();
+    $('#TableAlarms').show();
+    $('#atras').hide();
+    $('#TableVariables').hide();
+    $('#containerDades').hide();
+    $('#containerPercentatgeEstats').show();
+
+    $('#divPDF').hide();
+
+    var estatsJson = CrearDates(@Html.Raw(Model.Strapex.EstatsJson));
+
+    if (estatsJson) {
+
+        var minimumDate = moment("@Html.Raw(Model.Strapex.DataMinima).ToString()", "YYYY/MM/DD HH:mm:ss");
+        var maximumDate = moment("@Html.Raw(Model.Strapex.DataMaxima).ToString()", "YYYY/MM/DD HH:mm:ss");
+
+        var iniciData = moment("@Model.Strapex.Inici", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+        var finalData = moment("@Model.Strapex.Final", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+
+        var iniciDataAnterior = moment("@Html.Raw(Model.Strapex.IniciAnteriorStr).ToString()", "YYYY/MM/DD HH:mm:ss");
+        var finalDataAnterior = moment("@Html.Raw(Model.Strapex.FinalAnteriorStr).ToString()", "YYYY/MM/DD HH:mm:ss");
+
+
+        var alarmes = CrearDates(@Html.Raw(Model.Strapex.AlarmesJson));
+
+        var llistaCadencia = CrearDates(@Html.Raw(Model.Strapex.CadenciesPerHoraJson));
+        var llistaEstatsFrequents = @Html.Raw(Json.Encode(Model.Strapex.EstatsFrequents));
+
+        var alarmesFrequents = @Html.Raw(Json.Encode(Model.Strapex.AlarmesFrequents));
+
+        var lineArr = [];
+        var MAX_LENGTH = 600; //numero de punts3000
+        var duration = 100; //interval entre updates de la grafica (en milisegons)600
+
+        barchart(estatsJson, true, "#chartContainer", iniciData, finalData, "Estat", "Info", "Color", machine, "Strapex", "Strapex", "EstatsCheckbox", true, idMaquina);
+
+        if (alarmes.length > 0) {
+            barchartAlarmes(alarmes, "#chartContainer2", iniciData, finalData, machine, "#taulaAlarmesId", "Strapex", true);
+        }
+        else {
+            $('#containerAlarmes').hide();
+            $('#containerAlarmesFrequents').hide();
+            $('#TableAlarms').hide();
+        }
+
+        if (alarmesFrequents.length > 0) {
+            donutchart("#DonutAlarmes", alarmesFrequents, 30, "AlarmaId");
+        }
+
+        piechart("#CircularChartContainer", llistaEstatsFrequents, "Estat");
+
+        @*if (llistaCadencia && llistaCadencia.length > 0)
+            linechart("@Recursos.Idioma.Cadencia", llistaCadencia, true, false, true, true, "#GraficLinealCadencia", "Valor", iniciData, finalData, estatsJson, "Color");
+        else
+            $('#containerCadencia').hide();*@
+        $('#containerCadencia').hide();
+
+        linechart("@Recursos.Idioma.CaixesTotals", estatsJson, true, false, true, true, "#GraficLinealProducte", "CaixesTotals", iniciData, finalData, estatsJson, "Color");
+
+        showCheckboxes();//Mostrem els checkboxes de les gràfiques
+
+        $('#divPDF').show();
+    }
+    else {
+        hideGraphics();
+        $('#noData').show();
+        $('#containerPercentatgeEstats').hide();
+        $('#containerRebuigTotal').hide();
+        $('#TableAlarms').hide();
+        $('#atras').hide();
+        $('#containerAlarmes').hide();
+        $('#containerAlarmesFrequents').hide();
+    }
+    $("#divLoading").hide();
+
+    //Actualitzem la navbarSupportedContent per tal de dividir les gràfiques
+    ActualitzarNavbar();
+
+    function ActualitzarNavbar(){
+        $('#navbarSupportedContent').find('a').remove();
+        $("#navbarSupportedContent").prepend("<a onclick='hideGraphics();' href='#' class='nav-item nav-link' style='margin-right:10px;'><i class='fa fa-bell pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.LlistaAlarmes</a>");
+        $("#navbarSupportedContent").prepend("<a onclick='showGraphics();' href='#' class='nav-item nav-link' style='margin-right:10px'><i class='fa fa-bar-chart pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.Grafiques</a>");
+        $("#navbarSupportedContent").prepend("<a onclick='showDades();' href='#' class='nav-item nav-link' style='margin-right:10px'><i class='fa fa-pencil pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.Resum</a>");
+        //$("#navbarSupportedContent").find('li').prepend("<a onclick='showVariables();' href='#' style='margin-right:10px'>@Recursos.Idioma.CanviVariables</a>");
+    }
+
+    function seedData() {//valors inicials de realtimeChart
+        var endOfDate = (iniciData._i.split("/"))
+        var endNow = new Date(endOfDate[1] + "/" + endOfDate[0] + "/" + endOfDate[2])
+
+        for (var i = 0; i < MAX_LENGTH; ++i) {
+            lineArr.push({
+                time: new Date(endNow.getTime() - ((MAX_LENGTH - i) * duration)),
+                z: 0
+            });
+        }
+    }
+
+    function CrearDates(jsonObj) {
+
+        for (var i in jsonObj) {
+            jsonObj[i].Inici = new Date(jsonObj[i].Inici);
+            jsonObj[i].Final = new Date(jsonObj[i].Final);
+        }
+        return jsonObj;
+    }
+
+    function hideGraphics() {
+        $('#containerProducte').hide();
+        $('#containerEstats').hide();
+        $('#containerPercentatgeEstats').hide();
+        $('#containerCadencia').hide();
+        $('#containerCaixesTotals').hide();
+        $('#containerCaixesTotalsL1').hide();
+        $('#containerCaixesTotalsL2').hide();
+        $('#divPDF').hide();
+        $('#containerDades').hide();
+        if (alarmes && alarmes.length > 0) {
+            $('#containerAlarmes').show();//alarmes!
+            $('#TableAlarms').show();
+            $('#atras').show();
+            $('#containerAlarmesFrequents').show();
+        }
+        $('#TableVariables').hide();
+        $('#tableContentVariables').hide();
+        $('#divTotalCaixes').hide();
+    }
+
+    function showGraphics() {
+        if (estatsJson.length > 0) { //Per mantenir l'estructura de la pàgina, altrament es farà més petita i es solapen els elements.
+            $('#containerProducte').show();
+            $('#containerEstats').show();
+            $('#containerPercentatgeEstats').show();
+            $('#containerCadencia').show();
+            $('#containerCaixesTotals').show();
+            $('#containerCaixesTotalsL1').show();
+            $('#containerCaixesTotalsL2').show();
+            $('#divPDF').show();
+            if (alarmes && alarmes.length > 0) {
+                $('#containerAlarmes').show();//alarmes!
+                $('#containerAlarmesFrequents').show();
+                $('#TableAlarms').show();
+            }
+            $('#containerDades').hide();
+            $('#atras').hide();
+            $('#TableVariables').hide();
+            $('#tableContentVariables').hide();
+            showCheckboxes();
+        }
+    }
+    function showDades() {
+        if (estatsJson.length > 0) {
+            hideGraphics();
+            $('#containerAlarmes').hide();
+            $('#containerAlarmesFrequents').hide();
+            $('#TableAlarms').hide();
+            $('#atras').hide();
+            $('#TableVariables').hide();
+            $('#tableContentVariables').hide();
+            $('#containerDades').show();
+        }
+    }
+
+    function showCheckboxes() {
+        $('#GraficLinealCadenciaCheckbox').show();
+        $('#GraficLinealProducteCheckbox').show();
+        $('#GraficLinealProducteL1Checkbox').show();
+        $('#GraficLinealProducteL2Checkbox').show();
+    }
+
+    function ShowHideLine(div_id, checkboxId) {
+        if (document.body.contains(document.getElementById(div_id))) {
+            if (document.getElementById(div_id).style.opacity == 1 && $("input[id^='" + checkboxId.substring(0, checkboxId.length - 1) + "']:checked").length > 1) {//Esta actiu, el desactivem
+                d3.select("#" + div_id).style("opacity", 0);
+                document.getElementById(checkboxId).checked = false;
+            }
+            else {
+                d3.select("#" + div_id).style("opacity", 1);
+                document.getElementById(checkboxId).checked = true;
+            }
+        }
+    }
+
+    function ShowHideBackground(div_id, checkboxId) {
+        if (document.body.contains(document.getElementById(div_id))) {
+            if (document.getElementById(div_id).style.opacity != 0 && $("input[id^='" + checkboxId.substring(0, checkboxId.length - 1) + "']:checked").length > 1) {//Esta actiu, el desactivem
+                d3.selectAll("#" + div_id).style("opacity", 0);
+                document.getElementById(checkboxId).checked = false;
+            }
+            else {
+                d3.selectAll("#" + div_id).style("opacity", 0.1);
+                document.getElementById(checkboxId).checked = true;
+            }
+        }
+    }
+
+    function increaseZoom() {
+        if (estatsJson) {
+            var oldDateStart = "@Html.Raw(Model.Strapex.Inici).ToString()";
+            var oldDateEnd = "@Html.Raw(Model.Strapex.Final).ToString()";
+
+            var dateEnd = oldDateEnd.split("/");
+            var dateStart = oldDateStart.split("/");
+
+            var milisecondsEnd = Date.parse(dateEnd[1] + "/" + dateEnd[0] + "/" + dateEnd[2]);
+            var milisecondsStart = Date.parse(dateStart[1] + "/" + dateStart[0] + "/" + dateStart[2]);
+
+            var newDateMilli = milisecondsStart + ((milisecondsEnd - milisecondsStart) / 10);
+            var newDate = new Date(newDateMilli);
+            var newDateSplit = newDate.toString().split(" ");
+
+            var test = newDateSplit[2] + "/" + returnMonthNumber(newDateSplit[1]) + "/" + newDate.getFullYear() + " " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds();
+
+            $("#divLoading").show();
+            var antInitDate = document.getElementById("dataInicial").value;
+            var antFinalDate = document.getElementById("dataFinal").value;
+            var list = document.getElementById('shiftDropDownList');
+            var selectedShift = list.options[list.selectedIndex].value;
+            $("#partial").load("/Strapex/StrapexPartial", { inici: test, final: antFinalDate, torn: selectedShift, iniciAnt: antInitDate, finalAnt: antFinalDate, nomMaquina: machine , idMaquina: @Model.Strapex.IdMaquina });
+        }
+    }
+
+    function previosZoom() {
+        if (estatsJson) {
+            $("#divLoading").show();
+            var dataIniciAnterior = document.getElementById("dataInicial").value;
+            var dataFinalAnterior = document.getElementById("dataFinal").value;
+            var list = document.getElementById('shiftDropDownList');
+            var selectedShift = list.options[list.selectedIndex].value;
+            $("#partial").load("/Strapex/StrapexPartial", { inici: dataIniciAnterior, final: dataFinalAnterior, torn: selectedShift, iniciAnt: minimumDate._i, finalAnt: maximumDate._i, nomMaquina: machine, idMaquina: @Model.Strapex.IdMaquina });
+        }
+    }
+
+    function returnMonthNumber(monthname) {
+        var monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        var month = monthShortNames.indexOf(monthname);
+        return month ? month + 1 : 0;
+    }
+
+    function refreshDuration() {
+        var newDataIn = new Date(moment("@Html.Raw(Model.Strapex.Inici).ToString()", "DD/MM/YYYY HH:mm:ss"));
+        var newDataFi = new Date(moment("@Html.Raw(Model.Strapex.Final).ToString()", "DD/MM/YYYY HH:mm:ss"));
+        var duration = convertMSGrafica(Math.abs(newDataFi.getTime() - newDataIn.getTime()));
+        var newDuration = "@Html.Raw(Recursos.Idioma.Duracio)" + ": " + duration;
+        $("#textDurada").text(newDuration);
+        document.getElementById('dataInicial').value = "@Html.Raw(Model.Strapex.Inici.ToString())";
+        document.getElementById('dataFinal').value = "@Html.Raw(Model.Strapex.Final.ToString())";
+    }
+
+    function PDFBackend() {
+        window.location.href = "@Html.Raw(@Url.Action("GenerarPDF", "Strapex", new { nomMaquina=@Model.Strapex.Nom, inici=@Model.Strapex.Inici.ToString(), final=@Model.Strapex.Final.ToString(), torn=0, idMaquina= @Model.Strapex.IdMaquina }))";
+    }
+
+    function DescarregarVideo(datainici, index) {
+
+        var llistaCameres = document.getElementById("camerasAlarmaId" + index);
+        var camaraId = llistaCameres.options[llistaCameres.selectedIndex].text;
+
+
+        var url = "@Html.Raw(@Url.Action("DescarregarVideo", "Axxon", new { inici="iniciParam", idCamera = "idCameraParam"}))";
+        url = url.replace("iniciParam", datainici);
+        url = url.replace("idCameraParam", camaraId);
+
+        window.open(url,"_blank");
+
+    }
+
+    $("a").click(function () {
+        if ($(this).hasClass("fa-minus-circle")) {
+            $(this).removeClass("fa-minus-circle");
+            $(this).addClass("fa-plus-circle");
+        }
+        else if($(this).hasClass("fa-plus-circle")) {
+            $(this).removeClass("fa-plus-circle");
+            $(this).addClass("fa-minus-circle");
+        }
+    });
+
+</script>

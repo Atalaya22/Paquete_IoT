@@ -1,0 +1,76 @@
+﻿html{
+    height: 100%;
+}
+
+.container{
+    margin-top: 25px;
+    max-width: 1140px;
+}
+
+body {
+    height: 100%;
+    background: #212121;
+}
+
+footer {
+    bottom: 20px;
+    position: absolute;
+}
+
+.body-login {
+    background: #5f6060;
+    background: -webkit-linear-gradient(-135deg, #3A4F59, #C8D8DB);
+    background: -o-linear-gradient(-135deg, #3A4F59, #C8D8DB);
+    background: -moz-linear-gradient(-135deg, #3A4F59, #C8D8DB);
+    background: linear-gradient(35deg, #383d41, rgb(8 8 8 / 90%));
+	
+}
+
+/* Set padding to keep content from hitting the edges */
+/*.body-content {
+    padding-top: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+}*/
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.navbar-brand{
+    height:60px;
+}
+
+/* Estils per pàgines de inci sessio i registre */
+.register-form-display{
+    display: block;
+    padding-bottom: 20px;
+}
+
+.form-inline{
+    display: inline-block;
+}
+
+.register-labels{
+    float: left;
+    padding-left: 15px;
+    padding-bottom: 10px;
+}
+
+.form-inline .form-control {
+    width: -moz-available;
+    width: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
+    width: fill-available;
+}
+
+/*Fi inici sessio i registre*/
+
+/* Set width on the form input elements since they're 100% wide by default */
+/*input,
+select,
+textarea {
+    max-width: 280px;
+}*/

@@ -1,0 +1,374 @@
+﻿@model IoT_Web.Models.CorreuElectronic
+@{
+    Layout = "~/Views/Shared/_LayoutNoLogin.cshtml";
+}
+
+@{
+    ViewBag.Title = Recursos.Idioma.NouCorreu;
+}
+
+@Styles.Render("~/Content/FormWizardCustom.css")
+
+<div class="container-login100">
+    <div class="row justify-content-center wrap-login100">
+        <span class="login100-form-title">
+            @Recursos.Idioma.NouCorreu
+        </span>
+        @using (Html.BeginForm("CrearNouCorreu", "Correu", FormMethod.Post, new { @style = "width:100%;", @id = "idFormCorreu" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+            <div class="stepwizard" style="margin-bottom: 20px;">
+                <div class="stepwizard-row setup-panel">
+                    <div class="stepwizard-step">
+                        <a href="#step-1" type="button" class="btn btn-primary btn-circle"><i class="fa fa-info" aria-hidden="true"></i></a>
+                        <p>@Recursos.Idioma.Maquines</p>
+                    </div>
+
+                    <div class="stepwizard-step">
+                        <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled"><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                        <p>@Recursos.Idioma.Dates</p>
+                    </div>
+
+                    <div class="stepwizard-step">
+                        <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled"><i class="fa fa-language" aria-hidden="true"></i></a>
+                        <p>@Recursos.Idioma.Idiomes</p>
+                    </div>
+
+                    <div class="stepwizard-step">
+                        <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled"><i class="fa fa-user" aria-hidden="true"></i></a>
+                        <p>@Recursos.Idioma.Receptors</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row setup-content form-group" id="step-1">
+                <div style="margin: auto; width: 50%;">
+                    <input autofocus="autofocus" style="display:none" />
+                    <!-- content go here -->
+                    <h5 style="text-align: center; margin-top: 10px; margin-bottom: 10px">
+                        @Recursos.Idioma.EscollirMaquines
+                    </h5>
+                    <div>
+                        <div class="row justify-content-center" style="margin-top: 10px">
+                            <div style="max-width: 90%; min-width: 475px;">
+                                <div class="row justify-content-center">
+                                    <div class="col-10">
+                                        @Html.CheckBoxFor(m => m.TotesSubmaquines)
+                                        @Html.LabelFor(m => m.TotesSubmaquines, Recursos.Idioma.TotesLesMaquines)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wrap-input100">
+                            @Html.ListBoxFor((m => m.LlistaNomSubmaquina), new SelectList(ViewBag.List, "Nom", "NomTraduit"), new { style = "margin-bottom:20px;font-family: Poppins-Medium;font-size: 15px;line-height: 1.5;color: #666666;display: block;width: 100%;background-color: #e6e6e6;border-radius: 1px;padding: 0 10px 0 15px;" })
+                        </div>
+                    </div>
+                    <button class="btn btn-light btn-block nextBtn pull-right" type="button">@Recursos.Idioma.Seguent</button>
+                </div>
+            </div>
+
+            <div class="row setup-content" id="step-2">
+                <div style="margin: auto;width: 50%;">
+                    <!-- content go here -->
+                    <input autofocus="autofocus" style="display:none" />
+                    <h5 style="text-align: center; margin-bottom: 10px">
+                        @Recursos.Idioma.HoraInici
+                    </h5>
+                    <div class="wrap-input100">
+                        <div class="input-group date" id="datetimepickerBegin" data-target-input="nearest">
+                            @Html.TextBoxFor(m => m.IniciInforme, new { @class = "input100 datetimepicker-input form-control", @placeholder = Recursos.Idioma.HoraInici, })
+                            @*<input id="dataFinal" type="text" class="input100 datetimepicker-input form-control" data-target="#datetimepickerBegin" placeholder="Hora de inicio:" />*@
+                            <div class="input-group-append" data-target="#datetimepickerBegin" data-toggle="datetimepicker">
+                                <div class="input-group-text" style=" border-bottom-right-radius: 25px; border-top-right-radius: 25px;">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 style="text-align: center; margin-top: 20px; margin-bottom: 20px">
+                            @Recursos.Idioma.HoraFi
+                        </h5>
+                        <div class="input-group date" id="datetimepickerEnd" data-target-input="nearest" style="margin-top: 10px">
+                            @Html.TextBoxFor(m => m.FinalInforme, new { @class = "input100 datetimepicker-input form-control", @placeholder = Recursos.Idioma.HoraFi })
+                            @*<input id="dataFinal" type="text" class="input100 datetimepicker-input form-control" data-target="#datetimepickerEnd" placeholder="Hora de finalización:" />*@
+                            <div class="input-group-append" data-target="#datetimepickerEnd" data-toggle="datetimepicker">
+                                <div class="input-group-text" style=" border-bottom-right-radius: 25px; border-top-right-radius: 25px;">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <h5 style="text-align: center; margin-top: 20px; margin-bottom: 20px">
+                            @Recursos.Idioma.HoraEnviament
+                        </h5>
+                        <div class="input-group date" id="datetimepickerHoraEnviament" data-target-input="nearest" style="margin-top: 10px">
+                            @Html.TextBoxFor(m => m.TimeEnviament, new { @class = "input100 datetimepicker-input form-control", @placeholder = Recursos.Idioma.HoraEnviament })
+                            @*<input id="dataFinal" type="text" class="input100 datetimepicker-input form-control" data-target="#datetimepickerEnd" placeholder="Hora de finalización:" />*@
+                            <div class="input-group-append" data-target="#datetimepickerHoraEnviament" data-toggle="datetimepicker">
+                                <div class="input-group-text" style=" border-bottom-right-radius: 25px; border-top-right-radius: 25px;">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h5 style="text-align: center; margin-top: 30px">
+                            @Recursos.Idioma.DiesEnviarMail
+                        </h5>
+                    </div>
+                    <div class="row justify-content-center" style="margin-top: 20px">
+                        <div style="max-width: 90%; min-width: 220px; margin-left: 75px">
+                            <div class="row justify-content-center">
+                                <div class="col-6">
+                                    @Html.CheckBoxFor(m => m.Dilluns)
+                                    @Html.LabelFor(m => m.Dilluns, Recursos.Idioma.Dilluns)
+                                </div>
+                                <div class="col-6">
+                                    @Html.CheckBoxFor(m => m.Dimarts)
+                                    @Html.LabelFor(m => m.Dimarts, Recursos.Idioma.Dimarts)
+                                </div>
+                                <div class="col-6">
+                                    @Html.CheckBoxFor(m => m.Dimecres)
+                                    @Html.LabelFor(m => m.Dimecres, Recursos.Idioma.Dimecres)
+                                </div>
+                                <div class="col-6">
+                                    @Html.CheckBoxFor(m => m.Dijous)
+                                    @Html.LabelFor(m => m.Dijous, Recursos.Idioma.Dijous)
+                                </div>
+                                <div class="col-6">
+                                    @Html.CheckBoxFor(m => m.Divendres)
+                                    @Html.LabelFor(m => m.Divendres, Recursos.Idioma.Divendres)
+                                </div>
+                                <div class="col-6">
+                                    @Html.CheckBoxFor(m => m.Dissabte)
+                                    @Html.LabelFor(m => m.Dissabte, Recursos.Idioma.Dissabte)
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-6">
+                                    @Html.CheckBoxFor(m => m.Diumenge)
+                                    @Html.LabelFor(m => m.Diumenge, Recursos.Idioma.Diumenge)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-light btn-block nextBtn pull-right" type="button">@Recursos.Idioma.Seguent</button>
+                </div>
+            </div>
+
+            <div class="row setup-content form-group" id="step-3">
+                <div style="margin: auto; width: 50%;">
+                    <input autofocus="autofocus" style="display:none" />
+                    <!-- content go here -->
+                    <h5 style="text-align: center; margin-top: 10px; margin-bottom: 10px">
+                        @Recursos.Idioma.EscollirIdiomes
+                    </h5>
+                    <div class="row justify-content-center" style="margin-top: 20px">
+                        <div style="max-width: 90%; min-width: 220px; margin-left: 75px">
+                            <div class="row justify-content-center">
+                                <div class="col-8">
+                                    @Html.CheckBoxFor(m => m.Catala)
+                                    @Html.LabelFor(m => m.Catala, Recursos.Idioma.Cat)
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-8">
+                                    @Html.CheckBoxFor(m => m.Espanyol)
+                                    @Html.LabelFor(m => m.Espanyol, Recursos.Idioma.Es)
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-8">
+                                    @Html.CheckBoxFor(m => m.Angles)
+                                    @Html.LabelFor(m => m.Angles, Recursos.Idioma.En)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-light btn-block nextBtn pull-right" type="button">@Recursos.Idioma.Seguent</button>
+                </div>
+            </div>
+
+            <div class="row setup-content" id="step-4">
+                <div style="margin: auto;width: 50%;">
+                    <!-- content go here -->
+                    <input autofocus="autofocus" style="display:none" />
+                    <h5 style="text-align: center; margin-top: 10px; margin-bottom: 10px">
+                        @Recursos.Idioma.Receptors
+                    </h5>
+                    <div class="wrap-input100">
+                        @Html.TextBoxFor(m => m.CorreuReceptor, new { @class = "input100", @placeholder = Recursos.Idioma.Destinataris })
+                    </div>
+                    <div class="wrap-input100" id="InputCCForm">
+                        <span class="fa fa-plus-circle" onclick="AddInput('InputCCForm','CC','ReceptorsCC');" aria-hidden="false">
+                        </span>
+                        @Recursos.Idioma.AfegeixReceptor
+                    </div>
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn" type="button" onclick="VerificarCamps();">
+                            @Recursos.Idioma.GuardarCorreu
+                        </button>
+                    </div>
+                    <div class="container-login100-form-btn">
+                        <a class="txt2">
+                            <i class="fa fa-info m-l-5" aria-hidden="true">
+                                @Recursos.Idioma.Carpeta
+                            </i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center p-t-136" style="margin-top: 30px">
+                <a class="txt2">
+                    @Html.ActionLink(Recursos.Idioma.Tornar, "Index", "Correu")
+                    <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div class="status" id="status" style="text-align:center"></div>
+        }
+    </div>
+</div>
+
+
+
+<script>
+    function AddInput(id, tipus, receptor) {
+        $("#" + id).append('<div><input class="input100" id="' + receptor + '" name="' + receptor + '" placeholder="' + tipus + '" required="required" style="width:85%; display:inline;margin-top:10px;" type="text" value=""><a href="#" class="delete">@Recursos.Idioma.Eliminar</a></div>'); //add input box
+    }
+
+    $("#InputCCForm").on("click", ".delete", function (e) {
+        e.preventDefault();
+        $(this).parent('div').remove();
+    })
+
+    $("#InputCEForm").on("click", ".delete", function (e) {
+        e.preventDefault();
+        $(this).parent('div').remove();
+    })
+</script>
+
+<script>
+    $(document).ready(function () {
+        var navListItems = $('div.setup-panel div a'), // tab nav items
+            allWells = $('.setup-content'), // content div
+            allNextBtn = $('.nextBtn'); // next button
+
+        allWells.hide(); // hide all contents by defauld
+
+        navListItems.click(function (e) {
+            e.preventDefault();
+            var $target = $($(this).attr('href')),
+                $item = $(this);
+
+            if (!$item.hasClass('disabled')) {
+                navListItems.removeClass('btn-primary').addClass('btn-default');
+                $item.addClass('btn-primary');
+                allWells.hide();
+                $target.show();
+                $target.find('input:eq(0)').focus();
+            }
+        });
+        // next button
+        allNextBtn.click(function () {
+            var curStep = $(this).closest(".setup-content"),
+                curStepBtn = curStep.attr("id"),
+                nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+                //curInputs = curStep.find("input[type='text'],select"),
+                curInputs = curStep.find(""),
+                isValid = true;
+            document.getElementById('status').innerHTML = "";//Reset del div per mostrar els errors dels inputs
+            // Validation
+            $(".form-group").removeClass("has-error");
+            for (var i = 0; i < curInputs.length; i++) {
+                if (curInputs[i].value == "") {
+                    isValid = false;
+                    document.getElementById('status').innerHTML = "<font color='#ff5042'>" + $(curInputs[i]).attr("placeholder") + " @Recursos.Idioma.NoPotSerBuit</font>";
+                    break;
+                }
+            }
+            // move to next step if valid
+            if (isValid)
+                nextStepWizard.removeAttr('disabled').trigger('click');
+        });
+
+        $('div.setup-panel div a.btn-primary').trigger('click');
+    });
+
+    function VerificarCamps() {
+        var isValid = true;
+        document.getElementById('status').innerHTML = "";//Reset del div per mostrar els errors dels inputs
+
+        //Pas 1
+        var curStep = $();
+        var curInputs = curStep.find("input[type='text'],select");
+
+        isValid = VerificarElements(curInputs, isValid);
+
+        if (!isValid) return false;
+
+        //Pas 2
+        curStep = $("#step-2");
+        curInputs = curStep.find("input[type='text']");
+
+        isValid = VerificarElements(curInputs, isValid);
+
+        if (!isValid) return false;
+
+        //Pas 3
+        curStep = $("#step-3");
+        curInputs = curStep.find("input[type='text'],select");
+
+        isValid = VerificarElements(curInputs, isValid);
+
+        if (!isValid) return false;
+
+        //Pas 4
+        curStep = $("#step-4");
+        curInputs = curStep.find("input[type='text']");
+
+        isValid = VerificarElements(curInputs, isValid);
+
+        if (!isValid) return false;
+        else document.getElementById('idFormCorreu').submit();
+    }
+
+    function VerificarElements(curInputs, isValid) {
+        for (var i = 0; i < curInputs.length; i++) {
+            console.log("value=" + curInputs[i].value);
+            if (curInputs[i].value == "" && $(curInputs[i]).attr("placeholder") != "CE") {
+                isValid = false;
+                document.getElementById('status').innerHTML = "<font color='#ff5042'>" + $(curInputs[i]).attr("placeholder") + " @Recursos.Idioma.NoPotSerBuit</font>";
+                break;
+            }
+        }
+        return isValid;
+    }
+</script>
+
+<script>
+    $(function () {
+        $('#datetimepickerBegin').datetimepicker({
+            format: 'HH:mm',
+            stepping: 30,
+            autoclose: true
+        });            
+
+        $('#datetimepickerEnd').datetimepicker({
+            format: 'HH:mm',
+            stepping: 30,
+            autoclose: true
+        });
+        $('#datetimepickerHoraEnviament').datetimepicker({
+            format: 'HH:mm',
+            stepping: 30,
+            autoclose: true
+        });
+
+    });
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+}

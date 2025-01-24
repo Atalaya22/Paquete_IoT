@@ -1,0 +1,51 @@
+﻿@model IEnumerable<IoT_Web.Models.UsersWithRoles_ViewModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="table100 ver2 m-b-110">
+    <div class="table100-head">
+        <table>
+            <thead>
+                <tr class="row100 head row100-head">
+                    <th class="cell100 column1">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th class="cell100 column2">
+                        @Html.DisplayNameFor(model => model.Role)
+                    </th>
+                    <th class="cell100 column3">
+                        @Html.DisplayNameFor(model => model.Username)
+                    </th>
+                    <th class="cell100 column4"></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="table100-body js-pscroll">
+        <table>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="row100 body">
+                        <td class="cell100 column1">
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td class="cell100 column2">
+                            @Html.DisplayFor(modelItem => item.Role)
+                        </td>
+                        <td class="cell100 column3">
+                            @Html.DisplayFor(modelItem => item.Username)
+                        </td>
+                        <td class="cell100 column4">
+                            @Html.ActionLink(Recursos.Idioma.Editar, "Edit", new { id = item.UserId }) |
+                            @Html.ActionLink(Recursos.Idioma.Eliminar, "Delete", new { id = item.UserId })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@Html.ActionLink(Recursos.Idioma.NouUsuari, "Register", "Account", null, new { @class = "button" })
