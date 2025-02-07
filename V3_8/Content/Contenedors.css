@@ -1,0 +1,8 @@
+.contenedor{
+	background: rgba(53, 53, 53, 0.6);
+	border-radius: 16px;
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(7.8px);
+	-webkit-backdrop-filter: blur(7.8px);
+	border: 0.2px solid rgba(111, 111, 111, 1);
+}

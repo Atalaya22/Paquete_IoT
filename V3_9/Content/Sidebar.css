@@ -1,0 +1,297 @@
+/*
+    DEMO STYLE
+*/
+
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a, a:hover, a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.navbar {
+    padding: 15px 10px;
+    /*background: linear-gradient(-35deg, #2d2d2d, #2d2d2d);
+    border-radius: 10px;
+    margin-bottom: 0px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);*/
+	
+}
+
+.navbar-btn {
+    box-shadow: none;
+    outline: none !important;
+    border: none;
+}
+
+.navbar-logo{
+    width: 100%;
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+
+/* ---------------------------------------------------
+    BUTTON STYLE
+----------------------------------------------------- */
+.language-buttons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+ 
+.language-button {
+    border: none;
+    background: none;
+    margin: 0 10px; /* Ajusta el margen según sea necesario */
+    transition: transform 0.3s ease;
+}
+ 
+.language-button:hover {
+        transform: scale(2.0); /* Ajusta el factor de escala según sea necesario */
+}
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE (Improved)
+----------------------------------------------------- */
+
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Permite que el body ocupe toda la altura */
+}
+
+
+/* Sidebar Container */
+#sidebar {
+    height: 118vh;
+    min-width: 250px;
+    max-width: 265px;
+    background: linear-gradient(335deg, #2c2c2c, #434649);
+    color: #fff;
+    transition: all 0.6s cubic-bezier(0.945, 0.020, 0.270, 0.665);
+    transform-origin: bottom left;
+    border-right: 0.2px solid rgba(111, 111, 111, 1);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+
+}
+
+#sidebar.active {
+    margin-left: -250px;
+    transform: rotateY(100deg);
+}
+
+/* Sidebar Header */
+#sidebar .sidebar-header {
+    padding: 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    /*background: linear-gradient(335deg, #434649, #2c2c2c);
+    box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.2);*/
+    color: #e0e0e0;
+    text-transform: uppercase;
+}
+
+/* List Items */
+#sidebar ul.components {
+    padding: 20px 0;
+}
+
+#sidebar ul li a {
+    padding: 15px;
+    padding-left: 20px;
+    font-size: 1.1em;
+    display: block;
+    color: #e0e0e0;
+    text-decoration: none;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+#sidebar ul li a:hover {
+    color: #fff;
+    background: #e11426;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    border-radius: 0px;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: linear-gradient(335deg, #4c4c4c, #e11426);
+    border-left: 4px solid #e11426;
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Dropdown Icon */
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    color: #e0e0e0;
+    transition: transform 0.3s ease;
+}
+
+a[data-toggle="collapse"] {
+    cursor: pointer;
+}
+
+/* Submenu */
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 40px !important;
+    color: #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+ul ul a:hover {
+    background: #4a4a4a;
+    color: #ffcc00;
+    text-shadow: 0 0 8px rgba(255, 204, 0, 0.7);
+    border-radius: 8px;
+}
+
+/* Footer CTAs */
+ul.CTAs {
+    padding: 20px;
+}
+
+ul.CTAs a {
+    text-align: center;
+    font-size: 0.9em !important;
+    display: block;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    background: #fff;
+    color: #7386D5;
+    text-decoration: none;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+ul.CTAs a:hover {
+    background: #6d7fcc !important;
+    color: #fff !important;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+}
+
+
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+#content {
+    width: calc(100% - 250px);
+    padding: 40px;
+    min-height: 100vh;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#content.active {
+    width: 100%;
+}
+
+#sidebarCollapse {
+    width: 40px;
+    height: 40px;
+    background: #2d2d2d;
+    cursor: pointer;
+}
+
+#sidebarCollapse span {
+    width: 80%;
+    height: 2px;
+    margin: 0 auto;
+    display: block;
+    background: #9c9c9c;
+    transition: all 0.8s cubic-bezier(0.810, -0.330, 0.345, 1.375);
+    transition-delay: 0.2s;
+}
+
+#sidebarCollapse span:first-of-type {
+    transform: rotate(45deg) translate(2px, 2px);
+}
+#sidebarCollapse span:nth-of-type(2) {
+    opacity: 0;
+}
+#sidebarCollapse span:last-of-type {
+    transform: rotate(-45deg) translate(1px, -1px);
+}
+
+
+#sidebarCollapse.active span {
+    transform: none;
+    opacity: 1;
+    margin: 5px auto;
+}
+
+.bottom-elements {
+    height: 50px;
+    position: absolute;
+    width: 250px;
+    bottom: 70px;
+    padding-bottom: 5.5em;
+}
+
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+@media (max-width: 900px) {
+    #sidebar {
+        margin-left: -250px;
+        transform: rotateY(90deg);
+    }
+    #sidebar.active {
+        margin-left: 0;
+        transform: none;
+    }
+    #sidebarCollapse span:first-of-type,
+    #sidebarCollapse span:nth-of-type(2),
+    #sidebarCollapse span:last-of-type {
+        transform: none;
+        opacity: 1;
+        margin: 5px auto;
+    }
+    #sidebarCollapse.active span {
+        margin: 0 auto;
+    }
+    #sidebarCollapse.active span:first-of-type {
+        transform: rotate(45deg) translate(2px, 2px);
+    }
+    #sidebarCollapse.active span:nth-of-type(2) {
+        opacity: 0;
+    }
+    #sidebarCollapse.active span:last-of-type {
+        transform: rotate(-45deg) translate(1px, -1px);
+    }
+
+}
+

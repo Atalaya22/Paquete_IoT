@@ -1,0 +1,175 @@
+<html>
+<head>
+    <style>
+        body {
+            background: #2c2c2c;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px; /* Increased the max width for larger player */
+            margin: 20px auto;
+            padding: 20px;
+            background: #3a3a3a;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .label {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background: #4a4a4a;
+            color: #ffffff;
+            font-size: 1em;
+        }
+
+        #divFrame {
+            margin-top: 20px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 700px; /* Retained height for a larger video player */
+            border: none;
+            border-radius: 10px;
+            background: #1f1f1f;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #aaaaaa;
+        }
+
+        .logo {
+            display: block;
+            max-width: 200px;
+            margin: 0 auto 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="logo_iot_v2.png" alt="IoT Logo" class="logo">
+        <select id="selectCameres" onChange="canviarCamera(this.value)">
+        </select>
+
+        <div id="divFrame"></div>
+    </div>
+
+    <div class="footer">
+        2024 - Tavil IoT
+    </div>
+
+    <script>
+        function getParamValue(paramName) {
+            const url = window.location.search.substring(1);
+            const qArray = url.split('&');
+
+            for (let i = 0; i < qArray.length; i++) {
+                const pArr = qArray[i].split('=');
+                if (pArr[0] === paramName) {
+                    return decodeURIComponent(pArr[1]);
+                }
+            }
+            return null;
+        }
+
+        (async function inici() {
+            const selectCameres = document.getElementById("selectCameres");
+            const cameres = getParamValue('cam').split(';');
+
+            cameres.forEach(camera => {
+                const option = new Option(camera, camera);
+                selectCameres.add(option);
+            });
+
+            initPlayer(selectCameres.value);
+        })();
+
+        function canviarCamera(cam) {
+            initPlayer(cam);
+        }
+
+        async function initPlayer(icam) {
+            const cameres = getParamValue('cam').split(';');
+            const data = getParamValue('data');
+            const dataArray = data.split(';');
+            const dataVideo = new Date(dataArray[0], dataArray[1] - 1, dataArray[2], dataArray[3], dataArray[4], dataArray[5]);
+            const playerMode = getParamValue('mode');
+
+            const response = await fetch(`/camera/list?filter=${icam}.&limit=1`);
+            const { cameras: [{ archives: [archive] }] } = await response.json();
+
+            const player = createPlayer('player');
+
+            await player.isReady;
+
+            await player.init({
+                archive: {
+                    time: dataVideo,
+                    storage: archive.storage,
+                },
+                origin: archive.accessPoint,
+                mode: playerMode,
+                displayName: ''
+            });
+        }
+
+        function createPlayer(styleClass) {
+            const iframe = document.createElement('iframe');
+            const instance = {
+                isReady: new Promise(resolve => {
+                    iframe.addEventListener('load', resolve);
+                }),
+                onArchTime: undefined,
+            };
+
+            iframe.src = 'embedded.html';
+            iframe.classList.add(styleClass);
+
+            const divFrame = document.getElementById("divFrame");
+            divFrame.innerHTML = "";
+            divFrame.append(iframe);
+
+            window.addEventListener('message', ({ data: { archTime } }) => {
+                if (archTime && instance.onArchTime) {
+                    instance.onArchTime(archTime);
+                }
+            });
+
+            return new Proxy(instance, {
+                get(obj, prop) {
+                    if (prop in obj) {
+                        return obj[prop];
+                    }
+
+                    return (opts) => {
+                        iframe.contentWindow.postMessage({
+                            type: prop,
+                            ...opts
+                        }, window.location.origin);
+
+                        return new Promise(resolve =>
+                            iframe.contentWindow.addEventListener('message', ({ data }) => resolve(data))
+                        );
+                    };
+                }
+            });
+        }
+    </script>
+</body>
+</html>

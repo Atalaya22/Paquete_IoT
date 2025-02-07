@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<style>
+			.player {
+				width: 800px;
+				height: 500px;
+			}
+		</style>
+	</head>
+	<body>
+		<script>
+			(async function initPlayer() {
+				const {cameras: [{archives: [archive]}]} = await fetch('/camera/list?filter=1.&limit=1').then(r => r.json());
+				const player = createPlayer('player');
+
+				player.onArchTime = text;
+
+				await player.isReady;
+
+				await player.init({
+					archive: {
+						time: new Date(),
+						storage: archive.storage ,
+					},
+					origin: archive.accessPoint,
+					mode: 'archive',
+					displayName: 'Arbitrary Camera Name'
+				}).then(text);
+
+			})()
+
+			function text(obj) {
+				const t = document.createElement('pre');
+
+				t.innerText = JSON.stringify(obj, null, '\t');
+				document.body.append(t);
+			}
+
+			function createPlayer(styleClass) {
+				const iframe = document.createElement('iframe');
+				const instance = {
+					isReady: new Promise(resolve => {
+						iframe.addEventListener('load', resolve);
+					}),
+					onArchTime: undefined,
+				};
+
+				iframe.src = 'embedded.html';
+				iframe.classList.add(styleClass);
+
+				document.body.append(iframe);
+
+				window.addEventListener('message', ({data: {archTime}}) => {
+					if (archTime && instance.onArchTime) {
+						instance.onArchTime(archTime);
+					}
+				})
+
+				return new Proxy(instance, {
+					get(obj, prop) {
+						if (prop in obj) {
+							return obj[prop];
+						}
+
+						return (opts) => {
+							iframe.contentWindow.postMessage({
+								type: prop,
+								...opts
+							}, window.location.origin)
+
+							return new Promise(resolve =>
+								iframe.contentWindow.addEventListener('message', ({data}) => resolve(data))
+							);
+						};
+					}
+				});
+			}
+		</script>
+	</body>
+</html>

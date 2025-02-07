@@ -1,0 +1,744 @@
+﻿@model IoT_Web.Models.Maquines.LiniaParentModel
+@{ }
+
+<link rel="stylesheet" href="~/Content/Overlay.css" />
+<link rel="stylesheet" href="~/Content/DataTableCustom.css" />
+<link rel="stylesheet" href="~/Content/FonsGrafiques.css" />
+
+<div id="noData" style="display: none; margin-top:200px;margin-bottom:200px;">
+    <p align="center">@Recursos.Idioma.NoDades</p>
+</div>
+
+<!--<div class="container mb-2">
+    <div class="row">
+        <div class="col-12" id="conjunt-cadencies">
+            <!-- Gràfic conjunt de cadències -->
+-->
+<!--@*@Html.Raw(Model.Chart.ObtenirGraficCadenciesConjuntes())*@
+        </div>
+
+        <script>
+
+            var dadesPlot = [];
+
+            debugger;
+            var dadesChart = @Html.Raw(Json.Encode(Model.ChartCadencies.Charts2));
+            dadesChart.forEach(chart => {
+
+
+                let xAxisDate = chart.XAxis.map(x => {
+                    let momentObj = moment(x, 'DD/MM/YYYY HH:mm:ss');
+                    return momentObj.toDate();
+                });
+
+                let tracePlot = {
+                    x: xAxisDate,
+                    y: chart.YAxis,
+                    mode: 'lines+markers',
+                    name: chart.Titol,
+                    hovertemplate: "" +
+                        "<b>@Recursos.Idioma.Hora:</b> %{x|%H:%M:%S}<br>" +
+                        "<b>@Recursos.Idioma.Cadencia:</b> %{y:.2f}<br>" +
+                        "<extra></extra>"
+                }
+
+                dadesPlot.push(tracePlot);
+
+            });
+
+            var layoutPlot = {
+                showlegend: true,
+                height: 600,
+                width: 1080,
+                autosize: false,
+                plot_bgcolor: "#353c48",
+                paper_bgcolor: "#353c48",
+                title: "@Recursos.Idioma.Cadencies",
+                xaxis: {
+                    title: null,
+                    showline: true,
+                    showgrid: false
+                },
+                yaxis: {
+                    title: null,
+                    showline: true,
+                    showgrid: true
+                },
+                font: {
+                    color: '#ffffff'
+                },
+                legend: {
+                    title: "@Recursos.Idioma.Linies"
+                }
+            };
+
+            var configPlot = { responsive: true }
+
+            Plotly.newPlot('conjunt-cadencies', dadesPlot, layoutPlot, configPlot);
+
+        </script>
+
+    </div>
+</div>-->
+
+
+@foreach (var alimentacio in Model.Linies[0].LlistaAlimentacio)
+{
+    <div class="container backgroundGraphics" id="containerEstats_@alimentacio.Nom">
+        <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseEstats_@alimentacio.Nom" href="#collapseEstats_@alimentacio.Nom" aria-expanded="false" aria-controls="collapseEstats_@alimentacio.Nom">
+        </a>
+        <p style="font-size:20px;">@Recursos.Idioma.NoLlegits @alimentacio.NomTraduit</p>
+        <div id="collapseEstats_@alimentacio.Nom" class="collapse show">
+            <div class="row">
+                <div class="col" id="chartContainerEstats_@alimentacio.Nom" style="min-height: 170px; max-height:170px;">
+                </div>
+            </div>
+            <div style="text-align: center;" id="EstatsCheckbox_@alimentacio.Nom">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container backgroundGraphics" id="containerCadencia_@alimentacio.Nom">
+        <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCadencia_@alimentacio.Nom" href="#collapseCadencia_@alimentacio.Nom" aria-expanded="false" aria-controls="collapseCadencia_@alimentacio.Nom">
+        </a>
+        <p style="font-size:20px;">@Recursos.Idioma.Cadencia @alimentacio.Nom</p>
+        <div id="collapseCadencia_@alimentacio.Nom" class="collapse show">
+            <div class="container" id="containerCadencia_@alimentacio.Nom">
+                <div class="row">
+                    <div class="col">
+                        <div id="GraficLinealCadencia_@alimentacio.Nom" style="min-width: 300px;min-height: 100px;">
+                        </div>
+                        <div style="text-align: center; display:none;" id="GraficLinealCadenciaCheckbox">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="GraficLinealCadencia_@(alimentacio.Nom)Checkbox1" onclick="ShowHideLine('d1GraficLinealCadencia', 'GraficLinealCadenciaCheckbox1');" checked>
+                                <label class="form-check-label" for="GraficLinealCadencia_@(alimentacio.Nom)Checkbox1"><font color="#F08080">Picks</font></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="GraficLinealCadencia_@(alimentacio.Nom)Checkbox2" onclick="ShowHideLine('d2GraficLinealCadencia', 'GraficLinealCadenciaCheckbox2');" checked>
+                                <label class="form-check-label" for="GraficLinealCadencia_@(alimentacio.Nom)Checkbox2"><font color="#F0F080">Tendency</font></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="GraficLinealCadencia_@(alimentacio.Nom)Checkbox3" onclick="ShowHideLine('d3GraficLinealCadencia', 'GraficLinealCadenciaCheckbox3');" checked>
+                                <label class="form-check-label" for="GraficLinealCadencia_@(alimentacio.Nom)Checkbox3"><font color="blue">Average</font></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="GraficLinealCadencia_@(alimentacio.Nom)Checkbox4" onclick="ShowHideBackground('d4GraficLinealCadencia', 'GraficLinealCadenciaCheckbox4');" checked>
+                                <label class="form-check-label" for="GraficLinealCadencia_@(alimentacio.Nom)Checkbox4"><font color="red">Background</font></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="container backgroundGraphics" id="containterDadesGenerals">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseDadesGenerals" href="#collapseDadesGenerals" aria-expanded="false" aria-controls="collapseDadesGenerals">
+    </a>
+    <div id="collapseDadesGenerals" class="collapse show">
+        <div class="row">
+            <div class="col">
+                <table class="table" style="border-radius:10px;">
+                    <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                        <tr>
+                            <th colspan="4" style="text-align: center;">@Recursos.Idioma.EstadistiquesGenerals</th>
+                        </tr>
+                    </thead>
+                    <tbody style="background:white;">
+                        <tr>
+                            <td>@Recursos.Idioma.CadenciaMitja:</td>
+                            <td>@Model.Linies.FirstOrDefault().DadesGenerals.CadenciaMitja @Recursos.Idioma.Caixa / @Recursos.Idioma.Hora</td>
+                            <td>@Recursos.Idioma.CaixesTotals:</td>
+                            <td>
+                                @Model.Linies.FirstOrDefault().DadesGenerals.CaixesTotals
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>@Recursos.Idioma.CaixesTotals @Model.Linies.FirstOrDefault().CaixesTotalsLinia.NomLinia_1:</td>
+                            <td>@Model.Linies.FirstOrDefault().CaixesTotalsLinia.CaixesTotals_1</td>
+                            <td>@Recursos.Idioma.CaixesTotals @Model.Linies.FirstOrDefault().CaixesTotalsLinia.NomLinia_2:</td>
+                            <td>@Model.Linies.FirstOrDefault().CaixesTotalsLinia.CaixesTotals_2</td>
+                        </tr>
+                        @*<tr>
+            <td>@Recursos.Idioma.Rebutjats</td>
+            <td>@Model.Linies.FirstOrDefault().DadesGenerals.RebuigTotals</td>
+            <td>@Recursos.Idioma.CadenciaMitja @Model.Linies.FirstOrDefault().LlistaStrapex.FirstOrDefault().NomTraduit</td>
+            <td>@Model.Linies.FirstOrDefault().DadesGenerals.CadenciaStrapex1 @Recursos.Idioma.Caixa / @Recursos.Idioma.Hora</td>
+
+        </tr>
+        <tr>
+            <td>@Recursos.Idioma.CadenciaMitja @Model.Linies.FirstOrDefault().LlistaStrapex[1].NomTraduit</td>
+            <td>@Model.Linies.FirstOrDefault().DadesGenerals.CadenciaStrapex2 @Recursos.Idioma.Caixa / @Recursos.Idioma.Hora</td>
+            <td>@Recursos.Idioma.CadenciaMitja @Model.Linies.FirstOrDefault().LlistaStrapex[2].NomTraduit</td>
+            <td>@Model.Linies.FirstOrDefault().DadesGenerals.CadenciaStrapex3 @Recursos.Idioma.Caixa / @Recursos.Idioma.Hora</td>
+        </tr>*@
+                        <tr>
+                            <td>@Recursos.Idioma.CadenciaMitja @Model.Linies.FirstOrDefault().LlistaAlimentacio.FirstOrDefault().NomTraduit</td>
+                            <td>@Model.Linies.FirstOrDefault().DadesGenerals.CadenciaInfeed @Recursos.Idioma.Caixa / @Recursos.Idioma.Hora</td>
+                            <td>@Recursos.Idioma.CadenciaMitja @Model.Linies.FirstOrDefault().LlistaAlimentacio[1].NomTraduit</td>
+                            <td>@Model.Linies.FirstOrDefault().DadesGenerals.CadenciaOutfeed @Recursos.Idioma.Caixa / @Recursos.Idioma.Hora</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerWarningsCaixesTotals">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseWarningsEtiquetadora" href="#collapseWarningsEtiquetadora" aria-expanded="false" aria-controls="collapseWarningsEtiquetadora">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.CaixesTotals @Recursos.Idioma.Percentatge</p>
+    <div id="collapseWarningsEtiquetadora" class="collapse show">
+        @foreach (var alimentacio in Model.Linies[0].LlistaAlimentacio)
+        {
+            <div class="row graficaWarning" id="divPercentatgeWarning" style="padding-bottom: 35px; padding-top: 20px;margin-top:20px;">
+                <div class="col" id="DonutWarningCaixesTotals_@alimentacio.Nom" style="min-width: 300px;min-height: 300px;">
+                </div>
+                <div class="col" id="TableWarningPercentatgeCaixesTotals_@alimentacio.Nom" style="min-width: 300px; margin-right:2%">
+
+                    <div class="col" style="border-radius:10px;">
+                        <table class="table" style="border-radius:10px;">
+
+                            <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                                <tr style="background-color:darkgray;">
+                                    <th style="text-align: center;" scope="col" colspan="4">@alimentacio.NomTraduit</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">@Recursos.Idioma.Descripcio</th>
+                                    <th scope="col">%</th>
+                                </tr>
+                            </thead>
+                            <tbody style="background:white;">
+                                @foreach (var alarma in alimentacio.PercentatgesNoReads)
+                                {
+                                    <tr>
+
+                                        <td style="display:inline-block; width: 15px; margin-top: 10px; margin-bottom: 10px; border: 1px solid black; margin-left: 10px; border-radius: 10px;" bgcolor="@alarma.Color"></td>
+                                        <td>@alarma.Id</td>
+                                        <td>@alarma.Nom</td>
+                                        <td style="width:15%">@alarma.Percentatge % (@alarma.QuantitatCaixes)</td>
+                                    </tr>
+
+                                }
+                                @if (alimentacio.PercentatgesNoReads.Count() > 0)
+                                {
+                                    <tr style="background-color:darkgray">
+                                        <td></td>
+                                        <td></td>
+                                        <td>@Recursos.Idioma.Total</td>
+                                        <td style="width:15%">@alimentacio.PercentatgesNoReads.Sum(X => X.QuantitatCaixes)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerWarningsDonutsNoLlegits">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseWarningsEtiquetadora" href="#collapseWarningsEtiquetadora" aria-expanded="false" aria-controls="collapseWarningsEtiquetadora">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.NoLlegits</p>
+    <div id="collapseWarningsEtiquetadora" class="collapse show">
+        @foreach (var alimentacio in Model.Linies[0].LlistaAlimentacio)
+        {
+
+            for (int i = 0; i < alimentacio.EstadistiquesNoReads.Count(); i = i + 2)
+            { 
+                <div class="row graficaWarning" id="divPercentatgeWarning" style="padding-bottom: 35px; padding-top: 20px;margin-top:20px;">
+                    <div class="col" id="DonutWarning_@alimentacio.EstadistiquesNoReads[i].Nom.Replace(" ", "").Replace(".","")" style="min-width: 300px;min-height: 300px;">
+                    </div>
+                    <div class="col" id="TableWarningPercentatge" style="min-width: 300px; margin-right:2%">
+
+                        <div class="col" style="border-radius:10px;">
+                            <table class="table" style="border-radius:10px;">
+
+                                <thead style="background:linear-gradient(205deg, #B8C9CD, #D5E2E4);">
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">@Recursos.Idioma.Descripcio</th>
+                                        <th scope="col">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="background:white;">
+                                    @{
+                                        var estadisticaNoRead = alimentacio.EstadistiquesNoReads[i];
+                                        var estadisticaGoodRead = alimentacio.EstadistiquesNoReads[i + 1];
+                                        var total = estadisticaNoRead.QuantitatCaixes + estadisticaGoodRead.QuantitatCaixes;
+
+                                        <tr>
+
+                                            <td style="display:inline-block; width: 15px; margin-top: 10px; margin-bottom: 10px; border: 1px solid black; margin-left: 10px; border-radius: 10px;" bgcolor="@estadisticaNoRead.Color"></td>
+                                            <td>@estadisticaNoRead.Id</td>
+                                            <td>@estadisticaNoRead.Nom</td>
+                                            <td style="width:15%">@estadisticaNoRead.Percentatge % (@estadisticaNoRead.QuantitatCaixes)</td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td style="display:inline-block; width: 15px; margin-top: 10px; margin-bottom: 10px; border: 1px solid black; margin-left: 10px; border-radius: 10px;" bgcolor="@estadisticaGoodRead.Color"></td>
+                                            <td>@estadisticaGoodRead.Id</td>
+                                            <td>@estadisticaGoodRead.Nom</td>
+                                            <td style="width:15%">@estadisticaGoodRead.Percentatge % (@estadisticaGoodRead.QuantitatCaixes)</td>
+                                        </tr>
+
+                                        <tr style="background-color:darkgray">
+                                            <td></td>
+                                            <td></td>
+                                            <td>@Recursos.Idioma.Total</td>
+                                            <td style="width:15%">@total</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@*@foreach (var strapex in Model.Linies[0].LlistaStrapex)
+{
+    <div class="container backgroundGraphics" id="containerEstatsStrapex_@strapex.Nom">
+        <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseEstatsStrapex_@strapex.Nom" href="#collapseEstatsStrapex_@strapex.Nom" aria-expanded="false" aria-controls="collapseEstatsStrapex_@strapex.Nom">
+        </a>
+        <p style="font-size:20px;">@Recursos.Idioma.MaquinaEstats @strapex.NomTraduit</p>
+        <div id="collapseEstatsStrapex_@strapex.Nom" class="collapse show">
+            <div class="row">
+                <div class="col" id="chartContainerEstatsStrapex_@strapex.Nom" style="min-height: 170px; max-height:170px;">
+                </div>
+            </div>
+            <div style="text-align: center;" id="EstatsStrapexCheckbox_@strapex.Nom">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container backgroundGraphics" id="containerCadencia_@strapex.Nom">
+        <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCadencia_@strapex.Nom" href="#collapseCadencia_@strapex.Nom" aria-expanded="false" aria-controls="collapseCadencia_@strapex.Nom">
+        </a>
+        <p style="font-size:20px;">@Recursos.Idioma.Cadencia @strapex.Nom</p>
+        <div id="collapseCadencia_@strapex.Nom" class="collapse show">
+            <div class="container" id="containerCadencia_@strapex.Nom">
+                <div class="row">
+                    <div class="col">
+                        <div id="GraficLinealCadencia_@strapex.Nom" style="min-width: 300px;min-height: 100px;">
+                        </div>
+                        <div style="text-align: center; display:none;" id="GraficLinealCadenciaCheckbox">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="GraficLinealCadencia_@(strapex.Nom)Checkbox1" onclick="ShowHideLine('d1GraficLinealCadencia', 'GraficLinealCadenciaCheckbox1');" checked>
+                                <label class="form-check-label" for="GraficLinealCadencia_@(strapex.Nom)Checkbox1"><font color="#F08080">Picks</font></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="GraficLinealCadencia_@(strapex.Nom)Checkbox2" onclick="ShowHideLine('d2GraficLinealCadencia', 'GraficLinealCadenciaCheckbox2');" checked>
+                                <label class="form-check-label" for="GraficLinealCadencia_@(strapex.Nom)Checkbox2"><font color="#F0F080">Tendency</font></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="GraficLinealCadencia_@(strapex.Nom)Checkbox3" onclick="ShowHideLine('d3GraficLinealCadencia', 'GraficLinealCadenciaCheckbox3');" checked>
+                                <label class="form-check-label" for="GraficLinealCadencia_@(strapex.Nom)Checkbox3"><font color="blue">Average</font></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="GraficLinealCadencia_@(strapex.Nom)Checkbox4" onclick="ShowHideBackground('d4GraficLinealCadencia', 'GraficLinealCadenciaCheckbox4');" checked>
+                                <label class="form-check-label" for="GraficLinealCadencia_@(strapex.Nom)Checkbox4"><font color="red">Background</font></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}*@
+
+<script>
+
+    function calcularCadenciaMinut(productes, interval) {
+        if (interval < 1) interval = 1;
+        return 60 * productes / interval;
+    }
+
+    function mitjanaProductesCadencies(linia) {
+        let resultat = [];
+        //1. Obtenim els estats que son útils per calcular cadencies
+        let estatsUtilsCadencies = linia.Estats.filter(element => element.ConveyorStatus >= 2);
+        estatsUtilsCadencies = crearDates(estatsUtilsCadencies);
+        //Calculem l'inici de la primera cadència a calcular
+        let estatsCalculCadencies = [];
+        let iniciPrimerEstat = null;
+        let fiPrimeraCadencia = null;
+
+        estatsUtilsCadencies.forEach((estat) => {
+            if (fiPrimeraCadencia) {
+                if (estat.Final <= fiPrimeraCadencia) {
+                    estatsCalculCadencies.push(estat);
+                } else {
+                    //Hem de calcular la cadencia
+                    let productes = obtenirProductesFinals(estatsCalculCadencies);
+                    resultat.push(productes);
+
+                    //Hem de resetejar el primer estat
+                    iniciPrimerEstat = null;
+                    fiPrimeraCadencia = null;
+                    estatsCalculCadencies = [];
+                }
+            }
+
+            if (!fiPrimeraCadencia) {
+                //Busquem el primer estat inferior a 1 minut de duració
+                iniciPrimerEstat = estat.Inici;
+                //Sumem 1 minut al primer inici
+                fiPrimeraCadencia = new Date(iniciPrimerEstat.getTime() + 1 * 60000);
+                if (estat.Final <= fiPrimeraCadencia) {
+                    estatsCalculCadencies.push(estat);
+                } else {
+                    fiPrimeraCadencia = null;
+                }
+            }
+        });
+
+        let suma = 0;
+        resultat.forEach((valor) => suma += valor);
+        return suma / resultat.length;
+    }
+
+    function obtenirCadencies(linia) {
+        let resultat = [];
+        //1. Obtenim els estats que son útils per calcular cadencies
+        let estatsUtilsCadencies = linia.Estats.filter(element => element.ConveyorStatus == 3);
+        estatsUtilsCadencies = crearDates(estatsUtilsCadencies);
+        //Calculem l'inici de la primera cadència a calcular
+        let estatsCalculCadencies = [];
+        let iniciPrimerEstat = null;
+        let fiPrimeraCadencia = null;
+        let virtualIdentificadorCadencia = 0;
+        let mitjanaProductesLinia = mitjanaProductesCadencies(linia);
+
+        estatsUtilsCadencies.forEach((estat) => {
+            if (fiPrimeraCadencia) {
+                if (estat.Final <= fiPrimeraCadencia) {
+                    estatsCalculCadencies.push(estat);
+                } else {
+                    //Hem de calcular la cadencia
+                    let productes = obtenirProductesFinals(estatsCalculCadencies);
+                    let primerElement = null;
+                    let ultimElement = null;
+                    //Hem d'afegir el resultat a la llista de cadencies resultant
+                    let nElements = estatsCalculCadencies.length;
+                    if (productes > (mitjanaProductesLinia) && nElements > 1) {
+                        primerElement = estatsCalculCadencies[0];
+                        ultimElement = estatsCalculCadencies[nElements - 1]
+
+                        resultat.push({
+                            Id: ++virtualIdentificadorCadencia,
+                            Inici: primerElement.Inici,
+                            Final: ultimElement.Final,
+                            Valor: productes
+                        });
+                    }
+                    //Hem de resetejar el primer estat
+                    iniciPrimerEstat = null;
+                    fiPrimeraCadencia = null;
+                    estatsCalculCadencies = [];
+                }
+            }
+
+            if (!fiPrimeraCadencia) {
+                //Busquem el primer estat inferior a 1 minut de duració
+                iniciPrimerEstat = estat.Inici;
+                //Sumem 1 minut al primer inici
+                fiPrimeraCadencia = new Date(iniciPrimerEstat.getTime() + 1 * 60000);
+                if (estat.Final <= fiPrimeraCadencia) {
+                    estatsCalculCadencies.push(estat);
+                } else {
+                    fiPrimeraCadencia = null;
+                }
+            }
+        });
+
+        return resultat;
+    }
+
+    function obtenirProductesFinals(estats) {
+        let total = 0;
+        estats.forEach(estat => {
+            if (estat.ConveyorStatus == 3) total += estat.ProductesActuals;
+        });
+        return total;
+    }
+
+    function inicialitzarCadencies(cadencies, linia) {
+        if (cadencies && cadencies.length > 1) {
+            linechart("@Recursos.Idioma.Cadencia", cadencies, true, false, true, true, `#GraficLinealCadencia_${linia.IdMaquina}`, "Valor", iniciData, finalData, crearDates(linia.Estats), "Color");
+        } else {
+            $(`#containerCadencia_${linia.IdMaquina}`).hide();
+        }
+    }
+
+    function inicialitzarAlarmes(linia) {
+        let alarmes = crearDates(linia.Alarmes);
+        if (alarmes && alarmes.length > 0) {
+            barchartAlarmes(alarmes, `#chartContainer_${linia.IdMaquina}`, iniciData, finalData, linia.Nom, null, "Linia", true, `AlarmesCheckbox_${linia.IdMaquina}`)
+        } else {
+            $(`#containerAlarmes_${linia.IdMaquina}`).hide();
+        }
+        return alarmes;
+    }
+
+    function crearDates(json) {
+        for (var comptador in json) {
+            if (json[comptador].Inici) json[comptador].Inici = new Date(json[comptador].Inici);
+            if (json[comptador].Final) json[comptador].Final = new Date(json[comptador].Final);
+        }
+        return json;
+    }
+
+    var machine = "@Model.NomMaquina";
+    var idMaquina = @Model.IdMaquina;
+
+    $(document).ready(function () {
+
+        SeleccionarMenu(machine, idMaquina);//Selecciona la màquina activa
+
+        //Actualitzem la durada
+        refreshDuration();
+
+        setTimeout(() => {
+            $('.modebar-btn.plotlyjsicon.modebar-btn--logo').hide();
+            $('div.js-plotly-plot svg.main-svg').css('border-radius', '10px');
+        }, 1000);
+
+    });
+
+    var interval;
+    var minuteNumber = 0;
+    //reset visibilitat divs
+    $('#noData').hide();
+
+
+    var linies = @Html.Raw(Model.ObtenirLiniesJson());
+
+    if (linies) {
+        var datesMaximes = @Html.Raw(Model.ObtenirDatesMaximes());
+        var minimumDate = moment(datesMaximes["Minima"], "YYYY/MM/DD HH:mm:ss");
+        var maximumDate = moment(datesMaximes["Maxima"], "YYYY/MM/DD HH:mm:ss");
+
+        var iniciData = moment("@Model.DataInici", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+        var finalData = moment("@Model.DataFi", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+
+        var iniciDataAnterior = moment("@Html.Raw(Model.DataIniciAnterior)", "YYYY/MM/DD HH:mm:ss");
+        var finalDataAnterior = moment("@Html.Raw(Model.DataFiAnterior)", "YYYY/MM/DD HH:mm:ss");
+
+        var lineArr = [];
+        var MAX_LENGTH = 600; //numero de punts3000
+        var duration = 100; //interval entre updates de la grafica (en milisegons)600
+
+        var alarmes = [];
+        var cadencies = [];
+
+        linies.forEach((linia) => {
+            let alarmesLinia = inicialitzarAlarmes(linia);
+            if (alarmesLinia && alarmesLinia.length > 0) alarmes = alarmes.concat(alarmesLinia);
+
+            let cadenciesLinia = obtenirCadencies(linia);
+            inicialitzarCadencies(cadenciesLinia, linia);
+            if (cadenciesLinia && cadenciesLinia.length > 0) cadencies = cadencies.concat(cadenciesLinia);
+        });
+
+        var Alimentacio = @Html.Raw(Model.ObtenirAlimentacions());
+
+        Alimentacio.forEach((agrupacio) => {
+            let estats = crearDates(JSON.parse(agrupacio.LlistaNoReadsJson));
+            let noReads = agrupacio.EstadistiquesNoReads;
+            let percentatgeNoReads = crearDates(JSON.parse(agrupacio.PercentatgeNoReadsJson));
+
+            if (estats && estats.length > 0)
+                barchart(estats, true, `#chartContainerEstats_${agrupacio.Nom}`, iniciData, finalData, "Estat", "Info", "Color", machine, "Linia", "LiniaParent", `EstatsCheckbox_${agrupacio.Nom}`, true, idMaquina);
+            else $(`#containerEstats_${agrupacio.Nom}`).hide();
+
+            let llistaCadencia = crearDates(JSON.parse(agrupacio.CadenciesPerHoraJson));
+
+            if (llistaCadencia && llistaCadencia.length > 0)
+                linechart("@Recursos.Idioma.Cadencia", llistaCadencia, true, false, true, true, `#GraficLinealCadencia_${agrupacio.Nom}`, "Valor", iniciData, finalData, estats, "Color");
+
+            for (var i = 0; i < noReads.length; i = i + 2) {
+                var id = "#DonutWarning_" + noReads[i].Nom.replace(/\s/g, "").replace(".", "");
+                donutchart(id, noReads.slice(i, i+2), 30, "Nom");
+            }
+            //if (noReads && noReads.length > 0)
+            //    donutchart(`#DonutWarning_${agrupacio.Nom}`, noReads, 30, "Nom");
+            //else $('#containerWarningsDonutsNoLlegits').hide();
+
+            if (percentatgeNoReads && percentatgeNoReads.length > 0)
+                piechart(`#DonutWarningCaixesTotals_${agrupacio.Nom}`, percentatgeNoReads, "Nom");
+            else $('#containerWarningsCaixesTotals').hide();
+        });
+
+
+        @*var Strapex = @Html.Raw(Model.ObtenirStrapexs());
+
+        Strapex.forEach((strapex) => {
+            let estats = crearDates(JSON.parse(strapex.EstatsJson));
+
+            if (estats && estats.length > 0)
+                barchart(estats, true, `#chartContainerEstatsStrapex_${strapex.Nom}`, iniciData, finalData, "Estat", "Info", "Color", machine, "Linia", "LiniaParent", `EstatsStrapexCheckbox_${strapex.Nom}`, true, idMaquina);
+            else $(`#containerEstatsStrapex_${strapex.Nom}`).hide();
+
+            let llistaCadencia = crearDates(JSON.parse(strapex.CadenciesPerHoraJson));
+
+            if (llistaCadencia && llistaCadencia.length > 0)
+                linechart("@Recursos.Idioma.Cadencia", llistaCadencia, true, false, true, true, `#GraficLinealCadencia_${strapex.Nom}`, "Valor", iniciData, finalData, estats, "Color");
+        else
+            $('#containerCadencia').hide();
+        });*@
+
+        if (alarmes.length === 0 && cadencies.length === 0) {
+            //$('#noData').show();
+            //$('#conjunt-cadencies').hide();
+        } else {
+            $('#noData').hide();
+            $('#conjunt-cadencies').show();
+            $('.TipusGraficLinealCadencia').show();
+        }
+    }
+    else {
+        $('#noData').show();
+        $('#conjunt-cadencies').hide();
+        hideGraphics();
+    }
+    $("#divLoading").hide();
+
+    //Actualitzem la navbarSupportedContent per tal de dividir les gràfiques
+    ActualitzarNavbar();
+
+    function ActualitzarNavbar(){
+        $('#navbarSupportedContent').find('a').remove();
+        $("#navbarSupportedContent").prepend("<a onclick='hideGraphics();' href='#' class='nav-item nav-link' style='margin-right:10px;'><i class='fa fa-bell pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.LlistaAlarmes</a>");
+        $("#navbarSupportedContent").prepend("<a onclick='showGraphics();' href='#' class='nav-item nav-link' style='margin-right:10px'><i class='fa fa-bar-chart pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.Grafiques</a>");
+    }
+
+    function seedData() {//valors inicials de realtimeChart
+        var endOfDate = (iniciData._i.split("/"))
+        var endNow = new Date(endOfDate[1] + "/" + endOfDate[0] + "/" + endOfDate[2])
+
+        for (var i = 0; i < MAX_LENGTH; ++i) {
+            lineArr.push({
+                time: new Date(endNow.getTime() - ((MAX_LENGTH - i) * duration)),
+                z: 0
+            });
+        }
+    }
+
+    function hideGraphics() {
+        $('.containerAlarmes').hide();
+        $('.containerCadencia').hide();
+    }
+
+    function showGraphics() {
+        $('.containerAlarmes').show();
+        $('.containerCadencia').show();
+    }
+
+    function showDades() {
+        return null;
+    }
+
+    function ShowHideLine(div_id, checkboxId) {
+        if (document.body.contains(document.getElementById(div_id))) {
+            if (document.getElementById(div_id).style.opacity == 1 && $("input[id^='" + checkboxId.substring(0, checkboxId.length - 1) + "']:checked").length > 1) {//Esta actiu, el desactivem
+                d3.select("#" + div_id).style("opacity", 0);
+                document.getElementById(checkboxId).checked = false;
+            }
+            else {
+                d3.select("#" + div_id).style("opacity", 1);
+                document.getElementById(checkboxId).checked = true;
+            }
+        }
+    }
+
+    function ShowHideBackground(div_id, checkboxId) {
+        if (document.body.contains(document.getElementById(div_id))) {
+            if (document.getElementById(div_id).style.opacity != 0 && $("input[id^='" + checkboxId.substring(0, checkboxId.length - 1) + "']:checked").length > 1) {//Esta actiu, el desactivem
+                d3.selectAll("#" + div_id).style("opacity", 0);
+                document.getElementById(checkboxId).checked = false;
+            }
+            else {
+                d3.selectAll("#" + div_id).style("opacity", 0.1);
+                document.getElementById(checkboxId).checked = true;
+            }
+        }
+    }
+
+    function increaseZoom() {
+        var oldDateStart = "@Html.Raw(Model.DataInici).ToString()";
+        var oldDateEnd = "@Html.Raw(Model.DataFi).ToString()";
+
+        var dateEnd = oldDateEnd.split("/");
+        var dateStart = oldDateStart.split("/");
+
+        var milisecondsEnd = Date.parse(dateEnd[1] + "/" + dateEnd[0] + "/" + dateEnd[2]);
+        var milisecondsStart = Date.parse(dateStart[1] + "/" + dateStart[0] + "/" + dateStart[2]);
+
+        var newDateMilli = milisecondsStart + ((milisecondsEnd - milisecondsStart) / 10);
+        var newDate = new Date(newDateMilli);
+        var newDateSplit = newDate.toString().split(" ");
+
+        var test = newDateSplit[2] + "/" + returnMonthNumber(newDateSplit[1]) + "/" + newDate.getFullYear() + " " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds();
+
+        $("#divLoading").show();
+        var antInitDate = document.getElementById("dataInicial").value;
+        var antFinalDate = document.getElementById("dataFinal").value;
+        var list = document.getElementById('shiftDropDownList');
+        var selectedShift = list.options[list.selectedIndex].value;
+        $("#partial").load("/Linia/LiniaParentPartial", { inici: test, final: antFinalDate, torn: selectedShift, iniciAnt: antInitDate, finalAnt: antFinalDate, nomMaquina: machine , idMaquina: @Model.IdMaquina});
+    }
+
+    function previosZoom() {
+        $("#divLoading").show();
+        document.getElementById("dataInicial").value = iniciDataAnterior._i;
+        document.getElementById("dataFinal").value = finalDataAnterior._i;
+        var list = document.getElementById('shiftDropDownList');
+        var selectedShift = list.options[list.selectedIndex].value;
+        $("#partial").load("/Linia/LiniaParentPartial", { inici: iniciDataAnterior._i, final: finalDataAnterior._i, torn: selectedShift, iniciAnt: minimumDate._i, finalAnt: maximumDate._i, nomMaquina: machine , idMaquina: @Model.IdMaquina});
+    }
+
+    function returnMonthNumber(monthname) {
+        var monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        var month = monthShortNames.indexOf(monthname);
+        return month ? month + 1 : 0;
+    }
+
+    function refreshDuration() {
+        var newDataIn = new Date(moment("@Html.Raw(Model.DataInici).ToString()", "DD/MM/YYYY HH:mm:ss"));
+        var newDataFi = new Date(moment("@Html.Raw(Model.DataFi).ToString()", "DD/MM/YYYY HH:mm:ss"));
+        var duration = convertMSGrafica(Math.abs(newDataFi.getTime() - newDataIn.getTime()));
+        var newDuration = "@Html.Raw(Recursos.Idioma.Duracio)" + ": " + duration;
+        $("#textDurada").text(newDuration);
+        document.getElementById('dataInicial').value = "@Html.Raw(Model.DataInici.ToString())";
+        document.getElementById('dataFinal').value = "@Html.Raw(Model.DataFi.ToString())";
+    }
+
+    $("a").click(function () {
+        if ($(this).hasClass("fa-minus-circle")) {
+            $(this).removeClass("fa-minus-circle");
+            $(this).addClass("fa-plus-circle");
+        }
+        else if($(this).hasClass("fa-plus-circle")) {
+            $(this).removeClass("fa-plus-circle");
+            $(this).addClass("fa-minus-circle");
+        }
+    });
+
+</script>

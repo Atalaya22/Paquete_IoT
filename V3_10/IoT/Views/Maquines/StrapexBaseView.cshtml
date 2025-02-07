@@ -1,0 +1,162 @@
+﻿@model IoT_Web.Models.Maquines.StrapexModel
+
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript" src="~/Scripts/Libraries/jquery.dataTables.js"></script>
+
+<link rel="stylesheet" href="~/Content/Libraries/dataTables.bootstrap4.min.css" />
+<link rel="stylesheet" href="~/Content/Libraries/buttons.bootstrap4.min.css" />
+
+
+<script type="text/javascript" src="~/Scripts/Libraries/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Libraries/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Libraries/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Libraries/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Libraries/buttons.bootstrap4.min.js"></script>
+<script type="text/javascript" src="~/Scripts/JS_Formadora.js"></script>
+<script type="text/javascript" src="~/Scripts/Plotly/plotly-latest.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Plotly/plotly-d3.js"></script>
+<script type="text/javascript" src="~/PDF/GestorPDF.js"></script>
+<script type="text/javascript" src="~/PDF/jquery.color-animation.js"></script>
+
+
+<div class="sticky-top" style="top: 50px; padding: 10px;background: linear-gradient(-35deg, #9daaaf, #eaeaea);
+    border-radius: 0px 0px 10px 10px; margin-bottom:20px; z-index:5000;">
+    <div class="row justify-content-sm-end justify-content-center" @*style="top: 60px; padding: 10px;background-color: #212121;"*@>
+        <div class="col-auto" style="">
+            <a class="align-content-center btn btn-secondary" href="#" onclick="previosZoom();" role="button" id="atras" style="padding:0px;height:30px;width:30px;font-size:20px;"><span class="fa fa-arrow-circle-o-left" /></a>
+            <a class="align-content-center btn btn-secondary" href="#" onclick="increaseZoom();" role="button" style="padding:0px;height:30px;width:30px;font-size:20px;"><span class="fa fa-search-plus" /></a>
+        </div>
+        <div class="col-auto mr-auto" style="padding-left:0px;">
+            <p id="textDurada" style="font-size:16px; margin-top:3.5px;color: black;">@Recursos.Idioma.Duracio:</p>
+        </div>
+        <div class="col-auto" style="width: 190px; padding-right: 0px;">
+            <select id="shiftDropDownList" class="browser-default custom-select" style="width: 148px; height: 20px; font-size: 14px;">
+                <option value="0" selected>@Recursos.Idioma.TotsElsTorns</option>
+                @foreach (var shift in Model.TornsActuals)
+                {
+                    <option value="@shift.ID">@shift.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-auto" style="width:190px; padding-right: 0px;">
+            <div class="input-group date" id="datetimepicker1" data-target-input="nearest" @*style="float: right;"*@>
+                <input id="dataInicial" type="text" class="datetimepicker-input form-control" style="font-size: 14px; height: 22px;" data-target="#datetimepicker1" placeholder="@Recursos.Idioma.Desde:" />
+                <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto align-content-center" style="width:190px; padding-right: 0px;">
+            <div class="input-group date" id="datetimepicker2" data-target-input="nearest" @*style="float: center;"*@>
+                <input id="dataFinal" type="text" class="datetimepicker-input form-control" style="font-size: 14px; height: 22px;" data-target="#datetimepicker2" placeholder="@Recursos.Idioma.Fins:" />
+                <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto align-content-center" style="padding-right: 15px;">
+            <a class="align-content-center btn btn-secondary d-none d-md-block" href="#" onclick="actualitzarGraficForm();" role="button" style="padding:0px;height:30px;width:30px;font-size:20px;"><span class="fa fa-refresh" /></a>
+            <a class="align-content-center btn btn-secondary d-md-none" href="#" style="font-family: Arial;margin-top: 5px;" onclick="actualitzarGraficForm();" role="button">@Recursos.Idioma.Refrescar</a>
+        </div>
+        <script type="text/javascript">
+
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length >= 3) return parts.pop().split(';').shift();
+            }
+
+            function setCookie(cname, cvalue, exminutes) {
+                const d = new Date();
+                d.setTime(d.getTime() + (exminutes * 60 * 1000));
+                let expires = "expires=" + d.toUTCString();
+                document.cookie = cname + "=" + cvalue + ";" + expires + ";" + " Path=/";
+            }
+            $(document).ready(function () {
+
+            var dataMinima = moment("@Html.Raw(Model.Strapex.DataMinima).ToString()", "DD/MM/YYYY HH:mm:ss");
+            if (getCookie("inici")) dataMinima = moment(getCookie("inici"), "YYYY/MM/DD HH:mm:ss");
+            var dataMaxima = moment("@Html.Raw(Model.Strapex.DataMaxima).ToString()", "DD/MM/YYYY HH:mm:ss");
+            if (getCookie("final")) dataMaxima = moment(getCookie("final"), "YYYY/MM/DD HH:mm:ss");
+
+            $('#datetimepicker1').datetimepicker({
+                format: 'DD/MM/YYYY HH:mm:ss',
+                //maxDate: maximumDate,
+                //minDate: minimumDate,
+                date: dataMinima,
+                buttons: {
+                    showToday: true,
+                    showClear: true,
+                    showClose: true
+                },
+            });
+            $('#datetimepicker2').datetimepicker({
+                format: 'DD/MM/YYYY HH:mm:ss',
+                //maxDate: maximumDate,
+                //minDate: minimumDate,
+                date: dataMaxima,
+                buttons: {
+                    showToday: true,
+                    showClear: true,
+                    showClose: true
+                },
+            });
+
+        });
+        </script>
+    </div>
+</div>
+
+<div id="divLoading" style="margin: 0px; padding: 0px; position: fixed; right: 0px;
+    top: 0px; width: 100%; height: 100%; background-color: #666666; z-index: 30001;
+    opacity: .8; filter: alpha(opacity=70);display:none">
+    <p style="position: absolute; top: 30%; left: 45%; color: White;">
+        @Recursos.Idioma.Carregant<img src="~/Images/gif/loading.gif">
+    </p>
+</div>
+
+<div id="partial">
+    @{ Html.RenderPartial("~/Views/Maquines/_StrapexPartial.cshtml", Model);}
+</div>
+
+<script>
+    function actualitzarGraficForm() {
+        var valorInicialForm = moment(document.getElementById('dataInicial').value, "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+        var valorFinalForm = moment(document.getElementById('dataFinal').value, "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+
+        setCookie("inici", valorInicialForm.toString(), 15);
+        setCookie("final", valorFinalForm.toString(), 15);
+
+        var list = document.getElementById('shiftDropDownList');
+        var selectedShift = list.options[list.selectedIndex].value;
+        var maquina = "@Model.Strapex.Nom";
+
+        if (valorInicialForm == "") {
+            alert("@Html.Raw(Recursos.Idioma.AlertDataInicial)");
+            return;
+        }
+        if (valorFinalForm == "") {
+            alert("@Html.Raw(Recursos.Idioma.AlertDataFinal)");
+            return;
+        }
+        if (new Date(valorInicialForm).getTime() >= new Date(valorFinalForm).getTime()) {
+            alert("@Html.Raw(Recursos.Idioma.AlertNoInterval)")
+            return;
+        }
+
+        var tempsTotal = new Date(moment(document.getElementById('dataFinal').value, "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss")).getTime()
+            - new Date(moment(document.getElementById('dataInicial').value, "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss")).getTime();
+        if ((tempsTotal / (1000 * 3600 * 24)) > 7) {
+            alert("@Html.Raw(Recursos.Idioma.Alert7Dies)");
+            return;
+        }
+
+        $("#divLoading").show();
+        var antInitDate = "@Html.Raw(Model.Strapex.IniciAnteriorStr).ToString()";
+        var antFinalDate = "@Html.Raw(Model.Strapex.FinalAnteriorStr).ToString()";
+        $("#partial").load("/Strapex/StrapexPartial", { inici: valorInicialForm, final: valorFinalForm, torn: selectedShift, iniciAnt: antInitDate, finalAnt: antFinalDate, nomMaquina: maquina, idMaquina: @Model.Strapex.IdMaquina });
+    }
+</script>

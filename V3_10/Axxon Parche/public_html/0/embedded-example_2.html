@@ -1,0 +1,100 @@
+<html>
+	<head>
+		<style>
+			.player {
+				width: 100%;
+				height: 600px;
+			}
+		</style>
+	</head>
+	<body>
+		<script>
+			function getParamValue(paramName)
+			{
+				var url = window.location.search.substring(1); //get rid of "?" in querystring
+				var qArray = url.split('&'); //get key-value pairs
+				for (var i = 0; i < qArray.length; i++) 
+				{
+					var pArr = qArray[i].split('='); //split key and value
+					if (pArr[0] == paramName) 
+						return pArr[1]; //return value
+				}
+			}
+
+			(async function initPlayer() {
+				var cameres = getParamValue('cam').split(';');
+				var icam = 0;
+				for(icam = 0; icam <= cameres.length; icam++){
+					var data = getParamValue('data');
+					var dataArray = data.split(';');
+					var dataVideo = new Date(dataArray[0], dataArray[1]-1, dataArray[2], dataArray[3],dataArray[4],dataArray[5]);
+					var playerMode = getParamValue('mode');
+				
+					const {cameras: [{archives: [archive]}]} = await fetch('/camera/list?filter='+cameres[icam]+'.&limit=1').then(r => r.json());
+					const player = createPlayer('player');
+
+					//player.onArchTime = text;
+
+					await player.isReady;
+
+					await player.init({
+						archive: {
+							time: dataVideo,
+							storage: archive.storage ,
+						},
+						origin: archive.accessPoint,
+						mode: playerMode,
+						displayName: ''
+					});//.then(text);
+				}
+			})()
+
+			function text(obj) {
+				const t = document.createElement('pre');
+
+				t.innerText = JSON.stringify(obj, null, '\t');
+				document.body.append(t);
+			}
+
+			function createPlayer(styleClass) {
+				const iframe = document.createElement('iframe');
+				const instance = {
+					isReady: new Promise(resolve => {
+						iframe.addEventListener('load', resolve);
+					}),
+					onArchTime: undefined,
+				};
+
+				iframe.src = 'embedded.html';
+				iframe.classList.add(styleClass);
+
+				document.body.append(iframe);
+
+				window.addEventListener('message', ({data: {archTime}}) => {
+					if (archTime && instance.onArchTime) {
+						instance.onArchTime(archTime);
+					}
+				})
+
+				return new Proxy(instance, {
+					get(obj, prop) {
+						if (prop in obj) {
+							return obj[prop];
+						}
+
+						return (opts) => {
+							iframe.contentWindow.postMessage({
+								type: prop,
+								...opts
+							}, window.location.origin)
+
+							return new Promise(resolve =>
+								iframe.contentWindow.addEventListener('message', ({data}) => resolve(data))
+							);
+						};
+					}
+				});
+			}
+		</script>
+	</body>
+</html>

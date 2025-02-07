@@ -1,0 +1,44 @@
+﻿@model IoT_Web.Models.Menu.MenuModel
+
+<script type="text/javascript" src="~/Scripts/JS_Formadora.js"></script>
+
+<li>
+    @for (int i = 0; i < Model.LlistaMaquines.Count(); i++)
+    {
+        var maquina = Model.LlistaMaquines[i];
+
+        if (@maquina.listSubMaquines == null)
+        {
+            <a class='nav-item nav-link' href='/@maquina.NomTipusMaquina/@Html.Raw(maquina.NomTipusMaquina)BaseView?nomMaquina=@maquina.Nom&idMaquina=@maquina.IdMaquina'>
+                @maquina.NomTraduit
+                <span style='float:left;margin-top: 2%;' class='fa fa-bar-chart pull-left'></span>
+            </a>
+        }
+        else
+        {
+            <table>
+                <tr class='row100 body' id='li'>
+                    <td class='cell100 column1'>
+                        <a class='nav-item nav-link' href='/@maquina.NomTipusMaquina/@Html.Raw(maquina.NomTipusMaquina)ParentBaseView?nomMaquina=@maquina.Nom&idMaquina=@maquina.IdMaquina'>
+                            @maquina.NomTraduit
+                            <span style='float:left;margin-top: 2%;' class='fa fa-bar-chart pull-left'></span>
+                        </a>
+                    </td>
+                    <td class='cell100 column2'><a href='#homeSubmenu_@i' data-toggle='collapse' aria-expanded='false' class='dropdown-toggle'><br /></a></td>
+                </tr>
+            </table>
+            <ul class='collapse list-unstyled' id='homeSubmenu_@i' style="background-color: #272727;">
+				@foreach (var submaquines in maquina.listSubMaquines.OrderBy(x => x.NomTraduit))
+				{
+					<li id='li_@Html.Raw(maquina.NomTipusMaquina)_@Html.Raw(submaquines.Nom)'>
+						<a class='nav-item nav-link' href='/@submaquines.NomTipusMaquina/@Html.Raw(submaquines.NomTipusMaquina)BaseView?nomMaquina=@Html.Raw(maquina.Nom)_@Html.Raw(submaquines.Nom)&idMaquina=@submaquines.IdSubMaquina'>
+							@submaquines.NomTraduit
+						</a>
+					</li>
+				}
+			</ul>
+
+        }
+
+    }
+</li>

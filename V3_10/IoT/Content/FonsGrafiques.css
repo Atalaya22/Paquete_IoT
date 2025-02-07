@@ -1,0 +1,50 @@
+﻿.backgroundGraphics {
+    /*background-color: #3f4143;
+    border-radius: 10px;
+    max-width: 97%;
+	border: 0.2px solid rgba(111, 111, 111, 1);
+	box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);*/
+	
+	background: linear-gradient(145deg, #3b3c3d, #353535);
+    color: #e0e0e0;
+    border-radius: 10px;
+	border: 0.2px solid rgba(111, 111, 111, 1);
+	max-width: 97%;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2), 0 -4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.backgroundGraphics:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3), 0 -6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Collapse Button Styling */
+.container.backgroundGraphics a {
+
+    font-size: 16px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: block;
+    text-align: right;
+}
+
+.container.backgroundGraphics a:hover {
+    color: #ffd700;
+}
+
+/* Estilos para los enlaces dentro de .backgroundGraphics */
+.container.backgroundGraphics a[aria-expanded="true"] {
+    background: none !important; /* Remueve el fondo aplicado */
+    border-left: none !important; /* Remueve el borde izquierdo */
+    color: inherit !important; /* Asegura que se herede el color del texto */
+    box-shadow: none !important; /* Remueve cualquier sombra aplicada */
+}
+
+/* Opcional: estilo al pasar el mouse por enlaces expandidos */
+.container.backgroundGraphics a[aria-expanded="true"]:hover {
+    color: #ffd700 !important; /* Cambia el color al pasar el mouse */
+    background: linear-gradient(145deg, #3b3c3d, #353535); /* Fondo opcional */
+}

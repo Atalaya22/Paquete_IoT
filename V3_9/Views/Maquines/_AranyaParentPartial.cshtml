@@ -1,0 +1,769 @@
+﻿@model IoT_Web.Models.Maquines.AranyaParentModel
+@{ }
+
+<link rel="stylesheet" href="~/Content/Overlay.css" />
+<link rel="stylesheet" href="~/Content/DataTableCustom.css" />
+<link rel="stylesheet" href="~/Content/FonsGrafiques.css" />
+
+<div id="noData" style="display: none; margin-top:200px;margin-bottom:200px;">
+    <p align="center">@Recursos.Idioma.NoDades</p>
+</div>
+
+<div class="container backgroundGraphics" id="containerCadencies">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseCadencies" href="#collapseCadencies" aria-expanded="false" aria-controls="collapseCadencies">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.Cadencies</p>
+    <div id="collapseCadencies" class="collapse show">
+        <div class="container mb-2">
+            <div class="col-12" id="conjunt-cadencies">
+            </div>
+            @*
+                <script>
+
+                    var dadesPlot = [];
+
+                    var dadesChart = @Html.Raw(Json.Encode(Model.ChartCadencies.Charts2));
+                    dadesChart.forEach(chart => {
+
+
+                        let xAxisDate = chart.XAxis.map(x => {
+                            let momentObj = moment(x, 'DD/MM/YYYY HH:mm:ss');
+                            return momentObj.toDate();
+                        });
+
+                        let tracePlot = {
+                            x: xAxisDate,
+                            y: chart.YAxis,
+                            type: 'bar',      // Cambiamos el tipo de gráfico a "bar"
+                            mode: 'lines+markers',
+                            name: chart.Titol,
+                            hovertemplate: "" +
+                                "<b>@Recursos.Idioma.Hora:</b> %{x|%H:%M:%S}<br>" +
+                                "<b>@Recursos.Idioma.Cadencia:</b> %{y:.2f}<br>" +
+                                "<extra></extra>"
+                        }
+
+                        dadesPlot.push(tracePlot);
+
+                    });
+
+                    var layoutPlot = {
+                        showlegend: true,
+                        height: 600,
+                        width: 1080,
+                        autosize: false,
+                        plot_bgcolor: 'rgba(0,0,0,0)',
+                        paper_bgcolor: 'rgba(0,0,0,0)',
+                        xaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        yaxis: {
+                            title: null,
+                            showline: true,
+                            showgrid: true,
+                            gridcolor: 'grey'
+                        },
+                        font: {
+                            color: '#ffffff'
+                        }
+                    };
+
+                    var configPlot = { responsive: true }
+
+                    Plotly.newPlot('conjunt-cadencies', dadesPlot, layoutPlot, configPlot);
+
+                </script>
+            *@
+
+            <script>
+                // Función para calcular el promedio por hora
+                function calcularValorMedioPorHora(dataset, variable) {
+                    const agrupadoPorHora = {};
+
+                    dataset.forEach(item => {
+                        const hora = moment(item.X, 'DD/MM/YYYY HH:mm:ss').startOf('hour').toISOString();
+                        if (!agrupadoPorHora[hora]) {
+                            agrupadoPorHora[hora] = { suma: 0, conteo: 0 };
+                        }
+                        agrupadoPorHora[hora].suma += item[variable];
+                        agrupadoPorHora[hora].conteo += 1;
+                    });
+
+                    return Object.entries(agrupadoPorHora).map(([hora, { suma, conteo }]) => ({
+                        hora: new Date(hora),
+                        promedio: suma / conteo
+                    }));
+                }
+
+                var dadesPlot = [];
+
+                // Datos originales
+                var dadesChart = @Html.Raw(Json.Encode(Model.ChartCadencies.Charts2));
+
+                dadesChart.forEach(chart => {
+                    // Calcular el promedio por hora
+                    const datasetPorHora = calcularValorMedioPorHora(
+                        chart.XAxis.map((x, i) => ({ X: x, Y: chart.YAxis[i] })),
+                        'Y'
+                    );
+
+                    let tracePlot = {
+                        x: datasetPorHora.map(d => d.hora), // Fechas por hora
+                        y: datasetPorHora.map(d => d.promedio), // Promedio por hora
+                        type: 'bar', // Tipo de gráfico barras
+                        name: chart.Titol,
+                        hovertemplate: "" +
+                            "<b>@Recursos.Idioma.Data:</b> %{x|%d/%m/%Y %H:%M}<br>" +
+                            "<b>@Recursos.Idioma.Cadencia Media:</b> %{y:.2f}<br>" +
+                            "<extra></extra>"
+                    };
+
+                    dadesPlot.push(tracePlot);
+                });
+
+                var layoutPlot = {
+                    showlegend: true,
+                    height: 600,
+                    width: 1080,
+                    autosize: false,
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    xaxis: {
+                        showline: true,
+                        showgrid: true,
+                        gridcolor: 'grey',
+                        tickformat: '%d/%m/%Y %H:%M' // Formato de hora
+                    },
+                    yaxis: {
+                        showline: true,
+                        showgrid: true,
+                        gridcolor: 'grey'
+                    },
+                    font: {
+                        color: '#ffffff'
+                    }
+                };
+
+                var configPlot = { responsive: true };
+
+                Plotly.newPlot('conjunt-cadencies', dadesPlot, layoutPlot, configPlot);
+            </script>
+
+        </div>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerProducte">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseProducte" href="#collapseProducte" aria-expanded="false" aria-controls="collapseProducte">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.ProductesTotals</p>
+    <div id="collapseProducte" class="collapse show">
+        <div class="container mb-2">
+            <div class="row">
+                <div class="col-12" id="conjunt-productes">
+                </div>
+
+                @*
+
+                    <script>
+                        var dadesPlot2 = [];
+                        var dadesChart2 = @Html.Raw(Json.Encode(Model.ChartProductesTotals.Charts2));
+
+                        dadesChart2.forEach(chart => {
+                            let xAxisDate = chart.XAxis.map(x => {
+                                let momentObj = moment(x, 'DD/MM/YYYY HH:mm:ss');
+                                return momentObj.toDate();
+                            });
+
+                            // Calcular la diferencia entre valores consecutivos en YAxis
+                            let yDifferences = chart.YAxis.map((y, index, arr) => index === 0 ? 0 : y - arr[index - 1]);
+
+                            // Agrupar diferencias por día
+                            let dailyDifferences = {};
+                            xAxisDate.forEach((date, index) => {
+                                let day = moment(date).format('YYYY-MM-DD');  // Formato de día
+                                dailyDifferences[day] = (dailyDifferences[day] || 0) + yDifferences[index];
+                            });
+
+                            // Crear datos para la gráfica agrupada
+                            let xDatesGrouped = Object.keys(dailyDifferences).map(day => moment(day, 'YYYY-MM-DD').toDate());
+                            let yDifferencesGrouped = Object.values(dailyDifferences);
+
+                            // Trazo de diferencias agrupadas por día
+                            let tracePlotDiff = {
+                                x: xDatesGrouped,
+                                y: yDifferencesGrouped,
+                                type: 'bar',
+                                name: chart.Titol,
+                                hovertemplate: "" +
+                                    "<b>Data:</b> %{x|%Y-%m-%d}<br>" +
+                                    "<b>@Recursos.Idioma.ProductesTotals:</b> %{y}<br>" +
+                                    "<extra></extra>",
+                            };
+
+                            dadesPlot2.push(tracePlotDiff);
+                        });
+
+                        var layoutPlot2 = {
+                            showlegend: true,
+                            height: 600,
+                            width: 1080,
+                            autosize: false,
+                            plot_bgcolor: 'rgba(0,0,0,0)',
+                            paper_bgcolor: 'rgba(0,0,0,0)',
+                            xaxis: {
+                                title: null,
+                                showline: true,
+                                showgrid: true,
+                                gridcolor: 'grey',
+                                tickformat: '%Y-%m-%d'  // Mostrar solo la fecha en el eje X
+                            },
+                            yaxis: {
+                                showline: true,
+                                showgrid: true,
+                                gridcolor: 'grey'
+                            },
+                            font: {
+                                color: '#ffffff'
+                            }
+                        };
+
+                        var configPlot2 = { responsive: true };
+
+                        Plotly.newPlot('conjunt-productes', dadesPlot2, layoutPlot2, configPlot2);
+                    </script>
+
+                *@
+
+                <script>
+				(function() {
+					// Declarar dadesPlot2
+					var dadesPlot2 = [];
+					var dadesChart2 = @Html.Raw(Json.Encode(Model.ChartProductesTotals.Charts2));
+
+					// Crear un conjunto local para almacenar las fechas
+					let allDates = new Set();
+
+					dadesChart2.forEach(chart => {
+						let xAxisDate = chart.XAxis.map(x => {
+							let momentObj = moment(x, 'DD/MM/YYYY HH:mm:ss');
+							return momentObj.toDate();
+						});
+
+						// Calcular la diferencia entre valores consecutivos en YAxis
+						let yDifferences = chart.YAxis.map((y, index, arr) => index === 0 ? 0 : y - arr[index - 1]);
+
+						// Agrupar diferencias por día
+						let dailyDifferences = {};
+						xAxisDate.forEach((date, index) => {
+							let day = moment(date).format('YYYY-MM-DD'); // Formato de día
+							dailyDifferences[day] = (dailyDifferences[day] || 0) + yDifferences[index];
+						});
+
+						// Crear datos para la gráfica agrupada
+						let xDatesGrouped = Object.keys(dailyDifferences).map(day => moment(day, 'YYYY-MM-DD').toDate());
+						xDatesGrouped.forEach(date => allDates.add(date)); // Agregar las fechas al conjunto global
+						let yDifferencesGrouped = Object.values(dailyDifferences);
+
+						// Calcular la media acumulada
+						let cumulativeSum = 0;
+						let cumulativeMeans = yDifferencesGrouped.map((y, index) => {
+							cumulativeSum += y;
+							return cumulativeSum / (index + 1);
+						});
+
+						// Trazo de diferencias agrupadas por día (barras)
+						let tracePlotDiff = {
+							x: xDatesGrouped,
+							y: yDifferencesGrouped,
+							type: 'bar',
+							name: chart.Titol,
+							hovertemplate: "" +
+								"<b>Data:</b> %{x|%Y-%m-%d}<br>" +
+								"<b>@Recursos.Idioma.ProductesTotals:</b> %{y}<br>" +
+								"<extra></extra>",
+						};
+
+						// Trazo de línea para la media acumulada
+						let traceCumulativeMean = {
+							x: xDatesGrouped,
+							y: cumulativeMeans,
+							type: 'scatter',
+							mode: 'lines+markers',
+							name: '@Recursos.Idioma.MediaAcumulada',
+							line: { color: '#e74c3c', width: 2, dash: 'solid' }, // Línea roja sólida
+							marker: { size: 6, color: '#e74c3c' }, // Puntos rojos
+							hovertemplate: "" +
+								"<b>Data:</b> %{x|%Y-%m-%d}<br>" +
+								"<b>@Recursos.Idioma.MediaAcumulada:</b> %{y:.2f}<br>" +
+								"<extra></extra>",
+						};
+
+						dadesPlot2.push(tracePlotDiff);
+						dadesPlot2.push(traceCumulativeMean);
+					});
+
+					// Convertir las fechas únicas en un array ordenado
+					let allDatesArray = Array.from(allDates).sort((a, b) => a - b);
+
+					var layoutPlot2 = {
+						showlegend: true,
+						height: 600,
+						width: 1080,
+						autosize: false,
+						plot_bgcolor: 'rgba(0,0,0,0)',
+						paper_bgcolor: 'rgba(0,0,0,0)',
+						xaxis: {
+							title: null,
+							showline: true,
+							showgrid: true,
+							gridcolor: 'grey',
+							tickvals: allDatesArray, // Solo mostrar fechas que correspondan a las barras
+							ticktext: allDatesArray.map(date => moment(date).format('DD/MM/YYYY')), // Mostrar solo estas fechas
+							tickangle: -45, // Rotar etiquetas para evitar solapamiento
+							automargin: true, // Ajustar márgenes automáticamente
+						},
+						yaxis: {
+							showline: true,
+							showgrid: true,
+							gridcolor: 'grey',
+						},
+						barmode: 'group', // Agrupar las barras lado a lado
+						font: {
+							color: '#ffffff', // Color de la fuente
+						},
+						legend: {
+							font: { color: '#ffffff' },
+						},
+					};
+
+					var configPlot2 = { responsive: true };
+
+					Plotly.newPlot('conjunt-productes', dadesPlot2, layoutPlot2, configPlot2);
+				})();
+                </script>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container backgroundGraphics" id="containerInformacioGeneral">
+    <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseInformacioGeneral" href="#collapseInformacioGeneral" aria-expanded="false" aria-controls="collapseInformacioGeneral">
+    </a>
+    <p style="font-size:20px;">@Recursos.Idioma.InformacioGeneral</p>
+    <div id="collapseInformacioGeneral" class="collapse show">
+        <div class="row" style="border-radius:10px; width: 70% !important; margin: auto;">
+            <div class="col">
+                <div class="row" id="TableCaixesMagatzem" style="min-width: 500px; margin-top:2%; margin-right:1%">
+                    <div class="col" style="padding: 20px;">
+                        <table class="table" style="width: 100%; border-collapse: collapse; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);">
+                            <thead style="background-color: #2d2d2d; color: #ffffff;">
+                                <tr style="height: 50px;">
+                                    <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.NomMaquina</th>
+                                    <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.ProductesTotals</th>
+                                    <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.CadenciaMitja</th>
+                                    <th scope="col" style="padding: 15px; text-align: left;">@Recursos.Idioma.NumeroAlarmes</th>
+                                </tr>
+                            </thead>
+                            <tbody style="background: #3a3a3a; color: #e0e0e0;">
+                                @if (Model.Aranyes.Count() > 0)
+                                {
+                                    var totatProductes = 0;
+                                    double CadenciaMitjaTotal = 0;
+                                    var AlarmesTotals = 0;
+
+                                    foreach (var item in Model.Aranyes)
+                                    {
+                                        <tr style="background: #3a3a3a; margin-bottom: 10px; border: 1px solid #444;">
+                                            <td style="padding: 15px; vertical-align: middle;">@item.NomTraduit</td>
+                                            <td style="padding: 15px; vertical-align: middle;">@(item.Estats.Max(e => e.ProductesTotals) - item.Estats.Min(e => e.ProductesTotals))</td>
+                                            <td style="padding: 15px; vertical-align: middle;">@item.DadesGeneriques.CadenciaMitja</td>
+                                            <td style="padding: 15px; vertical-align: middle;">@item.Alarmes.Count()</td>
+                                        </tr>
+
+                                        totatProductes += (item.Estats.Max(e => e.ProductesTotals) - item.Estats.Min(e => e.ProductesTotals));
+                                        CadenciaMitjaTotal += item.DadesGeneriques.CadenciaMitjaDouble;
+                                        AlarmesTotals += item.Alarmes.Count();
+                                    }
+
+                                    <tr style="background-color: #2d2d2d; color: #ffffff; font-weight: bold;">
+                                        <td style="padding: 15px;">@Recursos.Idioma.Total</td>
+                                        <td style="padding: 15px;">@totatProductes</td>
+                                        <td style="padding: 15px;">@CadenciaMitjaTotal/min</td>
+                                        <td style="padding: 15px;">@AlarmesTotals</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table tbody tr {
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .table tbody tr:hover {
+            background-color: #525252;
+        }
+
+    .table thead th {
+        font-weight: bold;
+    }
+</style>
+
+
+@foreach (var aranya in Model.Aranyes)
+{
+    <div class="container backgroundGraphics containerAlarmes" id="containerAlarmes_@aranya.IdMaquina">
+        <a class="fa fa-minus-circle collapsed" data-toggle="collapse" data-parent="#collapseAlarmes_@aranya.IdMaquina" href="#collapseAlarmes_@aranya.IdMaquina" aria-expanded="false" aria-controls="collapseAlarmes_@aranya.IdMaquina"></a>
+        <p style="font-size:20px;">@Recursos.Idioma.Alarmes @aranya.NomTraduit</p>
+        <div id="collapseAlarmes_@aranya.IdMaquina" class="collapse show">
+            <div class="row graficaAlarmes" id="divPercentatgeAlarmes" style="padding-bottom: 35px; padding-top: 20px;margin-top:20px;">
+                <div class="col" id="chartContainer_@aranya.IdMaquina" style="min-height: 170px; max-height:170px;">
+                </div>
+            </div>
+            <div style="text-align: center;" id="AlarmesCheckbox_@aranya.IdMaquina">
+            </div>
+        </div>
+    </div>}
+
+<script>
+
+    function calcularCadenciaMinut(productes, interval) {
+        if (interval < 1) interval = 1;
+        return 60 * productes / interval;
+    }
+
+    function mitjanaProductesCadencies(Aranya) {
+        let resultat = [];
+        //1. Obtenim els estats que son útils per calcular cadencies
+        let estatsUtilsCadencies = Aranya.Estats.filter(element => element.ConveyorStatus >= 2);
+        estatsUtilsCadencies = crearDates(estatsUtilsCadencies);
+        //Calculem l'inici de la primera cadència a calcular
+        let estatsCalculCadencies = [];
+        let iniciPrimerEstat = null;
+        let fiPrimeraCadencia = null;
+
+        estatsUtilsCadencies.forEach((estat) => {
+            if (fiPrimeraCadencia) {
+                if (estat.Final <= fiPrimeraCadencia) {
+                    estatsCalculCadencies.push(estat);
+                } else {
+                    //Hem de calcular la cadencia
+                    let productes = obtenirProductesFinals(estatsCalculCadencies);
+                    resultat.push(productes);
+
+                    //Hem de resetejar el primer estat
+                    iniciPrimerEstat = null;
+                    fiPrimeraCadencia = null;
+                    estatsCalculCadencies = [];
+                }
+            }
+
+            if (!fiPrimeraCadencia) {
+                //Busquem el primer estat inferior a 1 minut de duració
+                iniciPrimerEstat = estat.Inici;
+                //Sumem 1 minut al primer inici
+                fiPrimeraCadencia = new Date(iniciPrimerEstat.getTime() + 1 * 60000);
+                if (estat.Final <= fiPrimeraCadencia) {
+                    estatsCalculCadencies.push(estat);
+                } else {
+                    fiPrimeraCadencia = null;
+                }
+            }
+        });
+
+        let suma = 0;
+        resultat.forEach((valor) => suma += valor);
+        return suma / resultat.length;
+    }
+
+    function obtenirCadencies(Aranya) {
+        let resultat = [];
+        //1. Obtenim els estats que son útils per calcular cadencies
+        let estatsUtilsCadencies = Aranya.Estats.filter(element => element.ConveyorStatus == 3);
+        estatsUtilsCadencies = crearDates(estatsUtilsCadencies);
+        //Calculem l'inici de la primera cadència a calcular
+        let estatsCalculCadencies = [];
+        let iniciPrimerEstat = null;
+        let fiPrimeraCadencia = null;
+        let virtualIdentificadorCadencia = 0;
+        let mitjanaProductesAranya = mitjanaProductesCadencies(Aranya);
+
+        estatsUtilsCadencies.forEach((estat) => {
+            if (fiPrimeraCadencia) {
+                if (estat.Final <= fiPrimeraCadencia) {
+                    estatsCalculCadencies.push(estat);
+                } else {
+                    //Hem de calcular la cadencia
+                    let productes = obtenirProductesFinals(estatsCalculCadencies);
+                    let primerElement = null;
+                    let ultimElement = null;
+                    //Hem d'afegir el resultat a la llista de cadencies resultant
+                    let nElements = estatsCalculCadencies.length;
+                    if (productes > (mitjanaProductesAranya) && nElements > 1) {
+                        primerElement = estatsCalculCadencies[0];
+                        ultimElement = estatsCalculCadencies[nElements - 1]
+
+                        resultat.push({
+                            Id: ++virtualIdentificadorCadencia,
+                            Inici: primerElement.Inici,
+                            Final: ultimElement.Final,
+                            Valor: productes
+                        });
+                    }
+                    //Hem de resetejar el primer estat
+                    iniciPrimerEstat = null;
+                    fiPrimeraCadencia = null;
+                    estatsCalculCadencies = [];
+                }
+            }
+
+            if (!fiPrimeraCadencia) {
+                //Busquem el primer estat inferior a 1 minut de duració
+                iniciPrimerEstat = estat.Inici;
+                //Sumem 1 minut al primer inici
+                fiPrimeraCadencia = new Date(iniciPrimerEstat.getTime() + 1 * 60000);
+                if (estat.Final <= fiPrimeraCadencia) {
+                    estatsCalculCadencies.push(estat);
+                } else {
+                    fiPrimeraCadencia = null;
+                }
+            }
+        });
+
+        return resultat;
+    }
+
+    function obtenirProductesFinals(estats) {
+        let total = 0;
+        estats.forEach(estat => {
+            if (estat.ConveyorStatus == 3) total += estat.ProductesActuals;
+        });
+        return total;
+    }
+
+    function inicialitzarCadencies(cadencies, Aranya) {
+        if (cadencies && cadencies.length > 1) {
+            linechart("@Recursos.Idioma.Cadencia", cadencies, true, false, true, true, `#GraficLinealCadencia_${Aranya.IdMaquina}`, "Valor", iniciData, finalData, crearDates(Aranya.Estats), "Color");
+        } else {
+            $(`#containerCadencia_${Aranya.IdMaquina}`).hide();
+        }
+    }
+
+    function inicialitzarAlarmes(Aranya) {
+        let alarmes = crearDates(Aranya.Alarmes);
+        if (alarmes && alarmes.length > 0) {
+            barchartAlarmes(alarmes, `#chartContainer_${Aranya.IdMaquina}`, iniciData, finalData, Aranya.Nom, null, "Aranya", true, `AlarmesCheckbox_${Aranya.IdMaquina}`)
+        } else {
+            $(`#containerAlarmes_${Aranya.IdMaquina}`).hide();
+        }
+        return alarmes;
+    }
+
+    function crearDates(json) {
+        for (var comptador in json) {
+            if (json[comptador].Inici) json[comptador].Inici = new Date(json[comptador].Inici);
+            if (json[comptador].Final) json[comptador].Final = new Date(json[comptador].Final);
+        }
+        return json;
+    }
+
+    var machine = "@Model.NomMaquina";
+    var idMaquina = @Model.IdMaquina;
+
+    $(document).ready(function () {
+
+        SeleccionarMenu(machine, idMaquina);//Selecciona la màquina activa
+
+        //Actualitzem la durada
+        refreshDuration();
+
+        setTimeout(() => {
+            $('.modebar-btn.plotlyjsicon.modebar-btn--logo').hide();
+            $('div.js-plotly-plot svg.main-svg').css('border-radius', '10px');
+        }, 1000);
+
+    });
+
+    var interval;
+    var minuteNumber = 0;
+    //reset visibilitat divs
+    $('#noData').hide();
+
+    var Aranyes = @Html.Raw(Model.ObtenirAranyesJson());
+
+    if (Aranyes) {
+        var datesMaximes = @Html.Raw(Model.ObtenirDatesMaximes());
+        var minimumDate = moment(datesMaximes["Minima"], "YYYY/MM/DD HH:mm:ss");
+        var maximumDate = moment(datesMaximes["Maxima"], "YYYY/MM/DD HH:mm:ss");
+
+        var iniciData = moment("@Model.DataInici", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+        var finalData = moment("@Model.DataFi", "DD/MM/YYYY HH:mm:ss").format("YYYY/MM/DD HH:mm:ss");
+
+        var iniciDataAnterior = moment("@Html.Raw(Model.DataIniciAnterior)", "YYYY/MM/DD HH:mm:ss");
+        var finalDataAnterior = moment("@Html.Raw(Model.DataFiAnterior)", "YYYY/MM/DD HH:mm:ss");
+
+        var lineArr = [];
+        var MAX_LENGTH = 600; //numero de punts3000
+        var duration = 100; //interval entre updates de la grafica (en milisegons)600
+
+        var alarmes = [];
+        var cadencies = [];
+
+        Aranyes.forEach((Aranya) => {
+            let alarmesAranya = inicialitzarAlarmes(Aranya);
+            if (alarmesAranya && alarmesAranya.length > 0) alarmes = alarmes.concat(alarmesAranya);
+
+            //let cadenciesAranya = obtenirCadencies(Aranya);
+            //inicialitzarCadencies(cadenciesAranya, Aranya);
+            //if (cadenciesAranya && cadenciesAranya.length > 0) cadencies = cadencies.concat(cadenciesAranya);
+        });
+
+        showGraphics();
+    }
+    else {
+        hideGraphics();
+    }
+    $("#divLoading").hide();
+
+    //Actualitzem la navbarSupportedContent per tal de dividir les gràfiques
+    ActualitzarNavbar();
+
+    function ActualitzarNavbar(){
+        $('#navbarSupportedContent').find('a').remove();
+        $("#navbarSupportedContent").prepend("<a onclick='hideGraphics();' href='#' class='nav-item nav-link' style='margin-right:10px;'><i class='fa fa-bell pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.LlistaAlarmes</a>");
+        $("#navbarSupportedContent").prepend("<a onclick='showGraphics();' href='#' class='nav-item nav-link' style='margin-right:10px'><i class='fa fa-bar-chart pull-left' style='margin-top:2%;'></i>@Recursos.Idioma.Grafiques</a>");
+    }
+
+    function seedData() {//valors inicials de realtimeChart
+        var endOfDate = (iniciData._i.split("/"))
+        var endNow = new Date(endOfDate[1] + "/" + endOfDate[0] + "/" + endOfDate[2])
+
+        for (var i = 0; i < MAX_LENGTH; ++i) {
+            lineArr.push({
+                time: new Date(endNow.getTime() - ((MAX_LENGTH - i) * duration)),
+                z: 0
+            });
+        }
+    }
+
+    function hideGraphics() {
+        $('#containerCadencies').hide();
+        $('#containerProducte').hide();
+        $('#containerInformacioGeneral').hide();
+        $('#containerAlarmes').hide();
+    }
+
+    function showGraphics() {
+        $('#containerCadencies').show();
+        $('#containerProducte').show();
+        $('#containerInformacioGeneral').show();
+        $('#containerAlarmes').show();
+    }
+
+    function showDades() {
+        return null;
+    }
+
+    function ShowHideLine(div_id, checkboxId) {
+        if (document.body.contains(document.getElementById(div_id))) {
+            if (document.getElementById(div_id).style.opacity == 1 && $("input[id^='" + checkboxId.substring(0, checkboxId.length - 1) + "']:checked").length > 1) {//Esta actiu, el desactivem
+                d3.select("#" + div_id).style("opacity", 0);
+                document.getElementById(checkboxId).checked = false;
+            }
+            else {
+                d3.select("#" + div_id).style("opacity", 1);
+                document.getElementById(checkboxId).checked = true;
+            }
+        }
+    }
+
+    function ShowHideBackground(div_id, checkboxId) {
+        if (document.body.contains(document.getElementById(div_id))) {
+            if (document.getElementById(div_id).style.opacity != 0 && $("input[id^='" + checkboxId.substring(0, checkboxId.length - 1) + "']:checked").length > 1) {//Esta actiu, el desactivem
+                d3.selectAll("#" + div_id).style("opacity", 0);
+                document.getElementById(checkboxId).checked = false;
+            }
+            else {
+                d3.selectAll("#" + div_id).style("opacity", 0.1);
+                document.getElementById(checkboxId).checked = true;
+            }
+        }
+    }
+
+    function increaseZoom() {
+        var oldDateStart = "@Html.Raw(Model.DataInici).ToString()";
+        var oldDateEnd = "@Html.Raw(Model.DataFi).ToString()";
+
+        var dateEnd = oldDateEnd.split("/");
+        var dateStart = oldDateStart.split("/");
+
+        var milisecondsEnd = Date.parse(dateEnd[1] + "/" + dateEnd[0] + "/" + dateEnd[2]);
+        var milisecondsStart = Date.parse(dateStart[1] + "/" + dateStart[0] + "/" + dateStart[2]);
+
+        var newDateMilli = milisecondsStart + ((milisecondsEnd - milisecondsStart) / 10);
+        var newDate = new Date(newDateMilli);
+        var newDateSplit = newDate.toString().split(" ");
+
+        var test = newDateSplit[2] + "/" + returnMonthNumber(newDateSplit[1]) + "/" + newDate.getFullYear() + " " + newDate.getHours() + ":" + newDate.getMinutes() + ":" + newDate.getSeconds();
+
+        $("#divLoading").show();
+        var antInitDate = document.getElementById("dataInicial").value;
+        var antFinalDate = document.getElementById("dataFinal").value;
+        var list = document.getElementById('shiftDropDownList');
+        var selectedShift = list.options[list.selectedIndex].value;
+        $("#partial").load("/Aranya/AranyaParentPartial", { inici: test, final: antFinalDate, torn: selectedShift, iniciAnt: antInitDate, finalAnt: antFinalDate, nomMaquina: machine , idMaquina: @Model.IdMaquina});
+    }
+
+    function previosZoom() {
+        $("#divLoading").show();
+        document.getElementById("dataInicial").value = iniciDataAnterior._i;
+        document.getElementById("dataFinal").value = finalDataAnterior._i;
+        var list = document.getElementById('shiftDropDownList');
+        var selectedShift = list.options[list.selectedIndex].value;
+        $("#partial").load("/Aranya/AranyaParentPartial", { inici: iniciDataAnterior._i, final: finalDataAnterior._i, torn: selectedShift, iniciAnt: minimumDate._i, finalAnt: maximumDate._i, nomMaquina: machine , idMaquina: @Model.IdMaquina});
+    }
+
+    function returnMonthNumber(monthname) {
+        var monthShortNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        var month = monthShortNames.indexOf(monthname);
+        return month ? month + 1 : 0;
+    }
+
+    function refreshDuration() {
+        var newDataIn = new Date(moment("@Html.Raw(Model.DataInici).ToString()", "DD/MM/YYYY HH:mm:ss"));
+        var newDataFi = new Date(moment("@Html.Raw(Model.DataFi).ToString()", "DD/MM/YYYY HH:mm:ss"));
+        var duration = convertMSGrafica(Math.abs(newDataFi.getTime() - newDataIn.getTime()));
+        var newDuration = "@Html.Raw(Recursos.Idioma.Duracio)" + ": " + duration;
+        $("#textDurada").text(newDuration);
+        document.getElementById('dataInicial').value = "@Html.Raw(Model.DataInici.ToString())";
+        document.getElementById('dataFinal').value = "@Html.Raw(Model.DataFi.ToString())";
+    }
+
+    $("a").click(function () {
+        if ($(this).hasClass("fa-minus-circle")) {
+            $(this).removeClass("fa-minus-circle");
+            $(this).addClass("fa-plus-circle");
+        }
+        else if($(this).hasClass("fa-plus-circle")) {
+            $(this).removeClass("fa-plus-circle");
+            $(this).addClass("fa-minus-circle");
+        }
+    });
+
+</script>
